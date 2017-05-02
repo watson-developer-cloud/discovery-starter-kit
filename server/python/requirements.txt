@@ -1,2 +1,2 @@
 # web app
-flask==0.12
+-r requirements/production.txt

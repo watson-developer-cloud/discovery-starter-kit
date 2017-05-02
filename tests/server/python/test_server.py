@@ -1,11 +1,19 @@
 import sys
 import os
-project_dir = os.path.abspath(
-    os.path.join(os.path.dirname( __file__ ), '..', '..', '..'))
-sys.path.insert(0, project_dir)
-print(sys.path)
-from server.python.server import app
 import unittest
+project_dir = os.path.abspath(
+  os.path.join(
+    os.path.dirname(__file__),
+    '..',
+    '..',
+    '..',
+    'server',
+    'python'
+  )
+)
+sys.path.insert(0, project_dir)
+from server import app  # noqa
+
 
 class TestServer(unittest.TestCase):
 
@@ -16,6 +24,7 @@ class TestServer(unittest.TestCase):
         rv = self.app.get('/')
         response_text = rv.data.decode('UTF-8')
         self.assertEqual('Watson Discovery Service Starter Kit', response_text)
+
 
 if __name__ == '__main__':
     unittest.main()
