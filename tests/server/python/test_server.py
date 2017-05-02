@@ -2,11 +2,12 @@ import sys
 import os
 project_dir = os.path.abspath(
     os.path.join(os.path.dirname( __file__ ), '..', '..', '..'))
-sys.path.append(project_dir)
+sys.path.insert(0, project_dir)
+print(sys.path)
 from server.python.server import app
 import unittest
 
-class ServerTestCase(unittest.TestCase):
+class TestServer(unittest.TestCase):
 
     def setUp(self):
         self.app = app.test_client()
