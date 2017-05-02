@@ -1,0 +1,2 @@
+# web app
+flask==0.12
