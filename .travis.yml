@@ -9,3 +9,6 @@ install:
 script:
 - flake8
 - pytest
+before_install:
+- openssl aes-256-cbc -K $encrypted_9d6d1e1af018_key -iv $encrypted_9d6d1e1af018_iv
+  -in .env.staging.enc -out .env.staging -d
