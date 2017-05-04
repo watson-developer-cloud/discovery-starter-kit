@@ -8,7 +8,7 @@ A repo containing the basics for setting up one of the watson developer cloud SD
 1. Install [virtual_env](https://virtualenv.pypa.io/en/stable/)
 1. Activate `virtualenv`
   1. `virtualenv .` in project root directory
-  1. `bin/activate` in project root directory
+  1. `source bin/activate` in project root directory
 1. Install dependencies `pip install -r server/python/requirements/dev.txt`
 1. Make a copy of `.env.example` at `.env` and fill with your service credentials by setting up new services on bluemix
   1. [Discovery](https://console.ng.bluemix.net/catalog/services/discovery?taxonomyNavigation=watson)
