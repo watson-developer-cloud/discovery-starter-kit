@@ -15,3 +15,8 @@ A repo containing the basics for setting up one of the watson developer cloud SD
   1. [Natural Language Understanding](https://console.ng.bluemix.net/catalog/services/natural-language-understanding?taxonomyNavigation=watson)
 1. Start server `python server/python/server.py`
 1. Visit http://localhost:5000/
+
+#### Development
+
+1. Linter run with `flask8`
+1. Tests run with `pytest`
