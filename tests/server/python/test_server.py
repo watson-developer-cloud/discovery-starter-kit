@@ -25,7 +25,7 @@ class TestServer(unittest.TestCase):
     def test_index(self):
         rv = self.app.get('/')
         response_text = rv.data.decode('UTF-8')
-        self.assertEqual('Watson Discovery Service Starter Kit', response_text)
+        self.assertIn('Watson Discovery Service Starter Kit', response_text)
 
     @patch('watson_developer_cloud.DiscoveryV1.get_environments')
     def test_get_environments(self, discovery):

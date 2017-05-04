@@ -2,7 +2,16 @@
 
 A repo containing the basics for setting up one of the watson developer cloud SDKs with a use case
 
-### Python
+### Client
+
+Client side is built with [React](https://facebook.github.io/react/)
+
+#### Development
+
+1. Run `npm start --prefix client/knowledge_base_search` - visit http://locahost:3000/
+1. To run statically through your server, run `npm run build --prefix client/knowledge_base_search` to produce static assets
+
+### Server - Python
 
 1. Install [python](https://www.python.org/) version 2.7
 1. Install [virtual_env](https://virtualenv.pypa.io/en/stable/)
@@ -15,3 +24,8 @@ A repo containing the basics for setting up one of the watson developer cloud SD
   1. [Natural Language Understanding](https://console.ng.bluemix.net/catalog/services/natural-language-understanding?taxonomyNavigation=watson)
 1. Start server `python server/python/server.py`
 1. Visit http://localhost:5000/
+
+#### Development
+
+1. Linter run with `flask8`
+1. Tests run with `pytest`

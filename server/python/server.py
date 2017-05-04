@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from dotenv import load_dotenv, find_dotenv
 from watson_developer_cloud import DiscoveryV1
 
@@ -8,7 +8,11 @@ try:
 except IOError:
     print('warning: no .env file loaded')
 
-app = Flask(__name__)
+app = Flask(
+        __name__,
+        static_folder="../../client/knowledge_base_search/build/static",
+        template_folder="../../client/knowledge_base_search/build"
+      )
 
 # Discovery
 discovery = DiscoveryV1(
@@ -21,7 +25,7 @@ discovery = DiscoveryV1(
 
 @app.route('/')
 def index():
-    return 'Watson Discovery Service Starter Kit'
+    return render_template('index.html')
 
 
 @app.route('/api/environments')
