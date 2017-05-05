@@ -10,8 +10,10 @@
 .text-input--input[type="text"] {
   color: #ffffff;
   margin-left: 2.5rem;
+  padding-right: 2.5rem;
   background-color: #00b39f;
   box-shadow: none;
+  max-width: 100%;
 }
 
 ::placeholder,
