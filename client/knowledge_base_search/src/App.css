@@ -1,24 +1,68 @@
-.App {
-  text-align: center;
+body * + * {
+  margin-top: 0;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.header {
+  background-color: #003C32;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.header--wordmark-link,
+.jumbotron--get-started-icon {
+  color: #ffffff;
+  fill: currentColor;
 }
 
-.App-intro {
-  font-size: large;
+a:hover,
+a:active,
+a:focus,
+a:visited {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.header--breadcrumbs-slash,
+.header--breadcrumbs-main,
+.header--breadcrumbs-main:hover,
+.header--breadcrumbs-main:focus,
+.header--breadcrumbs-main:visited {
+  color: #00b39f;
+}
+
+.header--breadcrumbs-sub {
+  color: #c7c7c7;
+}
+
+.header--breadcrumbs-sub:hover,
+.header--breadcrumbs-sub:active,
+.header--breadcrumbs-sub:focus {
+  color: #00b39f;
+}
+
+.base--button.base--button_fill,
+.base--button.base--button_fill:visited,
+.base--button.base--button_fill:hover,
+.base--button.base--button_fill:active,
+.base--button.base--button_fill:focus {
+  background-color: #003C32;
+  border-color: #003C32;
+}
+
+._full-width-row.jumbotron {
+  color: #ffffff;
+  background-color: #00b39f;
+}
+
+.description {
+  margin-top: 1rem;
+}
+
+.base--h2,
+.description,
+.jumbotron--nav-link,
+.jumbotron--nav-link:hover,
+.jumbotron--nav-link:focus,
+.jumbotron--nav-link:active,
+.jumbotron--nav-link:visited {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
 }

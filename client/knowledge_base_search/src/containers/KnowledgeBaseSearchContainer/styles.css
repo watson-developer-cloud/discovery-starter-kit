@@ -1,0 +1,73 @@
+.header--input {
+  color: #ffffff;
+  text-align: center;
+}
+
+.teal {
+  background-color: #00b39f;
+}
+
+.text-input--input[type="text"] {
+  color: #ffffff;
+  margin-left: 2.5rem;
+  background-color: #00b39f;
+  box-shadow: none;
+}
+
+::placeholder,
+.text-input--input[type="text"]:focus::placeholder {
+  color: #ffffff;
+  opacity: 0.5;
+}
+
+.positioned--icon {
+  position: relative;
+  top: 2rem;
+  display: inline;
+  z-index: 1;
+}
+
+.positioned--icon .icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  color: #ffffff;
+  fill: currentColor;
+}
+
+button.random-query--button {
+  font-size: 0.9rem;
+  padding: 0;
+  color: #ffffff;
+  border-color: #ffffff;
+  border-radius: 0;
+  border-width: 0 0 1px 0;
+  font-weight: 300;
+  border-bottom-width: 1px;
+}
+
+
+button.random-query--button:hover,
+button.random-query--button:focus {
+  color: #003C32;
+  border-color: #003C32;
+}
+
+button.white--button {
+  color: #ffffff;
+  border-color: #ffffff;
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+
+button.white--button:hover,
+button.white--button:focus {
+  opacity: 0.8;
+}
+
+._container-center {
+  text-align: center;
+}
+
+._container-right {
+  text-align: right;
+}
