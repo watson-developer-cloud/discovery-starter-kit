@@ -1,0 +1,26 @@
+
+.results_container--div {
+  display: flex;
+}
+
+.result_box--div {
+  padding-top: 1rem;
+}
+
+.results_comparison--div {
+  display: flex;
+  width: 66%;
+}
+
+.results_related_questions--div {
+  width: 34%;
+  padding-top: 1rem;
+  margin-left: 1rem;
+}
+
+.result_text--div {
+  padding: 2rem;
+  margin-right: 1rem;
+  background-color: #ececec;
+  font-weight: 300;
+}

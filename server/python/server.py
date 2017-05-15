@@ -1,5 +1,8 @@
 import os
-from flask import Flask, jsonify, render_template
+import json
+from get_discovery_collections import get_constants
+from flask import Flask, jsonify, render_template, request
+from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from watson_developer_cloud import DiscoveryV1
 
@@ -13,14 +16,23 @@ app = Flask(
         static_folder="../../client/knowledge_base_search/build/static",
         template_folder="../../client/knowledge_base_search/build"
       )
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Discovery
 discovery = DiscoveryV1(
-              url=os.getenv('DISCOVERY_BASE_URL'),
+              url=os.getenv('DISCOVERY_URL'),
               username=os.getenv('DISCOVERY_USERNAME'),
               password=os.getenv('DISCOVERY_PASSWORD'),
               version="2016-12-01"
             )
+
+# retrieve the following:
+# {
+#   environment_id,
+#   collection_id_regular,
+#   collection_id_enriched
+# }
+constants = get_constants(discovery)
 
 
 @app.route('/')
@@ -72,6 +84,24 @@ def get_collection(environment_id, collection_id):
             )
 
 
-if __name__ == '__main__':
+@app.route('/api/query/<collection_type>', methods=['POST'])
+def query(collection_type):
+    collection_id_key = 'collection_id_regular'
+    if collection_type == 'enriched':
+        collection_id_key = 'collection_id_enriched'
 
-    app.run()
+    return jsonify(
+              discovery.query(
+                environment_id=constants['environment_id'],
+                collection_id=constants[collection_id_key],
+                query_options=json.loads(request.data)
+              )
+            )
+
+
+if __name__ == '__main__':
+    # Get host/port from the Bluemix environment, or default to local
+    HOST_NAME = os.getenv('VCAP_APP_HOST', '127.0.0.1')
+    PORT_NUMBER = int(os.getenv('VCAP_APP_PORT', '5000'))
+
+    app.run(host=HOST_NAME, port=PORT_NUMBER, debug=False)

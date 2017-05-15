@@ -4,7 +4,7 @@ import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
-class KnowledgeBaseSearchContainer extends Component {
+class SearchContainer extends Component {
   componentWillMount() {
     this.state = {
       search_input: ''
@@ -22,7 +22,11 @@ class KnowledgeBaseSearchContainer extends Component {
   }
 
   handleOnSubmit = (e) => {
+    const input = this.state.search_input;
     e.preventDefault();
+    if (input && input.length > 0) {
+      this.props.onSubmit(input);
+    }
   }
 
   render() {
@@ -64,4 +68,8 @@ class KnowledgeBaseSearchContainer extends Component {
   }
 }
 
-export default KnowledgeBaseSearchContainer;
+SearchContainer.PropTypes = {
+  onSubmit: React.PropTypes.func.isRequired
+}
+
+export default SearchContainer;

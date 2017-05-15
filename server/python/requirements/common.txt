@@ -2,3 +2,4 @@
 flask==0.12
 watson_developer_cloud==0.25.2
 python-dotenv===0.6.4
+flask-cors===3.0.2

@@ -1,7 +1,7 @@
 import sys
 import os
 import unittest
-from mock import patch
+from mock import patch, MagicMock
 import json
 project_dir = os.path.abspath(
   os.path.join(
@@ -14,6 +14,16 @@ project_dir = os.path.abspath(
   )
 )
 sys.path.insert(0, project_dir)
+
+# Mock service interaction for unit tests
+mocked_collections = MagicMock()
+mocked_collections.get_constants.return_value = {
+  'environment_id': 'my_environment_id',
+  'collection_id_regular': 'my_regular_collection_id',
+  'collection_id_enriched': 'my_enriched_collection_id'
+}
+sys.modules['get_discovery_collections'] = mocked_collections
+
 from server import app # noqa
 
 
@@ -160,6 +170,54 @@ class TestServer(unittest.TestCase):
         discovery.return_value = mock_response
         rv = self.app.get('/api/environments/any_id/collections/any_id')
         actual_response = json.loads(rv.data.decode('UTF-8'))
+        self.assertEqual(actual_response, mock_response)
+
+    @patch('watson_developer_cloud.DiscoveryV1.query')
+    def test_regular_query(self, discovery):
+        query_opts = {'query': 'my_query'}
+        mock_response = json.loads(
+          """
+            {
+              "matching_results": 0,
+              "results": []
+            }
+          """ # noqa
+        )
+        discovery.return_value = mock_response
+        rv = self.app.post(
+              '/api/query/regular',
+              data=json.dumps(query_opts)
+             )
+        actual_response = json.loads(rv.data.decode('UTF-8'))
+        discovery.assert_called_with(
+          environment_id='my_environment_id',
+          collection_id='my_regular_collection_id',
+          query_options=query_opts
+        )
+        self.assertEqual(actual_response, mock_response)
+
+    @patch('watson_developer_cloud.DiscoveryV1.query')
+    def test_enriched_query(self, discovery):
+        query_opts = {'query': 'my_query'}
+        mock_response = json.loads(
+          """
+            {
+              "matching_results": 0,
+              "results": []
+            }
+          """ # noqa
+        )
+        discovery.return_value = mock_response
+        rv = self.app.post(
+              '/api/query/enriched',
+              data=json.dumps(query_opts)
+             )
+        actual_response = json.loads(rv.data.decode('UTF-8'))
+        discovery.assert_called_with(
+          environment_id='my_environment_id',
+          collection_id='my_enriched_collection_id',
+          query_options=query_opts
+        )
         self.assertEqual(actual_response, mock_response)
 
 

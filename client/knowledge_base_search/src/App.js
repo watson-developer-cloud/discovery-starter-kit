@@ -1,11 +1,37 @@
 import React, { Component } from 'react';
-import { Header, Jumbotron, Footer } from 'watson-react-components';
-import KnowledgeBaseSearchContainer from './containers/KnowledgeBaseSearchContainer/KnowledgeBaseSearchContainer';
+import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
+import SearchContainer from './containers/SearchContainer/SearchContainer';
+import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
 import links from './utils/links';
+import query from './actions/query';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './App.css';
 
 class App extends Component {
+  componentWillMount() {
+    this.state = {
+      fetching: false,
+      results_fetched: false,
+      results: [],
+      enriched_results: []
+    }
+  }
+
+  handleSearch = (input) => {
+    this.setState({fetching: true});
+    Promise.all([
+      query('regular', {query: input}),
+      query('enriched', {query: input})
+    ]).then((results_array) => {
+      this.setState({
+        fetching: false,
+        results_fetched: true,
+        results: results_array[0],
+        enriched_results: results_array[1]
+      });
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -24,7 +50,20 @@ class App extends Component {
           version="GA"
           description="This starter kit uses Stack Exchange Travel data to show the effect of using answer metadata to improve ranking and search relevance. Compared to a default collection, you get better results by enriching the documents and applying them to search."
         />
-        <KnowledgeBaseSearchContainer />
+        <SearchContainer onSubmit={this.handleSearch} />
+        {
+          this.state.fetching
+            ? (<section className="_full-width-row">
+                <Icon type="loader" size="large" />
+               </section>
+              )
+            : this.state.results_fetched
+              ? (<ResultsContainer
+                  results={this.state.results}
+                  enriched_results={this.state.enriched_results}
+                  />)
+              : null
+        }
         <Footer />
       </div>
     );
