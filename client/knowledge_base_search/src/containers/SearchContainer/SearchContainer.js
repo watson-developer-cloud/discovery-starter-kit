@@ -49,7 +49,7 @@ class SearchContainer extends Component {
             />
             <div className="_container-right">
               <button
-                type="button"
+                type="submit"
                 className="random-query--button"
                 onClick={this.handleOnClick}
               >
