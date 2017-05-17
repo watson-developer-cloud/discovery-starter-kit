@@ -33,9 +33,14 @@ class SearchContainer extends Component {
     return (
       <section className="_full-width-row teal">
         <div className="_container">
-          <h2 className="header--input">
-            Use a community's expertise to amplify the way you find information.
-          </h2>
+          {!this.props.resultsFetched
+            ? (
+              <h2 className="header--input">
+                Use a community's expertise to amplify the way you find information.
+              </h2>
+              )
+            : null
+          }
           <form onSubmit={this.handleOnSubmit}>
             <div className="positioned--icon">
               <Icon type="search" />
@@ -56,11 +61,16 @@ class SearchContainer extends Component {
                 Random Query
               </button>
             </div>
-            <div className="_container-center">
-              <button className="white--button">
-                Retrieve Answers
-              </button>
-            </div>
+            {!this.props.resultsFetched
+              ? (
+                <div className="_container-center">
+                  <button className="white--button">
+                    Retrieve Answers
+                  </button>
+                </div>
+                )
+              : null
+            }
           </form>
         </div>
       </section>
@@ -69,7 +79,8 @@ class SearchContainer extends Component {
 }
 
 SearchContainer.PropTypes = {
-  onSubmit: React.PropTypes.func.isRequired
+  onSubmit: React.PropTypes.func.isRequired,
+  hasResults: React.PropTypes.bool.isRequired
 }
 
 export default SearchContainer;

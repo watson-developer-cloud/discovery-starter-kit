@@ -50,11 +50,16 @@ class App extends Component {
           version="GA"
           description="This starter kit uses Stack Exchange Travel data to show the effect of using answer metadata to improve ranking and search relevance. Compared to a default collection, you get better results by enriching the documents and applying them to search."
         />
-        <SearchContainer onSubmit={this.handleSearch} />
+        <SearchContainer
+          onSubmit={this.handleSearch}
+          hasResults={this.state.results_fetched && !this.state.fetching}
+        />
         {
           this.state.fetching
-            ? (<section className="_full-width-row">
-                <Icon type="loader" size="large" />
+            ? (<section className='_full-width-row'>
+                <div className='_container _container_large _container-center'>
+                  <Icon type='loader' size='large' />
+                </div>
                </section>
               )
             : this.state.results_fetched
