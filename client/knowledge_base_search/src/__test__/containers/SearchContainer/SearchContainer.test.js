@@ -12,7 +12,7 @@ describe('<SearchContainer />', () => {
     ReactDOM.render(
       <SearchContainer
         onSubmit={onSubmitMock}
-        resultsFetched={false}
+        hasResults={false}
       />, div);
   });
 
@@ -20,7 +20,7 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        resultsFetched={false}  />
+                        hasResults={false}  />
                     );
     expect(wrapper.find('.header--input')).toHaveLength(1);
     expect(wrapper.find(TextInput)).toHaveLength(1);
@@ -31,7 +31,7 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        resultsFetched={true}  />
+                        hasResults={true}  />
                     );
     expect(wrapper.find('.header--input')).toHaveLength(0);
     expect(wrapper.find(TextInput)).toHaveLength(1);
@@ -39,7 +39,11 @@ describe('<SearchContainer />', () => {
   });
 
   describe('when text is typed in', () => {
-    const wrapper = shallow(<SearchContainer onSubmit={onSubmitMock} />);
+    const wrapper = shallow(
+                      <SearchContainer
+                        onSubmit={onSubmitMock}
+                        hasResults={false}  />
+                    );
     const text = 'my question';
 
     beforeEach(() => {
@@ -58,7 +62,11 @@ describe('<SearchContainer />', () => {
   });
 
   describe('when the random query button is pressed', () => {
-    const wrapper = shallow(<SearchContainer onSubmit={onSubmitMock} />);
+    const wrapper = shallow(
+                      <SearchContainer
+                        onSubmit={onSubmitMock}
+                        hasResults={false}  />
+                    );
 
     beforeEach(() => {
       wrapper.find('.random-query--button').simulate('click');

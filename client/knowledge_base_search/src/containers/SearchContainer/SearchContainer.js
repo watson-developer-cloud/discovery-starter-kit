@@ -33,7 +33,7 @@ class SearchContainer extends Component {
     return (
       <section className="_full-width-row teal">
         <div className="_container">
-          {!this.props.resultsFetched
+          {!this.props.hasResults
             ? (
               <h2 className="header--input">
                 Use a community's expertise to amplify the way you find information.
@@ -61,7 +61,7 @@ class SearchContainer extends Component {
                 Random Query
               </button>
             </div>
-            {!this.props.resultsFetched
+            {!this.props.hasResults
               ? (
                 <div className="_container-center">
                   <button className="white--button">
