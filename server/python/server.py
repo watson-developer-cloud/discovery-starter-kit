@@ -32,7 +32,11 @@ discovery = DiscoveryV1(
 #   collection_id_regular,
 #   collection_id_enriched
 # }
-constants = get_constants(discovery)
+constants = get_constants(
+              discovery,
+              regular_name=os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME'),
+              enriched_name=os.getenv('DISCOVERY_ENRICHED_COLLECTION_NAME')
+            )
 
 
 @app.route('/')
