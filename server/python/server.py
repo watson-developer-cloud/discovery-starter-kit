@@ -104,8 +104,10 @@ def query(collection_type):
 
 
 if __name__ == '__main__':
+    # If we are in the Bluemix environment, set port to 0.0.0.0
+    # otherwise set it to localhost (127.0.0.1)
+    HOST = '0.0.0.0' if os.getenv('VCAP_APPLICATION') else '127.0.0.1'
     # Get port from the Bluemix environment, or default to 5000
-    HOST = '0.0.0.0'
     PORT_NUMBER = int(os.getenv('PORT', '5000'))
 
     app.run(host=HOST, port=PORT_NUMBER, debug=False)
