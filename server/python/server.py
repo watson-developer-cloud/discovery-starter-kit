@@ -105,6 +105,7 @@ def query(collection_type):
 
 if __name__ == '__main__':
     # Get port from the Bluemix environment, or default to 5000
+    HOST = '0.0.0.0'
     PORT_NUMBER = int(os.getenv('PORT', '5000'))
 
-    app.run(port=PORT_NUMBER, debug=False)
+    app.run(host=HOST, port=PORT_NUMBER, debug=False)
