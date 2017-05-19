@@ -26,10 +26,16 @@ print('Retrieving environment and collection constants...')
 #   collection_id_enriched
 # }
 discovery_constants = get_constants(
-              discovery,
-              regular_name=os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME'),
-              enriched_name=os.getenv('DISCOVERY_ENRICHED_COLLECTION_NAME')
-            )
+                        discovery,
+                        regular_name=os.getenv(
+                                      'DISCOVERY_REGULAR_COLLECTION_NAME',
+                                      'knowledge_base_regular'
+                                    ),
+                        enriched_name=os.getenv(
+                                      'DISCOVERY_ENRICHED_COLLECTION_NAME',
+                                      'knowledge_base_enriched'
+                                    )
+                      )
 print('Constants retrieved!')
 print(discovery_constants)
 

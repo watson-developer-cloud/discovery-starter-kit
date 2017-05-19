@@ -34,8 +34,14 @@ discovery = DiscoveryV1(
 # }
 constants = get_constants(
               discovery,
-              regular_name=os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME'),
-              enriched_name=os.getenv('DISCOVERY_ENRICHED_COLLECTION_NAME')
+              regular_name=os.getenv(
+                            'DISCOVERY_REGULAR_COLLECTION_NAME',
+                            'knowledge_base_regular'
+                          ),
+              enriched_name=os.getenv(
+                            'DISCOVERY_ENRICHED_COLLECTION_NAME',
+                            'knowledge_base_enriched'
+                          )
             )
 
 
