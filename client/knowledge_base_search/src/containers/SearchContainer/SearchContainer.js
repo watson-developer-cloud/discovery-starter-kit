@@ -14,6 +14,7 @@ class SearchContainer extends Component {
   handleOnClick = () => {
     const totalQueries = randomQueries.length;
     const randomInt = Math.floor(Math.random() * totalQueries);
+
     this.handleOnInput({'target': { 'value': randomQueries[randomInt]}});
   }
 
@@ -23,6 +24,7 @@ class SearchContainer extends Component {
 
   handleOnSubmit = (e) => {
     const input = this.state.search_input;
+
     e.preventDefault();
     if (input && input.length > 0) {
       this.props.onSubmit(input);
