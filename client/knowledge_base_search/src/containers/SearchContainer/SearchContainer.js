@@ -16,6 +16,7 @@ class SearchContainer extends Component {
     const randomInt = Math.floor(Math.random() * totalQueries);
 
     this.handleOnInput({'target': { 'value': randomQueries[randomInt]}});
+    this.props.onSubmit(this.state.search_input);
   }
 
   handleOnInput = (e) => {
@@ -56,7 +57,7 @@ class SearchContainer extends Component {
             />
             <div className="_container-right">
               <button
-                type="submit"
+                type="button"
                 className="random-query--button"
                 onClick={this.handleOnClick}
               >

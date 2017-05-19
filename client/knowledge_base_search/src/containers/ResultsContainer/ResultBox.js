@@ -20,19 +20,21 @@ class ResultBox extends Component {
     );
   }
 
-  handleOnShowFullAnswer = () => {
-    this.props.onShowFullAnswer();
+  handleToggleFullAnswer = () => {
+    this.props.onToggleFullResult();
   }
 
   render() {
-    const { result, result_type } = this.props;
-    const result_rank = 1;
+    const {
+      result,
+      result_type,
+      result_rank,
+      is_full_result_shown
+    } = this.props;
 
     return (
       <div className='result_box--div'>
-        <h4>
-          {result_type}
-        </h4>
+        { result_rank === 1 ? (<h4>{result_type}</h4>) : null }
         <div className='result_text--div'>
           <div className='result_answer_snippet--div'>
             {this.trimAnswer(result.answer)}
@@ -40,9 +42,13 @@ class ResultBox extends Component {
           <div className='result_full_answer--div'>
             <button
               type='button'
-              onClick={this.handleOnShowFullAnswer}
+              onClick={this.handleToggleFullAnswer}
             >
-              See full answer
+              {
+                is_full_result_shown
+                  ? (<span>Hide full answer</span>)
+                  : (<span>Show full answer</span>)
+              }
             </button>
           </div>
           <hr className='base--hr' />
@@ -65,9 +71,11 @@ class ResultBox extends Component {
 ResultBox.PropTypes = {
   result: React.PropTypes.object.isRequired,
   result_type: React.PropTypes.string.isRequired,
+  result_rank: React.PropTypes.number.isRequired,
+  is_full_result_shown: React.PropTypes.bool.isRequired,
   max_length: React.PropTypes.number.isRequired,
   decimal_places: React.PropTypes.number.isRequired,
-  onShowFullAnswer: React.PropTypes.func.isRequired
+  onToggleFullResult: React.PropTypes.func.isRequired
 }
 
 ResultBox.defaultProps = {

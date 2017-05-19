@@ -8,6 +8,7 @@ body * + * {
 }
 
 .header--wordmark-link,
+.header--wordmark-svg,
 .jumbotron--get-started-icon {
   color: #ffffff;
   fill: currentColor;

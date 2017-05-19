@@ -52,7 +52,7 @@ class App extends Component {
         />
         <SearchContainer
           onSubmit={this.handleSearch}
-          hasResults={this.state.results_fetched && !this.state.fetching}
+          hasResults={this.state.results_fetched}
         />
         {
           this.state.fetching

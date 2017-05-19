@@ -9,13 +9,36 @@
 
 .results_comparison--div {
   display: flex;
+}
+
+.results_comparison--div div {
+  flex: 1;
+}
+
+.results_left--div {
   width: 66%;
 }
 
-.results_related_questions--div {
+.results_right--div {
   width: 34%;
   padding-top: 1rem;
   margin-left: 1rem;
+}
+
+button.teal--button {
+  color: #00b39f;
+  border-color: #00b39f;
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+
+button.teal--button:hover,
+button.teal--button:focus {
+  opacity: 0.8;
+}
+
+.show_results--div {
+  margin-top: 2rem;
 }
 
 .result_text--div {
@@ -70,7 +93,6 @@
 }
 
 .full_result_row--div {
-  width: 66%;
   margin-top: 2rem;
 }
 
