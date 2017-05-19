@@ -29,3 +29,9 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 1. Linter run with `flask8`
 1. Tests run with `pytest`
+
+### Setting up the Data
+
+After setting up python and the Bluemix services, run `python server/python/upload_documents.py`
+
+It will take all the documents in the `data/sample` directory and push them into both "regular" and "enriched" collections as named by the `DISCOVERY_REGULAR_COLLECTION_NAME` and `DISCOVERY_ENRICHED_COLLECTION_NAME` in your `.env` file
