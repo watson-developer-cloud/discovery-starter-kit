@@ -3,10 +3,10 @@ import './styles.css';
 
 class RelatedQuestions extends Component {
   filterRelatedQuestions() {
-    const { enriched_results, max_related_questions } = this.props;
-    const firstTitle = enriched_results[0].title;
+    const { results, max_related_questions } = this.props;
+    const firstTitle = results[0] ? results[0].title : '';
 
-    return enriched_results.reduce((memo, result) => {
+    return results.reduce((memo, result) => {
       if (result.title !== firstTitle && memo.indexOf(result.title) === -1) {
         memo.push(result.title);
       }
@@ -19,34 +19,39 @@ class RelatedQuestions extends Component {
   }
 
   render() {
+    const relatedQuestions = this.filterRelatedQuestions();
+
     return (
       <div className='results_right--div'>
         <h4>Related Questions</h4>
-        <ul className='base--ul'>
-        {
-          this.filterRelatedQuestions().map((question, index) => {
-            return (
-              <li key={index} className='base--li related_questions--li'>
-                <button
-                  type='button'
-                  onClick={this.handleOnClick}
-                  value={question}
-                  className='base--button_icon-hyperlink teal--link'
-                >
-                  { question }
-                </button>
-              </li>
-            );
-          })
+        { relatedQuestions.length > 0
+            ? <ul className='base--ul'>
+              {
+                relatedQuestions.map((question, index) => {
+                  return (
+                    <li key={index} className='base--li related_questions--li'>
+                      <button
+                        type='button'
+                        onClick={this.handleOnClick}
+                        value={question}
+                        className='base--button_icon-hyperlink teal--link'
+                      >
+                        { question }
+                      </button>
+                    </li>
+                  );
+                })
+              }
+              </ul>
+            : <div>No Related Questions</div>
         }
-        </ul>
       </div>
     );
   }
 }
 
 RelatedQuestions.PropTypes = {
-  enriched_results: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+  results: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
   onSearch: React.PropTypes.func.isRequired
 }
 

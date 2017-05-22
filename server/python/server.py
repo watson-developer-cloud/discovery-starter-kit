@@ -4,7 +4,8 @@ from get_discovery_collections import get_constants
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
-from watson_developer_cloud import DiscoveryV1
+import watson_developer_cloud.natural_language_understanding.features.v1 as features  # noqa
+from watson_developer_cloud import DiscoveryV1, NaturalLanguageUnderstandingV1
 
 try:
     load_dotenv(find_dotenv())
@@ -25,6 +26,14 @@ discovery = DiscoveryV1(
               password=os.getenv('DISCOVERY_PASSWORD'),
               version="2016-12-01"
             )
+
+# NLU
+nlu = NaturalLanguageUnderstandingV1(
+        url=os.getenv('NLU_URL'),
+        username=os.getenv('NLU_USERNAME'),
+        password=os.getenv('NLU_PASSWORD'),
+        version="2017-02-27"
+      )
 
 # retrieve the following:
 # {
@@ -94,17 +103,31 @@ def get_collection(environment_id, collection_id):
             )
 
 
+def get_enriched_query(question):
+    response = nlu.analyze(text=question, features=[features.Keywords()])
+    keywords = response.get('keywords', [])
+    query = ','.join(map(lambda keyword: keyword['text'], keywords))
+
+    if len(query) > 0:
+        return {'query': 'enriched_title.keywords.text:' + query}
+    else:
+        return {'query': question}
+
+
 @app.route('/api/query/<collection_type>', methods=['POST'])
 def query(collection_type):
     collection_id_key = 'collection_id_regular'
+    query_options = json.loads(request.data)
+
     if collection_type == 'enriched':
         collection_id_key = 'collection_id_enriched'
+        query_options = get_enriched_query(query_options['query'])
 
     return jsonify(
               discovery.query(
                 environment_id=constants['environment_id'],
                 collection_id=constants[collection_id_key],
-                query_options=json.loads(request.data)
+                query_options=query_options
               )
             )
 
