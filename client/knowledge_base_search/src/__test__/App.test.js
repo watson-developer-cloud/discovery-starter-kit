@@ -59,5 +59,9 @@ describe('<App />', () => {
       expect(query.default).toBeCalledWith('enriched', {'query': 'my query'});
       expect(query.default).toBeCalledWith('regular', {'query': 'my query'});
     });
+
+    it('sets the search_input state to the input value', () => {
+      expect(wrapper.instance().state.search_input).toEqual('my query');
+    });
   });
 });

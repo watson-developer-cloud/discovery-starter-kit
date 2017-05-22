@@ -13,12 +13,13 @@ class App extends Component {
       fetching: false,
       results_fetched: false,
       results: [],
-      enriched_results: []
+      enriched_results: [],
+      search_input: ''
     }
   }
 
   handleSearch = (input) => {
-    this.setState({fetching: true});
+    this.setState({fetching: true, search_input: input});
     Promise.all([
       query('regular', {query: input}),
       query('enriched', {query: input})
@@ -53,6 +54,7 @@ class App extends Component {
         <SearchContainer
           onSubmit={this.handleSearch}
           hasResults={this.state.results_fetched}
+          search_input={this.state.search_input}
         />
         {
           this.state.fetching
@@ -66,6 +68,7 @@ class App extends Component {
               ? (<ResultsContainer
                   results={this.state.results}
                   enriched_results={this.state.enriched_results}
+                  onSearch={this.handleSearch}
                   />)
               : null
         }

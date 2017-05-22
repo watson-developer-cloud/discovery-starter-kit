@@ -41,20 +41,20 @@ class AnswerColumn extends Component {
           </a>
         </div>
         <div className='answer_metadata--div'>
-          <ul>
-            <li>
+          <ul className='base--ul_no-bullets'>
+            <li className='base--li'>
               <span>Number of times this answer was viewed: </span>
               { views }
             </li>
-            <li>
+            <li className='base--li'>
               <span>Number of downvotes this answer received: </span>
               { downVotes }
             </li>
-            <li>
+            <li className='base--li'>
               <span>Number of upvotes this answer received: </span>
               { upVotes }
             </li>
-            <li>
+            <li className='base--li'>
               <span>Did the original poster accept this answer?: </span>
               { this.displayAccepted(accepted) }
             </li>

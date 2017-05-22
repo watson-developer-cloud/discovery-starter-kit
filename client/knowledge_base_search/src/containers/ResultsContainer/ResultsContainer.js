@@ -64,7 +64,10 @@ class ResultsContainer extends Component {
                         })
                       }
                     </div>
-                    <RelatedQuestions />
+                    <RelatedQuestions
+                      enriched_results={enriched_results.results}
+                      onSearch={this.props.onSearch}
+                    />
                   </div>
                 </div>
               )
@@ -79,7 +82,7 @@ class ResultsContainer extends Component {
             ? (
                 <div className='_container-center show_results--div'>
                   <button
-                    className='teal--button'
+                    className='base--button base--button_teal'
                     type='button'
                     onClick={this.handleMoreResults}
                   >
@@ -102,7 +105,8 @@ ResultsContainer.PropTypes = {
   enriched_results: React.PropTypes.shape({
     matching_results: React.PropTypes.number.isRequired,
     results: React.PropTypes.arrayOf(React.PropTypes.object)
-  }).isRequired
+  }).isRequired,
+  onSearch: React.PropTypes.func.isRequired
 }
 
 export default ResultsContainer;
