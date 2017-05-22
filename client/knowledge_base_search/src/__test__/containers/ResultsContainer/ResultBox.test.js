@@ -25,6 +25,46 @@ describe('<ResultBox />', () => {
     ReactDOM.render(<ResultBox {...props} />, div);
   });
 
+  describe('when there is no result', () => {
+    let wrapper;
+    const noResult = null;
+    const props_no_result = Object.assign({}, props, {
+      result: noResult
+    });
+
+    describe('and it is the first rank', () => {
+      const firstRank = 1;
+
+      beforeEach(() => {
+        const props_with_first_rank = Object.assign({}, props_no_result, {
+          result_rank: firstRank
+        });
+        wrapper = shallow(<ResultBox {...props_with_first_rank} />);
+      });
+
+      it('has "No Results" and title', () => {
+        const text = wrapper.text();
+        expect(text).toContain(result_type);
+        expect(text).toContain('No Results');
+      });
+    });
+
+    describe('and it is not the first rank', () => {
+      beforeEach(() => {
+        const props_with_not_first_rank = Object.assign({}, props_no_result, {
+          result_rank: 2
+        });
+        wrapper = shallow(<ResultBox {...props_with_not_first_rank} />);
+      });
+
+      it('does not have "No Results" or title', () => {
+        const text = wrapper.text();
+        expect(text).not.toContain(result_type);
+        expect(text).not.toContain('No Results');
+      });
+    });
+  });
+
   describe('when the result exceeds the max_length', () => {
     const long_result = Object.assign({}, result, {
       'answer': Array(ResultBox.defaultProps.max_length + 2).join('a')

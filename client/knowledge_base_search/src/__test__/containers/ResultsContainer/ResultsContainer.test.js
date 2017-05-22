@@ -41,6 +41,15 @@ describe('<ResultsContainer />', () => {
     expect(wrapper.find(RelatedQuestions)).toHaveLength(1);
   });
 
+  it('passes enriched_results to the RelatedQuestions', () => {
+    const wrapper = shallow(<ResultsContainer
+                              results={results}
+                              enriched_results={enriched_results}
+                            />);
+    expect(wrapper.find(RelatedQuestions).props().results)
+      .toEqual(enriched_results.results);
+  });
+
   describe('when both result sets have 0 results', () => {
     let wrapper;
 
@@ -59,6 +68,26 @@ describe('<ResultsContainer />', () => {
       expect(wrapper.find(ResultComparison)).toHaveLength(0);
       expect(wrapper.find(RelatedQuestions)).toHaveLength(0);
       expect(wrapper.text()).toEqual('No Results');
+    });
+  });
+
+  describe('when enriched_results is empty', () => {
+    let wrapper;
+
+    beforeEach(() => {
+      const no_results = {
+        'matching_results': 0,
+        'results': []
+      };
+      wrapper = shallow(<ResultsContainer
+                          results={results}
+                          enriched_results={no_results}
+                        />);
+    });
+
+    it('passes results to RelatedQuestions', () => {
+      expect(wrapper.find(RelatedQuestions).props().results)
+        .toEqual(results.results);
     });
   });
 

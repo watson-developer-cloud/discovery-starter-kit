@@ -35,34 +35,40 @@ class ResultBox extends Component {
     return (
       <div className='result_box--div'>
         { result_rank === 1 ? (<h4>{result_type}</h4>) : null }
-        <div className='result_text--div'>
-          <div className='result_answer_snippet--div'>
-            {this.trimAnswer(result.answer)}
-          </div>
-          <div className='result_full_answer--div'>
-            <button
-              type='button'
-              onClick={this.handleToggleFullAnswer}
-            >
-              {
-                is_full_result_shown
-                  ? (<span>Hide full answer</span>)
-                  : (<span>Show full answer</span>)
-              }
-            </button>
-          </div>
-          <hr className='base--hr' />
-          <div className='result_rank--div'>
-            <div className='result_rank_left--div'>
-              <span>Rank</span>
-              <span className='circle'>{result_rank}</span>
-            </div>
-            <div className='result_rank_right--div'>
-              <span>Relevance Score </span>
-              <span>{this.roundScore(result.score)}</span>
-            </div>
-          </div>
-        </div>
+        {
+          result
+            ? <div className='result_text--div'>
+                <div className='result_answer_snippet--div'>
+                  {this.trimAnswer(result.answer)}
+                </div>
+                <div className='result_full_answer--div'>
+                  <button
+                    type='button'
+                    onClick={this.handleToggleFullAnswer}
+                  >
+                    {
+                      is_full_result_shown
+                        ? (<span>Hide full answer</span>)
+                        : (<span>Show full answer</span>)
+                    }
+                  </button>
+                </div>
+                <hr className='base--hr' />
+                <div className='result_rank--div'>
+                  <div className='result_rank_left--div'>
+                    <span>Rank</span>
+                    <span className='circle'>{result_rank}</span>
+                  </div>
+                  <div className='result_rank_right--div'>
+                    <span>Relevance Score </span>
+                    <span>{this.roundScore(result.score)}</span>
+                  </div>
+                </div>
+              </div>
+            : result_rank === 1
+              ? <div className='result_text--div'>No Results</div>
+              : null
+        }
       </div>
     );
   }

@@ -34,6 +34,16 @@ class ResultsContainer extends Component {
     });
   }
 
+  getResultsForQuestions() {
+    const { results, enriched_results } = this.props;
+
+    if (enriched_results.results.length > 0) {
+      return enriched_results.results;
+    } else {
+      return results.results;
+    }
+  }
+
   render() {
     const { results, enriched_results } = this.props;
 
@@ -65,7 +75,7 @@ class ResultsContainer extends Component {
                       }
                     </div>
                     <RelatedQuestions
-                      enriched_results={enriched_results.results}
+                      results={this.getResultsForQuestions()}
                       onSearch={this.props.onSearch}
                     />
                   </div>

@@ -5,7 +5,7 @@ import { shallow } from 'enzyme';
 
 describe('<RelatedQuestions />', () => {
   const onSearchMock = jest.fn();
-  const enriched_results = [
+  const results = [
     {
       title: 'My title'
     }
@@ -15,9 +15,26 @@ describe('<RelatedQuestions />', () => {
     const div = document.createElement('div');
     ReactDOM.render(
       <RelatedQuestions
-        enriched_results={enriched_results}
+        results={results}
         onSearch={onSearchMock}
       />, div);
+  });
+
+  describe('when it has no results', () => {
+    let wrapper;
+    beforeEach(() => {
+      const noResults = [];
+      wrapper = shallow(
+                  <RelatedQuestions
+                    results={noResults}
+                    onSearch={onSearchMock}
+                  />
+                );
+    });
+
+    it('has "No Related Questions"', () => {
+      expect(wrapper.text()).toContain('No Related Questions');
+    });
   });
 
   describe('when duplicate titles exist', () => {
@@ -32,7 +49,7 @@ describe('<RelatedQuestions />', () => {
       ];
       wrapper = shallow(
                   <RelatedQuestions
-                    enriched_results={duplicates}
+                    results={duplicates}
                     onSearch={onSearchMock}
                   />
                 );
@@ -76,7 +93,7 @@ describe('<RelatedQuestions />', () => {
       ];
       wrapper = shallow(
                   <RelatedQuestions
-                    enriched_results={results}
+                    results={results}
                     onSearch={onSearchMock}
                   />
                 );
