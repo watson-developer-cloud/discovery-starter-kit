@@ -80,6 +80,18 @@ a:visited {
   margin-top: 1rem;
 }
 
+.license--section {
+  text-align: center;
+  padding: 1rem 0 0 0;
+  background-color: #323232;
+  color: #aeaeae;
+}
+
+.license--section a {
+  font-weight: 300;
+  border-bottom-width: 0.0625rem;
+}
+
 .base--h2,
 .description,
 .jumbotron--nav-link,
