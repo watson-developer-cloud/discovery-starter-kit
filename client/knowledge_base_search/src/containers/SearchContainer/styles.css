@@ -3,8 +3,9 @@
   text-align: center;
 }
 
-.teal {
+.search_container--section {
   background-color: #00b39f;
+  padding-top: 0;
 }
 
 .text-input--input[type="text"] {

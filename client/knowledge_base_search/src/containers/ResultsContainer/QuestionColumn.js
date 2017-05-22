@@ -23,7 +23,7 @@ class QuestionColumn extends Component {
         <a
           href={this.generateAuthorLink(userId)}
           target='_blank'
-          className='teal--a'
+          className='base--a'
         >
           {userName}
         </a>

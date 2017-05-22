@@ -8,6 +8,12 @@ class SearchContainer extends Component {
   componentWillMount() {
     this.state = {
       search_input: ''
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.search_input !== this.state.search_input) {
+      this.setState({search_input: nextProps.search_input});
     }
   }
 
@@ -16,7 +22,7 @@ class SearchContainer extends Component {
     const randomInt = Math.floor(Math.random() * totalQueries);
 
     this.handleOnInput({'target': { 'value': randomQueries[randomInt]}});
-    this.props.onSubmit(this.state.search_input);
+    this.props.onSubmit(randomQueries[randomInt]);
   }
 
   handleOnInput = (e) => {
@@ -34,7 +40,7 @@ class SearchContainer extends Component {
 
   render() {
     return (
-      <section className="_full-width-row teal">
+      <section className="_full-width-row search_container--section">
         <div className="_container">
           {!this.props.hasResults
             ? (
@@ -83,7 +89,8 @@ class SearchContainer extends Component {
 
 SearchContainer.PropTypes = {
   onSubmit: React.PropTypes.func.isRequired,
-  hasResults: React.PropTypes.bool.isRequired
+  hasResults: React.PropTypes.bool.isRequired,
+  search_input: React.PropTypes.string.isRequired
 }
 
 export default SearchContainer;
