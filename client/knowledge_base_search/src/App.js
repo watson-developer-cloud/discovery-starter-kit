@@ -72,6 +72,21 @@ class App extends Component {
                   />)
               : null
         }
+        <section className='_full-width-row license--section'>
+          <a
+            href={links.stack_exhange}
+            className={'base--a'}
+          >
+            Stack Exchange
+          </a>
+          <span> user contributions are licensed under </span>
+          <a
+            href={links.cc_license}
+            className={'base--a'}
+          >
+            cc by-sa 3.0 with attribution required
+          </a>
+        </section>
         <Footer />
       </div>
     );
