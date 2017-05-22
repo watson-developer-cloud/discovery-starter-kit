@@ -3,6 +3,7 @@ import json
 from get_discovery_collections import get_constants
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
+from requests.exceptions import HTTPError
 from dotenv import load_dotenv, find_dotenv
 import watson_developer_cloud.natural_language_understanding.features.v1 as features  # noqa
 from watson_developer_cloud import DiscoveryV1, NaturalLanguageUnderstandingV1
@@ -130,6 +131,17 @@ def query(collection_type):
                 query_options=query_options
               )
             )
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    error = 'Error processing the request'
+    if isinstance(e, HTTPError):
+        code = e.code
+        error = str(e.message)
+
+    return jsonify(error=error, code=code), code
 
 
 if __name__ == '__main__':
