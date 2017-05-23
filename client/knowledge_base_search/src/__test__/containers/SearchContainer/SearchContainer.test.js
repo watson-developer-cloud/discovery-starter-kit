@@ -13,6 +13,7 @@ describe('<SearchContainer />', () => {
       <SearchContainer
         onSubmit={onSubmitMock}
         hasResults={false}
+        isFetching={false}
       />, div);
   });
 
@@ -20,7 +21,8 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        hasResults={false}  />
+                        hasResults={false}
+                        isFetching={false}  />
                     );
     expect(wrapper.find('.header--input')).toHaveLength(1);
     expect(wrapper.find(TextInput)).toHaveLength(1);
@@ -31,7 +33,8 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        hasResults={true}  />
+                        hasResults={true}
+                        isFetching={false}  />
                     );
     expect(wrapper.find('.header--input')).toHaveLength(0);
     expect(wrapper.find(TextInput)).toHaveLength(1);
@@ -42,7 +45,8 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        hasResults={false}  />
+                        hasResults={false}
+                        isFetching={false}  />
                     );
     const text = 'my question';
 
@@ -65,7 +69,8 @@ describe('<SearchContainer />', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
-                        hasResults={false}  />
+                        hasResults={false}
+                        isFetching={false}  />
                     );
 
     beforeEach(() => {
@@ -80,6 +85,25 @@ describe('<SearchContainer />', () => {
       it('calls onSubmit with one of the random queries', () => {
         expect(onSubmitMock).toBeCalledWith(expect.any(String));
       });
+    });
+  });
+
+  describe('when isFetching is true', () => {
+    let wrapper;
+
+    beforeEach(() => {
+      wrapper = shallow(
+                  <SearchContainer
+                    onSubmit={onSubmitMock}
+                    hasResults={false}
+                    isFetching={true}  />
+                );
+    });
+
+    it('disables all the inputs', () => {
+      expect(wrapper.find(TextInput).props().disabled).toBe(true);
+      expect(wrapper.find('.white--button').props().disabled).toBe(true);
+      expect(wrapper.find('.random-query--button').props().disabled).toBe(true);
     });
   });
 });

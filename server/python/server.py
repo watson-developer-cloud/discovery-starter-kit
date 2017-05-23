@@ -3,6 +3,8 @@ import json
 from get_discovery_collections import get_constants
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from requests.exceptions import HTTPError
 from dotenv import load_dotenv, find_dotenv
 import watson_developer_cloud.natural_language_understanding.features.v1 as features  # noqa
@@ -22,6 +24,15 @@ app = Flask(
         static_folder="../../client/knowledge_base_search/build/static",
         template_folder="../../client/knowledge_base_search/build"
       )
+
+# Limit requests
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=['240 per minute', '4 per second'],
+    headers_enabled=True
+)
+
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Discovery
@@ -60,52 +71,9 @@ constants = get_constants(
 
 
 @app.route('/')
+@limiter.exempt
 def index():
     return render_template('index.html')
-
-
-@app.route('/api/environments')
-def get_environments():
-    return jsonify(discovery.get_environments())
-
-
-@app.route('/api/environments/<environment_id>')
-def get_environment(environment_id):
-    return jsonify(discovery.get_environment(environment_id=environment_id))
-
-
-@app.route('/api/environments/<environment_id>/configurations')
-def list_configurations(environment_id):
-    return jsonify(
-              discovery.list_configurations(
-                environment_id=environment_id
-              )
-            )
-
-
-@app.route('/api/environments/<environment_id>/configurations/<configuration_id>') # noqa
-def get_configuration(environment_id, configuration_id):
-    return jsonify(
-              discovery.get_configuration(
-                environment_id=environment_id,
-                configuration_id=configuration_id
-              )
-            )
-
-
-@app.route('/api/environments/<environment_id>/collections')
-def list_collections(environment_id):
-    return jsonify(discovery.list_collections(environment_id=environment_id))
-
-
-@app.route('/api/environments/<environment_id>/collections/<collection_id>')
-def get_collection(environment_id, collection_id):
-    return jsonify(
-              discovery.get_collection(
-                environment_id=environment_id,
-                collection_id=collection_id
-              )
-            )
 
 
 def get_enriched_query(question):
@@ -135,6 +103,13 @@ def query(collection_type):
                 query_options=query_options
               )
             )
+
+
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    return jsonify(
+            error="API Rate Limit exceeded: %s" % e.description,
+            code=429), 429
 
 
 @app.errorhandler(Exception)

@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App';
 import ResultsContainer from '../containers/ResultsContainer/ResultsContainer';
+import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import { Icon } from 'watson-react-components';
 import * as query from '../actions/query';
 import { shallow } from 'enzyme';
@@ -16,6 +17,7 @@ describe('<App />', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(Icon)).toHaveLength(0);
     expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+    expect(wrapper.find(ErrorContainer)).toHaveLength(0);
   });
 
   describe('when the query is loading', () => {
@@ -29,6 +31,7 @@ describe('<App />', () => {
     it('shows a loading spinner', () => {
       expect(wrapper.find(Icon)).toHaveLength(1);
       expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+      expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     });
   });
 
@@ -40,9 +43,28 @@ describe('<App />', () => {
       wrapper.setState({results_fetched: true});
     });
 
-    it('shows the results container', () => {
-      expect(wrapper.find(Icon)).toHaveLength(0);
-      expect(wrapper.find(ResultsContainer)).toHaveLength(1);
+    describe('and results are returned', () => {
+      beforeEach(() => {
+        wrapper.setState({results: [{'key': 'value'}]});
+      });
+
+      it('shows the results container', () => {
+        expect(wrapper.find(Icon)).toHaveLength(0);
+        expect(wrapper.find(ResultsContainer)).toHaveLength(1);
+        expect(wrapper.find(ErrorContainer)).toHaveLength(0);
+      });
+    });
+
+    describe('and there is an error', () => {
+      beforeEach(() => {
+        wrapper.setState({results_error: 'error'});
+      });
+
+      it('shows the error container', () => {
+        expect(wrapper.find(Icon)).toHaveLength(0);
+        expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+        expect(wrapper.find(ErrorContainer)).toHaveLength(1);
+      });
     });
   });
 

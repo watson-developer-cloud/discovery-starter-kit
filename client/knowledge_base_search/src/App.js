@@ -3,6 +3,7 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
+import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
 import links from './utils/links';
 import query from './actions/query';
 import 'watson-react-components/dist/css/watson-react-components.css';
@@ -15,21 +16,47 @@ class App extends Component {
       results_fetched: false,
       results: [],
       enriched_results: [],
-      search_input: ''
+      search_input: '',
+      results_error: null,
+      enriched_results_error: null
     }
   }
 
   handleSearch = (input) => {
-    this.setState({fetching: true, search_input: input});
+    this.setState({
+      fetching: true,
+      search_input: input,
+      results_error: null,
+      enriched_results_error: null
+    });
+
     Promise.all([
       query('regular', {query: input}),
       query('enriched', {query: input})
     ]).then((results_array) => {
+      const results_response = results_array[0];
+      const enriched_results_response = results_array[1];
+
+      if (results_response.error || enriched_results_response.error) {
+        this.setState({
+          fetching: false,
+          results_fetched: true,
+          results_error: results_response.error,
+          enriched_results_error:  enriched_results_response.error
+        });
+      } else {
+        this.setState({
+          fetching: false,
+          results_fetched: true,
+          results: results_array[0],
+          enriched_results: results_array[1]
+        });
+      }
+    }).catch((error) => {
       this.setState({
         fetching: false,
         results_fetched: true,
-        results: results_array[0],
-        enriched_results: results_array[1]
+        results_error: error
       });
     });
   }
@@ -56,6 +83,7 @@ class App extends Component {
           onSubmit={this.handleSearch}
           hasResults={this.state.results_fetched}
           search_input={this.state.search_input}
+          isFetching={this.state.fetching}
         />
         <CSSTransitionGroup
           transitionName='results'
@@ -71,12 +99,19 @@ class App extends Component {
                  </section>
                 )
               : this.state.results_fetched
-                ? (<ResultsContainer
-                    key={'results_container'}
-                    results={this.state.results}
-                    enriched_results={this.state.enriched_results}
-                    onSearch={this.handleSearch}
-                    />)
+                ? this.state.results_error || this.state.enriched_results_error
+                  ? (<ErrorContainer
+                      key={'error_container'}
+                      results_error={this.state.results_error}
+                      enriched_results_error={this.state.enriched_results_error}
+                      />
+                    )
+                  : (<ResultsContainer
+                      key={'results_container'}
+                      results={this.state.results}
+                      enriched_results={this.state.enriched_results}
+                      onSearch={this.handleSearch}
+                      />)
                 : null
           }
         </CSSTransitionGroup>

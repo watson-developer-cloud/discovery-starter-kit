@@ -68,12 +68,14 @@ class SearchContainer extends Component {
               value={this.state.search_input}
               onInput={this.handleOnInput}
               style={{width: '100%'}}
+              disabled={this.props.isFetching}
             />
             <div className="_container-right">
               <button
                 type="button"
                 className="random-query--button"
                 onClick={this.handleOnClick}
+                disabled={this.props.isFetching}
               >
                 Random Query
               </button>
@@ -86,7 +88,10 @@ class SearchContainer extends Component {
               {!this.props.hasResults
                 ? (
                   <div className="_container-center">
-                    <button className="white--button">
+                    <button
+                      className="white--button"
+                      disabled={this.props.isFetching}
+                    >
                       Retrieve Answers
                     </button>
                   </div>
@@ -104,7 +109,8 @@ class SearchContainer extends Component {
 SearchContainer.PropTypes = {
   onSubmit: PropTypes.func.isRequired,
   hasResults: PropTypes.bool.isRequired,
-  search_input: PropTypes.string.isRequired
+  search_input: PropTypes.string.isRequired,
+  isFetching: PropTypes.bool.isRequired
 }
 
 export default SearchContainer;
