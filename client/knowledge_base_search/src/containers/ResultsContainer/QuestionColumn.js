@@ -4,7 +4,7 @@ import links from '../../utils/links';
 
 class QuestionColumn extends Component {
   generateAuthorLink(userId) {
-    return links.stack_exhange_users + userId;
+    return links.stack_exchange_users + userId;
   }
 
   render() {

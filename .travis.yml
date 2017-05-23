@@ -13,7 +13,7 @@ script:
 - flake8
 - npm --prefix client/knowledge_base_search test
 - npm --prefix client/knowledge_base_search run build
-- pytest
+- python -m pytest
 before_install:
 - openssl aes-256-cbc -K $encrypted_22e51202b5e7_key -iv $encrypted_22e51202b5e7_iv
   -in .env.staging.enc -out .env.staging -d
