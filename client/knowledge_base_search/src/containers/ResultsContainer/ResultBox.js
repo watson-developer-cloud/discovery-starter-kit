@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
@@ -75,13 +76,13 @@ class ResultBox extends Component {
 }
 
 ResultBox.PropTypes = {
-  result: React.PropTypes.object.isRequired,
-  result_type: React.PropTypes.string.isRequired,
-  result_rank: React.PropTypes.number.isRequired,
-  is_full_result_shown: React.PropTypes.bool.isRequired,
-  max_length: React.PropTypes.number.isRequired,
-  decimal_places: React.PropTypes.number.isRequired,
-  onToggleFullResult: React.PropTypes.func.isRequired
+  result: PropTypes.object.isRequired,
+  result_type: PropTypes.string.isRequired,
+  result_rank: PropTypes.number.isRequired,
+  is_full_result_shown: PropTypes.bool.isRequired,
+  max_length: PropTypes.number.isRequired,
+  decimal_places: PropTypes.number.isRequired,
+  onToggleFullResult: PropTypes.func.isRequired
 }
 
 ResultBox.defaultProps = {

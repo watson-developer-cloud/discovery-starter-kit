@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { scroller, Element } from 'react-scroll';
 import { Icon } from 'watson-react-components';
 import QuestionColumn from './QuestionColumn';
@@ -85,23 +86,23 @@ class FullResult extends Component {
 }
 
 FullResult.PropTypes = {
-  transitionTimeout: React.PropTypes.number.isRequired,
-  accepted: React.PropTypes.number.isRequired,
-  answer: React.PropTypes.string.isRequired,
-  answerScore: React.PropTypes.string.isRequired,
-  authorUserId: React.PropTypes.string.isRequired,
-  authorUsername: React.PropTypes.string.isRequired,
-  downModVotes: React.PropTypes.number.isRequired,
-  id: React.PropTypes.number.isRequired,
-  score: React.PropTypes.number.isRequired,
-  subtitle: React.PropTypes.string.isRequired,
-  tags: React.PropTypes.string.isRequired,
-  title: React.PropTypes.string.isRequired,
-  upModVotes: React.PropTypes.number.isRequired,
-  userId: React.PropTypes.string.isRequired,
-  userReputation: React.PropTypes.number.isRequired,
-  username: React.PropTypes.string.isRequired,
-  views: React.PropTypes.number.isRequired
+  transitionTimeout: PropTypes.number.isRequired,
+  accepted: PropTypes.number.isRequired,
+  answer: PropTypes.string.isRequired,
+  answerScore: PropTypes.string.isRequired,
+  authorUserId: PropTypes.string.isRequired,
+  authorUsername: PropTypes.string.isRequired,
+  downModVotes: PropTypes.number.isRequired,
+  id: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+  subtitle: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  upModVotes: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
+  userReputation: PropTypes.number.isRequired,
+  username: PropTypes.string.isRequired,
+  views: PropTypes.number.isRequired
 }
 
 export default FullResult;

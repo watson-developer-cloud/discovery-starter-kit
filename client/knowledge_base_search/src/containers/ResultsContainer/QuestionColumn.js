@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import links from '../../utils/links';
 
 class QuestionColumn extends Component {
@@ -33,9 +34,9 @@ class QuestionColumn extends Component {
 }
 
 QuestionColumn.PropTypes = {
-  subtitle: React.PropTypes.string.isRequired,
-  userId: React.PropTypes.string.isRequired,
-  userName: React.PropTypes.string.isRequired
+  subtitle: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired
 }
 
 export default QuestionColumn;
