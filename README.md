@@ -1,4 +1,4 @@
-### Discovery Starter Kit [![Build Status](https://travis-ci.org/watson-developer-cloud/discovery-starter-kit.svg?branch=master)](https://travis-ci.org/watson-developer-cloud/discovery-starter-kit)
+### Discovery Starter Kit [![Build Status](https://api.travis-ci.org/watson-developer-cloud/discovery-starter-kit.svg)](https://travis-ci.org/watson-developer-cloud/discovery-starter-kit)
 
 A repo containing the basics for setting up one of the watson developer cloud SDKs with a use case
 
