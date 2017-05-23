@@ -2,6 +2,7 @@ import os
 import json
 from get_discovery_collections import get_constants
 from flask import Flask, jsonify, render_template, request
+from flask_sslify import SSLify
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -24,6 +25,9 @@ app = Flask(
         static_folder="../../client/knowledge_base_search/build/static",
         template_folder="../../client/knowledge_base_search/build"
       )
+
+# force SSL
+sslify = SSLify(app)
 
 # Limit requests
 limiter = Limiter(
@@ -124,10 +128,11 @@ def handle_error(e):
 
 
 if __name__ == '__main__':
-    # If we are in the Bluemix environment, set port to 0.0.0.0
-    # otherwise set it to localhost (127.0.0.1)
-    HOST = '0.0.0.0' if os.getenv('VCAP_APPLICATION') else '127.0.0.1'
+    # If we are in the Bluemix environment
+    PRODUCTION = True if os.getenv('VCAP_APPLICATION') else False
+    # set port to 0.0.0.0, otherwise set it to localhost (127.0.0.1)
+    HOST = '0.0.0.0' if PRODUCTION else '127.0.0.1'
     # Get port from the Bluemix environment, or default to 5000
     PORT_NUMBER = int(os.getenv('PORT', '5000'))
 
-    app.run(host=HOST, port=PORT_NUMBER, debug=False)
+    app.run(host=HOST, port=PORT_NUMBER, debug=not(PRODUCTION))
