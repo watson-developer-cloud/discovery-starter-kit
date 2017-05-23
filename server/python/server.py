@@ -7,11 +7,15 @@ from requests.exceptions import HTTPError
 from dotenv import load_dotenv, find_dotenv
 import watson_developer_cloud.natural_language_understanding.features.v1 as features  # noqa
 from watson_developer_cloud import DiscoveryV1, NaturalLanguageUnderstandingV1
+import cf_deployment_tracker
 
 try:
     load_dotenv(find_dotenv())
 except IOError:
     print('warning: no .env file loaded')
+
+# Emit Bluemix deployment event
+cf_deployment_tracker.track()
 
 app = Flask(
         __name__,
@@ -110,7 +114,7 @@ def get_enriched_query(question):
     query = ','.join(map(lambda keyword: keyword['text'], keywords))
 
     if len(query) > 0:
-        return {'query': 'enriched_title.keywords.text:' + query}
+        return {'query': 'enriched_text.keywords.text:' + query}
     else:
         return {'query': question}
 

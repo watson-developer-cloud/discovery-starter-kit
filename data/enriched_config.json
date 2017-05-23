@@ -1,0 +1,46 @@
+{
+  "name": "knowledge_base_enriched_config",
+  "enrichments": [
+    {
+      "enrichment": "alchemy_language",
+      "source_field": "subtitle",
+      "options": {
+        "extract": "keyword"
+      },
+      "destination_field": "enriched_subtitle"
+    },
+    {
+      "enrichment": "alchemy_language",
+      "source_field": "answer",
+      "options": {
+        "extract": "keyword"
+      },
+      "destination_field": "enriched_answer"
+    },
+    {
+      "enrichment": "alchemy_language",
+      "source_field": "title",
+      "options": {
+        "extract": "keyword"
+      },
+      "destination_field": "enriched_title"
+    }
+  ],
+  "normalizations": [
+    {
+      "operation": "copy",
+      "source_field": "enriched_title.keywords.text",
+      "destination_field": "enriched_text.keywords.text"
+    },
+    {
+      "operation": "copy",
+      "source_field": "enriched_subtitle.keywords.text",
+      "destination_field": "enriched_text.keywords.text"
+    },
+    {
+      "operation": "copy",
+      "source_field": "enriched_answer.keywords.text",
+      "destination_field": "enriched_text.keywords.text"
+    }
+  ]
+}

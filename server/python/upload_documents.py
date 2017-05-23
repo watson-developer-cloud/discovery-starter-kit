@@ -5,6 +5,7 @@ import glob
 from dotenv import load_dotenv, find_dotenv
 from get_discovery_collections import get_constants
 from watson_developer_cloud import DiscoveryV1
+import time
 
 try:
     load_dotenv(find_dotenv())
@@ -43,9 +44,10 @@ collections_url = os.getenv('DISCOVERY_URL')
 collections_url += '/v1/environments/'
 collections_url += discovery_constants['environment_id']
 collections_url += '/collections/'
+seconds_to_sleep = 5
 
 
-def upload_document(file_object, collection_id):
+def upload_document(file_object, collection_id, current_iteration):
     # normally we would just use discovery
     # but the update document method isn't implemented
     document_json = json.loads(file_object.read())
@@ -65,9 +67,18 @@ def upload_document(file_object, collection_id):
           auth=auth,
           params=querystring
         )
-    print(r.json())
     # reset the file cursor to the beginning
     file_object.seek(0)
+    response_json = r.json()
+    if r.status_code != 202:
+        # sleep and retry
+        print('Retrying document: ' + file_object.name)
+        print(response_json)
+        next_iteration = current_iteration + 1
+        time.sleep(seconds_to_sleep * next_iteration)
+        upload_document(file_object, collection_id, next_iteration)
+    else:
+        print(response_json)
 
 
 def upload_documents():
@@ -82,18 +93,20 @@ def upload_documents():
       )
     )
     print('Sample Docs Directory: ' + sample_docs_dir)
-    print('Number of files to process:' + len(glob.glob(sample_docs_dir)))
+    print('Number of files to process:' + str(len(glob.glob(sample_docs_dir))))
     for file in glob.glob(sample_docs_dir):
         file_object = open(file, 'rb')
         print('Processing file: ' + file_object.name + ' for "regular"')
         upload_document(
           file_object,
-          discovery_constants['collection_id_regular']
+          discovery_constants['collection_id_regular'],
+          0
         )
         print('Processing file: ' + file_object.name + ' for "enriched"')
         upload_document(
           file_object,
-          discovery_constants['collection_id_enriched']
+          discovery_constants['collection_id_enriched'],
+          0
         )
         file_object.close()
 

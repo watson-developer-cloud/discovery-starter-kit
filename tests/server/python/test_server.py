@@ -201,7 +201,7 @@ class TestServer(unittest.TestCase):
     def test_enriched_query_with_2_keywords(self, discovery, nlu):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
-          'query': 'enriched_title.keywords.text:keyword_1,keyword_2'
+          'query': 'enriched_text.keywords.text:keyword_1,keyword_2'
         }
         mock_response = json.loads(
           """
@@ -270,7 +270,7 @@ class TestServer(unittest.TestCase):
     def test_enriched_query_with_1_keyword(self, discovery, nlu):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
-          'query': 'enriched_title.keywords.text:keyword_1'
+          'query': 'enriched_text.keywords.text:keyword_1'
         }
         mock_response = json.loads(
           """
