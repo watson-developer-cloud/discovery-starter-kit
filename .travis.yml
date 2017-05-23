@@ -18,3 +18,5 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_22e51202b5e7_key -iv $encrypted_22e51202b5e7_iv
   -in .env.staging.enc -out .env.staging -d
 - cp .env.staging .env
+matrix:
+  fast_finish: true
