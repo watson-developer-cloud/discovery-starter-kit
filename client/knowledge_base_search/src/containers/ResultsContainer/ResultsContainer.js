@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import RelatedQuestions from './RelatedQuestions';
 import ResultComparison from './ResultComparison';
 import 'watson-react-components/dist/css/watson-react-components.css';
@@ -58,21 +59,27 @@ class ResultsContainer extends Component {
                   </h4>
                   <div className='results_container--div'>
                     <div className='results_left--div'>
-                      {
-                        [...Array(this.state.total_results_shown).keys()].map((i) => {
-                          return(
-                            <ResultComparison
-                              key={i}
-                              index={i}
-                              enriched_result={enriched_results.results[i]}
-                              result={results.results[i]}
-                              full_result_index={this.state.full_result_index}
-                              full_result_type={this.state.full_result_type}
-                              onSetFullResult={this.setFullResult}
-                            />
-                          );
-                        })
-                      }
+                      <CSSTransitionGroup
+                        transitionName='results_comparison'
+                        transitionEnterTimeout={500}
+                        transitionLeave={false}
+                      >
+                        {
+                          [...Array(this.state.total_results_shown).keys()].map((i) => {
+                            return(
+                              <ResultComparison
+                                key={i}
+                                index={i}
+                                enriched_result={enriched_results.results[i]}
+                                result={results.results[i]}
+                                full_result_index={this.state.full_result_index}
+                                full_result_type={this.state.full_result_type}
+                                onSetFullResult={this.setFullResult}
+                              />
+                            );
+                          })
+                        }
+                      </CSSTransitionGroup>
                     </div>
                     <RelatedQuestions
                       results={this.getResultsForQuestions()}

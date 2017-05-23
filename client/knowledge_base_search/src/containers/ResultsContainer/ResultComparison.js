@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import ResultBox from './ResultBox';
 import FullResult from './FullResult';
 import './styles.css';
@@ -33,7 +34,8 @@ class ResultComparison extends Component {
       result,
       enriched_result,
       index,
-      full_result_index
+      full_result_index,
+      full_result_type
     } = this.props;
 
     return (
@@ -62,11 +64,22 @@ class ResultComparison extends Component {
             }
           />
         </div>
-        {
-          full_result_index === index
-            ? (<FullResult {...this.getFullAnswer()} />)
-            : null
-        }
+        <CSSTransitionGroup
+          transitionName='full_result'
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={300}
+        >
+          {
+            full_result_index === index
+              ? (
+                  <FullResult
+                    key={full_result_index + '_' + full_result_type}
+                    {...this.getFullAnswer()}
+                  />
+                )
+              : null
+          }
+        </CSSTransitionGroup>
       </div>
     );
   }

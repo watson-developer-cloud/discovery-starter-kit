@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
@@ -56,22 +57,29 @@ class App extends Component {
           hasResults={this.state.results_fetched}
           search_input={this.state.search_input}
         />
-        {
-          this.state.fetching
-            ? (<section className='_full-width-row'>
-                <div className='_container _container_large _container-center'>
-                  <Icon type='loader' size='large' />
-                </div>
-               </section>
-              )
-            : this.state.results_fetched
-              ? (<ResultsContainer
-                  results={this.state.results}
-                  enriched_results={this.state.enriched_results}
-                  onSearch={this.handleSearch}
-                  />)
-              : null
-        }
+        <CSSTransitionGroup
+          transitionName='results'
+          transitionEnterTimeout={500}
+          transitionLeave={false}
+        >
+          {
+            this.state.fetching
+              ? (<section key={'loader'} className='_full-width-row'>
+                  <div className='_container _container_large _container-center'>
+                    <Icon type='loader' size='large' />
+                  </div>
+                 </section>
+                )
+              : this.state.results_fetched
+                ? (<ResultsContainer
+                    key={'results_container'}
+                    results={this.state.results}
+                    enriched_results={this.state.enriched_results}
+                    onSearch={this.handleSearch}
+                    />)
+                : null
+          }
+        </CSSTransitionGroup>
         <section className='_full-width-row license--section'>
           <a
             href={links.stack_exhange}
