@@ -30,12 +30,13 @@ from server import app # noqa
 class TestServer(unittest.TestCase):
 
     def setUp(self):
+        app.debug = True
         self.app = app.test_client()
 
     def test_index(self):
         rv = self.app.get('/')
         response_text = rv.data.decode('UTF-8')
-        self.assertIn('Watson Discovery Service Starter Kit', response_text)
+        self.assertIn('Knowledge Base Search', response_text)
 
     @patch('watson_developer_cloud.DiscoveryV1.query')
     def test_regular_query(self, discovery):
