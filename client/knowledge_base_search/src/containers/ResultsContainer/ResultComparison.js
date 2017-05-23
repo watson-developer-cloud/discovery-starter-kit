@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
 import ResultBox from './ResultBox';
@@ -95,13 +96,13 @@ class ResultComparison extends Component {
 }
 
 ResultComparison.PropTypes = {
-  result: React.PropTypes.object.isRequired,
-  enriched_result: React.PropTypes.object.isRequired,
-  index: React.PropTypes.number.isRequired,
-  onSetFullResult: React.PropTypes.func.isRequired,
-  full_result_index: React.PropTypes.number.isRequired,
-  full_result_type: React.PropTypes.string.isRequired,
-  fullResultTransitionTimeout: React.PropTypes.number.isRequired
+  result: PropTypes.object.isRequired,
+  enriched_result: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  onSetFullResult: PropTypes.func.isRequired,
+  full_result_index: PropTypes.number.isRequired,
+  full_result_type: PropTypes.string.isRequired,
+  fullResultTransitionTimeout: PropTypes.number.isRequired
 }
 
 ResultComparison.defaultProps = {

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { Icon, TextInput } from 'watson-react-components';
 import randomQueries from '../../utils/randomQueries';
@@ -101,9 +102,9 @@ class SearchContainer extends Component {
 }
 
 SearchContainer.PropTypes = {
-  onSubmit: React.PropTypes.func.isRequired,
-  hasResults: React.PropTypes.bool.isRequired,
-  search_input: React.PropTypes.string.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  hasResults: PropTypes.bool.isRequired,
+  search_input: PropTypes.string.isRequired
 }
 
 export default SearchContainer;

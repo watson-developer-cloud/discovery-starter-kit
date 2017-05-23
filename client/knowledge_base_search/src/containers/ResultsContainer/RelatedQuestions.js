@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './styles.css';
 
 class RelatedQuestions extends Component {
@@ -51,8 +52,8 @@ class RelatedQuestions extends Component {
 }
 
 RelatedQuestions.PropTypes = {
-  results: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
-  onSearch: React.PropTypes.func.isRequired
+  results: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onSearch: PropTypes.func.isRequired
 }
 
 RelatedQuestions.defaultProps = {

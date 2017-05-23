@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import links from '../../utils/links';
 
 class AnswerColumn extends Component {
@@ -66,13 +67,13 @@ class AnswerColumn extends Component {
 }
 
 AnswerColumn.PropTypes = {
-  answer: React.PropTypes.string.isRequired,
-  userId: React.PropTypes.number.isRequired,
-  userName: React.PropTypes.string.isRequired,
-  views: React.PropTypes.number.isRequired,
-  downVotes: React.PropTypes.number.isRequired,
-  upVotes: React.PropTypes.number.isRequired,
-  accepted: React.PropTypes.bool.isRequired
+  answer: PropTypes.string.isRequired,
+  userId: PropTypes.number.isRequired,
+  userName: PropTypes.string.isRequired,
+  views: PropTypes.number.isRequired,
+  downVotes: PropTypes.number.isRequired,
+  upVotes: PropTypes.number.isRequired,
+  accepted: PropTypes.bool.isRequired
 }
 
 export default AnswerColumn;

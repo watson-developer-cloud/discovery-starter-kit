@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
 import RelatedQuestions from './RelatedQuestions';
@@ -124,15 +125,15 @@ class ResultsContainer extends Component {
 }
 
 ResultsContainer.PropTypes = {
-  results: React.PropTypes.shape({
-    matching_results: React.PropTypes.number.isRequired,
-    results: React.PropTypes.arrayOf(React.PropTypes.object)
+  results: PropTypes.shape({
+    matching_results: PropTypes.number.isRequired,
+    results: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
-  enriched_results: React.PropTypes.shape({
-    matching_results: React.PropTypes.number.isRequired,
-    results: React.PropTypes.arrayOf(React.PropTypes.object)
+  enriched_results: PropTypes.shape({
+    matching_results: PropTypes.number.isRequired,
+    results: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
-  onSearch: React.PropTypes.func.isRequired
+  onSearch: PropTypes.func.isRequired
 }
 
 export default ResultsContainer;
