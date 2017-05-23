@@ -116,3 +116,12 @@ a:visited {
   color: #00a894;
   border-color: #00a894;
 }
+
+.results-enter {
+  opacity: 0.01;
+}
+
+.results-enter.results-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}

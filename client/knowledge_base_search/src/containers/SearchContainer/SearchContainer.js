@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import { Icon, TextInput } from 'watson-react-components';
 import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';
@@ -42,14 +43,20 @@ class SearchContainer extends Component {
     return (
       <section className="_full-width-row search_container--section">
         <div className="_container">
-          {!this.props.hasResults
-            ? (
-              <h2 className="header--input">
-                Use a community's expertise to amplify the way you find information.
-              </h2>
-              )
-            : null
-          }
+          <CSSTransitionGroup
+            transitionName='search_header'
+            transitionEnterTimeout={500}
+            transitionLeaveTimeout={300}
+          >
+            {!this.props.hasResults
+              ? (
+                <h2 className="header--input" key='header_input'>
+                  Use a community's expertise to amplify the way you find information.
+                </h2>
+                )
+              : null
+            }
+          </CSSTransitionGroup>
           <form onSubmit={this.handleOnSubmit}>
             <div className="positioned--icon">
               <Icon type="search" />
@@ -70,16 +77,22 @@ class SearchContainer extends Component {
                 Random Query
               </button>
             </div>
-            {!this.props.hasResults
-              ? (
-                <div className="_container-center">
-                  <button className="white--button">
-                    Retrieve Answers
-                  </button>
-                </div>
-                )
-              : null
-            }
+            <CSSTransitionGroup
+              transitionName='search_button'
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={300}
+            >
+              {!this.props.hasResults
+                ? (
+                  <div className="_container-center">
+                    <button className="white--button">
+                      Retrieve Answers
+                    </button>
+                  </div>
+                  )
+                : null
+              }
+            </CSSTransitionGroup>
           </form>
         </div>
       </section>

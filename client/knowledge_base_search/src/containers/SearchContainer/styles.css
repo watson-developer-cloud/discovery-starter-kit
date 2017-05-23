@@ -74,3 +74,27 @@ button.white--button:focus {
 ._container-right {
   text-align: right;
 }
+
+.search_header-enter,
+.search_button-enter {
+  max-height: 0;
+  overflow-y: hidden;
+}
+
+.search_header-enter.search_header-enter-active,
+.search_button-enter.search_button-enter-active {
+  max-height: 5rem;
+  transition: max-height 500ms ease-in;
+}
+
+.search_header-leave,
+.search_button-leave {
+  max-height: 5rem;
+}
+
+.search_header-leave.search_header-leave-active,
+.search_button-leave.search_button-leave-active {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 300ms ease-in;
+}
