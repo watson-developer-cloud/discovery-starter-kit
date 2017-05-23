@@ -27,7 +27,7 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 #### Development
 
-1. Linter run with `flask8`
+1. Linter run with `flake8`
 1. Tests run with `pytest`
 
 ### Setting up the Data
