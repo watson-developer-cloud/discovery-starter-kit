@@ -1,0 +1,170 @@
+---
+stages:
+- name: Build
+  inputs:
+  - url: https://github.com/watson-developer-cloud/discovery-starter-kit.git
+    type: git
+    branch: release
+    dir_name: null
+  triggers:
+  - type: commit
+  jobs:
+  - name: Build
+    type: builder
+    artifact_dir: ''
+    build_type: npm
+    script: |
+      #!/bin/bash
+      export PATH=/opt/IBM/node-v6.7.0/bin:$PATH
+      npm --prefix client/knowledge_base_search install
+      npm --prefix client/knowledge_base_search run build
+
+      # setup requirements file in root directory
+      cat > ./requirements.txt <<EOL
+      -r server/python/requirements/production.txt
+
+      EOL
+- name: Deploy
+  inputs:
+  - type: job
+    stage: Build
+    job: Build
+    dir_name: null
+  triggers:
+  - type: stage
+  properties:
+  - name: NAME
+    value: ''
+    type: text
+  - name: TEST_RESULT_FOR_AD
+    value: ''
+    type: text
+  - name: CF_INSTANCES
+    value: '1'
+    type: text
+  - name: CF_MEMORY
+    value: 512M
+    type: text
+  - name: DISCOVERY_SERVICE_NAME
+    value: Discovery-Demo
+    type: text
+  - name: NLU_SERVICE_NAME
+    value: Discovery-Demo-NLU
+    type: text
+  - name: ROUTE_HOSTNAME
+    value: knowledege-base-search
+    type: text
+  - name: ROUTE_DOMAIN
+    value: mybluemix.net
+    type: text
+  jobs:
+  - name: CF Deploy
+    type: deployer
+    target:
+      application: knowledge-base-search
+    script: |
+      #!/bin/bash
+
+      # write out manifest.yml
+      echo "Writing manifest.yml..."
+
+      cat > ./manifest.yml <<EOL
+      declared-services:
+        ${DISCOVERY_SERVICE_NAME}:
+          label: discovery
+          plan: free
+        ${NLU_SERVICE_NAME}:
+          label: natural_language_understanding
+          plan: free
+      name: ${CF_APP}
+      instances: ${CF_INSTANCES}
+      memory: ${CF_MEMORY}
+      buildpack: python_buildpack
+      command: python server/python/server.py
+      no-route: true
+      services:
+       - ${DISCOVERY_SERVICE_NAME}
+       - ${NLU_SERVICE_NAME}
+
+      EOL
+
+      export NAME="${CF_APP}_${BUILD_NUMBER}"
+      cf push "${NAME}"
+  - name: Deploy Begin
+    type: deployer
+    extension_id: ibm.devops.services.pipeline.devops.ad_start
+    RAMPUP_DURATION: 30s
+    COMMAND: |-
+      #!/bin/bash
+      #
+      # The following code uses the Active Deploy service to update your new application with zero downtime.
+      # The code used is available at https://github.com/Osthanes/update_service
+      # and https://github.com/Osthanes/activedeploy_common.
+      #
+      # For details about how to set up the Active Deploy extension for the Delivery Pipeline, see
+      # https://console.ng.bluemix.net/docs/services/ActiveDeploy/updatingapps.html#adpipeline.
+      #
+      # Feel free to fork the code. After creating your fork, define the environment variable GIT_HOME to use the forked repositories with the
+      # format https://github.com/${GIT_HOME}/update_service and https://github.com/${GIT_HOME}/activedeploy_common.
+      #
+      # Make sure the following variables are defined as environment properties with no values:
+      # NAME: The name of your new application. This variable has to be exported in the first deploy job.
+      # TEST_RESULT_FOR_AD: Passes the results of the test phase to the Active Deploy - Complete job. Set this variable in the test job.
+      #
+      # The following variables may be defined as environment properties:
+      # GROUP_SIZE: The number of instances that are created during initial deployment. The default value is 1.
+      # CONCURRENT_VERSIONS: The number of application versions to keep at the end of deployment. The default value is 2.
+      # AD_INSTANCE_NAME: The name for Active Deploy Instance, if it does not yet exist. The default value is activedeploy-for-pipeline.
+
+      source ${EXT_DIR}/git_util.sh
+      git_retry clone https://github.com/Osthanes/update_service.git activedeploy
+      activedeploy/activedeploy_step_1.sh
+    RAMPDOWN_DURATION: 30s
+    DEPLOYMENT_METHOD: Red Black
+  - name: Test
+    type: tester
+    fail_stage: false
+    script: |
+      #!/bin/bash
+
+      #!/bin/bash
+      export TEST_RESULT_FOR_AD=1
+
+      ENDPOINT="https://${ROUTE_HOSTNAME}.${ROUTE_DOMAIN}/api/query/regular"
+
+      echo "Testing endpoint: ${ENDPOINT} with POST"
+
+      HTTP_RESPONSE=$(curl -H "Content-Type:application/json" -X POST -k -sL -d '{"query": ""}' -D- -o/dev/null "${ENDPOINT}")
+
+      echo "$HTTP_RESPONSE"
+
+      HTTP_STATUS=$(echo "$HTTP_RESPONSE" | head -n 1| cut -d $' ' -f2)
+
+      if [ "$HTTP_STATUS" = "200" ]; then
+        export TEST_RESULT_FOR_AD=0
+      fi
+  - name: Deploy Finish
+    type: deployer
+    extension_id: ibm.devops.services.pipeline.devops.ad_finish
+    COMMAND: |-
+      #!/bin/bash
+      #
+      # The following code uses the Active Deploy service to update your new application with zero downtime.
+      # The code used is available at https://github.com/Osthanes/update_service
+      # and https://github.com/Osthanes/activedeploy_common.
+      #
+      # For details about how to set up the Active Deploy extension for the Delivery Pipeline, see
+      # https://console.ng.bluemix.net/docs/services/ActiveDeploy/updatingapps.html#adpipeline.
+      #
+      # Feel free to fork the code. After creating your fork, define the environment variable GIT_HOME to use the forked repositories with the
+      # format https://github.com/${GIT_HOME}/update_service and https://github.com/${GIT_HOME}/activedeploy_common.
+      #
+
+      source ${EXT_DIR}/git_util.sh
+      git_retry clone https://github.com/Osthanes/update_service.git activedeploy
+      activedeploy/activedeploy_step_2.sh
+hooks:
+- enabled: true
+  label: null
+  ssl_enabled: false
+  url: https://devops-api.ng.bluemix.net/v1/messaging/webhook/publish
