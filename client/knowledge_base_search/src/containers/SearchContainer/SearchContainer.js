@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { Icon, TextInput } from 'watson-react-components';
 import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';

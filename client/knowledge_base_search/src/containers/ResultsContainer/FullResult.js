@@ -1,10 +1,20 @@
 import React, { Component } from 'react';
+import { scroller, Element } from 'react-scroll';
 import { Icon } from 'watson-react-components';
 import QuestionColumn from './QuestionColumn';
 import AnswerColumn from './AnswerColumn';
 import links from '../../utils/links';
 
 class FullResult extends Component {
+  componentDidMount() {
+    // wait for transition before calculating scroll position
+    setTimeout(() => {
+      scroller.scrollTo('scroll_to_answer_' + this.props.id, {
+        smooth: true
+      });
+    }, this.props.transitionTimeout);
+  }
+
   generateQuestionUrl(question_id) {
     return links.stack_exchange_questions + question_id;
   }
@@ -26,7 +36,7 @@ class FullResult extends Component {
     } = this.props;
 
     return (
-      <div className='full_result_row--div'>
+      <Element name={'scroll_to_answer_' + id} className='full_result_row--div'>
         <h4>
           Discovery answers…
         </h4>
@@ -69,12 +79,13 @@ class FullResult extends Component {
             </a>
           </div>
         </div>
-      </div>
+      </Element>
     );
   }
 }
 
 FullResult.PropTypes = {
+  transitionTimeout: React.PropTypes.number.isRequired,
   accepted: React.PropTypes.number.isRequired,
   answer: React.PropTypes.string.isRequired,
   answerScore: React.PropTypes.string.isRequired,

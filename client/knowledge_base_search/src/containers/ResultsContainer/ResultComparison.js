@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { scroller, Element } from 'react-scroll';
 import ResultBox from './ResultBox';
 import FullResult from './FullResult';
 import './styles.css';
@@ -9,6 +10,12 @@ class ResultComparison extends Component {
     this.state = {
       full_result: null
     }
+  }
+
+  componentDidMount() {
+    scroller.scrollTo('scroll_to_result_' + this.props.index, {
+      smooth: true
+    });
   }
 
   toggleFullResult = (index, type) => {
@@ -35,11 +42,12 @@ class ResultComparison extends Component {
       enriched_result,
       index,
       full_result_index,
-      full_result_type
+      full_result_type,
+      fullResultTransitionTimeout
     } = this.props;
 
     return (
-      <div>
+      <Element name={'scroll_to_result_' + index}>
         <div className='results_comparison--div'>
           <ResultBox
             result_type={'Discovery Enriched'}
@@ -67,20 +75,21 @@ class ResultComparison extends Component {
         <CSSTransitionGroup
           transitionName='full_result'
           transitionEnterTimeout={500}
-          transitionLeaveTimeout={300}
+          transitionLeaveTimeout={fullResultTransitionTimeout}
         >
           {
             full_result_index === index
               ? (
                   <FullResult
                     key={full_result_index + '_' + full_result_type}
+                    transitionTimeout={fullResultTransitionTimeout}
                     {...this.getFullAnswer()}
                   />
                 )
               : null
           }
         </CSSTransitionGroup>
-      </div>
+      </Element>
     );
   }
 }
@@ -91,7 +100,12 @@ ResultComparison.PropTypes = {
   index: React.PropTypes.number.isRequired,
   onSetFullResult: React.PropTypes.func.isRequired,
   full_result_index: React.PropTypes.number.isRequired,
-  full_result_type: React.PropTypes.string.isRequired
+  full_result_type: React.PropTypes.string.isRequired,
+  fullResultTransitionTimeout: React.PropTypes.number.isRequired
+}
+
+ResultComparison.defaultProps = {
+  fullResultTransitionTimeout: 300
 }
 
 export default ResultComparison;

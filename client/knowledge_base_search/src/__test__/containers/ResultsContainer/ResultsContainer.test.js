@@ -67,7 +67,7 @@ describe('<ResultsContainer />', () => {
     it('shows "No Results"', () => {
       expect(wrapper.find(ResultComparison)).toHaveLength(0);
       expect(wrapper.find(RelatedQuestions)).toHaveLength(0);
-      expect(wrapper.text()).toEqual('No Results');
+      expect(wrapper.find('h2').text()).toEqual('No Results');
     });
   });
 

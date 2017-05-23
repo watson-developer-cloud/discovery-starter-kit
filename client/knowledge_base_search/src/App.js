@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
