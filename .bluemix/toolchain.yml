@@ -13,8 +13,7 @@ template:
 toolchain:
   name: 'watson-discovery-service-starter-kit-{{timestamp}}'
   template:
-    getting_started:
-      $ref: "**Your toolchain is ready!**\n**Quick start:** Use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to create collections and ingest data"
+    getting_started: "**Your toolchain is ready!**\n**Quick start:** Use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to create collections and ingest data"
 services:
   sample-repo:
     service_id: hostedgit
