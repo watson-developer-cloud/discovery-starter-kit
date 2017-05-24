@@ -1,4 +1,4 @@
-version: '1'
+version: '2'
 template:
   name: "Watson Discovery Service Starter Kit"
   description: "A starter kit designed to get developers started using the Watson Discovery Service with their own data"
