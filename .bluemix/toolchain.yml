@@ -13,11 +13,12 @@ template:
       [master](https://github.com/watson-developer-cloud/discovery-starter-kit/tree/master)
 toolchain:
   name: 'watson-discovery-service-starter-kit-{{timestamp}}'
-  getting_started: |-
-    **Your toolchain is ready!**
+  template:
+    getting_started: |-
+      **Your toolchain is ready!**
 
-    **Quick start:** Use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to create collections and ingest data.
-    Then, commit a change to the Git repo to trigger a new build and deployment.
+      **Quick start:** Use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to create collections and ingest data.
+      Then, commit a change to the Git repo to trigger a new build and deployment.
 services:
   sample-repo:
     service_id: hostedgit
