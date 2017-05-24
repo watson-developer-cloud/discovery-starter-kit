@@ -2,10 +2,9 @@
 stages:
 - name: Build
   inputs:
-  - url: https://github.com/watson-developer-cloud/discovery-starter-kit.git
-    type: git
-    branch: release
-    dir_name: null
+  - type: git
+    branch: master
+    service: ${SAMPLE_REPO}
   triggers:
   - type: commit
   jobs:
@@ -52,7 +51,7 @@ stages:
     value: Discovery-Demo-NLU
     type: text
   - name: ROUTE_HOSTNAME
-    value: knowledege-base-search
+    value: ${CF_APP_NAME}
     type: text
   - name: ROUTE_DOMAIN
     value: mybluemix.net
@@ -61,7 +60,10 @@ stages:
   - name: CF Deploy
     type: deployer
     target:
-      application: knowledge-base-search
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
+      space: ${PROD_SPACE_NAME}
+      application: ${CF_APP_NAME}
     script: |
       #!/bin/bash
 
@@ -74,7 +76,7 @@ stages:
           label: discovery
           plan: free
         ${NLU_SERVICE_NAME}:
-          label: natural_language_understanding
+          label: natural-language-understanding
           plan: free
       name: ${CF_APP}
       instances: ${CF_INSTANCES}
@@ -92,6 +94,10 @@ stages:
       cf push "${NAME}"
   - name: Deploy Begin
     type: deployer
+    target:
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
+      space: ${PROD_SPACE_NAME}
     extension_id: ibm.devops.services.pipeline.devops.ad_start
     RAMPUP_DURATION: 30s
     COMMAND: |-
@@ -145,6 +151,10 @@ stages:
       fi
   - name: Deploy Finish
     type: deployer
+    target:
+      region_id: ${PROD_REGION_ID}
+      organization: ${PROD_ORG_NAME}
+      space: ${PROD_SPACE_NAME}
     extension_id: ibm.devops.services.pipeline.devops.ad_finish
     COMMAND: |-
       #!/bin/bash

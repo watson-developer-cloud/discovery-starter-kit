@@ -6,7 +6,7 @@ A repo containing the basics for setting up one of the watson developer cloud SD
 
 Shows the comparison on what the Watson Discovery Service can add to your data to make the search experience return more relevant results
 
-[![Deploy to Bluemix](https://bluemix.net/deploy/button.png)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
+[![Deploy To Bluemix](https://console.ng.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.ng.bluemix.net/devops/setup/deploy/?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
 
 You will have to modify the `ROUTE_HOSTNAME` environment variable to the name of the host you want to put it at. By default the host for this repo is `knowledge-base-search` which becomes [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
 
