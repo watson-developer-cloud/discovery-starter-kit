@@ -5,15 +5,14 @@ import { shallow } from 'enzyme';
 
 describe('<ResultBox />', () => {
   const onToggleFullResultMock = jest.fn();
-  const result = {
-    'answer': 'result',
-    'score': 1.0
-  };
+  const result_text = 'result';
+  const result_score = 1.0;
   const result_type = 'result type';
   const result_rank = 1;
   const is_full_result_shown = false;
   const props = {
-    result,
+    result_text,
+    result_score,
     result_type,
     onToggleFullResult: onToggleFullResultMock,
     result_rank,
@@ -29,7 +28,7 @@ describe('<ResultBox />', () => {
     let wrapper;
     const noResult = null;
     const props_no_result = Object.assign({}, props, {
-      result: noResult
+      result_text: noResult
     });
 
     describe('and it is the first rank', () => {
@@ -66,11 +65,8 @@ describe('<ResultBox />', () => {
   });
 
   describe('when the result exceeds the max_length', () => {
-    const long_result = Object.assign({}, result, {
-      'answer': Array(ResultBox.defaultProps.max_length + 2).join('a')
-    });
     const props_with_long_result = Object.assign({}, props, {
-      'result': long_result
+      result_text: Array(ResultBox.defaultProps.max_length + 2).join('a')
     });
 
     it('trims the result and adds an ellipsis', () => {
@@ -82,11 +78,8 @@ describe('<ResultBox />', () => {
   });
 
   describe('when the score exceeds the decimal_places', () => {
-    const really_precise_score_result = Object.assign({}, result, {
-      'score': 5.012345
-    });
     const props_with_precise_score = Object.assign({}, props, {
-      'result': really_precise_score_result
+      result_score: 5.012345
     });
 
     it('rounds the score', () => {

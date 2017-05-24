@@ -79,7 +79,7 @@ class ResultsContainer extends Component {
                                 <ResultComparison
                                   key={'result_comparison_' + i}
                                   index={i}
-                                  enriched_result={enriched_results.results[i]}
+                                  enriched_result={enriched_results.passages[i]}
                                   result={results.results[i]}
                                   full_result_index={this.state.full_result_index}
                                   full_result_type={this.state.full_result_type}
@@ -131,7 +131,8 @@ ResultsContainer.PropTypes = {
   }).isRequired,
   enriched_results: PropTypes.shape({
     matching_results: PropTypes.number.isRequired,
-    results: PropTypes.arrayOf(PropTypes.object)
+    results: PropTypes.arrayOf(PropTypes.object),
+    passages: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
   onSearch: PropTypes.func.isRequired
 }

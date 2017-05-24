@@ -80,17 +80,6 @@ def index():
     return render_template('index.html')
 
 
-def get_enriched_query(question):
-    response = nlu.analyze(text=question, features=[features.Keywords()])
-    keywords = response.get('keywords', [])
-    query = ','.join(map(lambda keyword: keyword['text'], keywords))
-
-    if len(query) > 0:
-        return {'query': 'enriched_text.keywords.text:' + query}
-    else:
-        return {'query': question}
-
-
 @app.route('/api/query/<collection_type>', methods=['POST'])
 def query(collection_type):
     collection_id_key = 'collection_id_regular'
@@ -98,7 +87,7 @@ def query(collection_type):
 
     if collection_type == 'enriched':
         collection_id_key = 'collection_id_enriched'
-        query_options = get_enriched_query(query_options['query'])
+        query_options['passages'] = True
 
     return jsonify(
               discovery.query(

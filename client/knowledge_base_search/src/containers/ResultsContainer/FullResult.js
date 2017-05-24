@@ -22,8 +22,10 @@ class FullResult extends Component {
 
   render() {
     const {
-      title,
-      subtitle,
+      question: {
+        title,
+        subtitle
+      },
       answer,
       authorUserId,
       authorUsername,
@@ -95,9 +97,11 @@ FullResult.PropTypes = {
   downModVotes: PropTypes.number.isRequired,
   id: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
-  subtitle: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  question: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired
+  }).isRequired,
   upModVotes: PropTypes.number.isRequired,
   userId: PropTypes.string.isRequired,
   userReputation: PropTypes.number.isRequired,
