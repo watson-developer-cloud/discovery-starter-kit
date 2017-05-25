@@ -53,7 +53,8 @@ class ResultComparison extends Component {
           <ResultBox
             result_type={'Discovery Enriched'}
             result_rank={index + 1}
-            result={enriched_result}
+            result_text={enriched_result.passage_text}
+            result_score={enriched_result.passage_score}
             is_full_result_shown={
               this.isFullResultShown(index, 'enriched')
             }
@@ -64,7 +65,8 @@ class ResultComparison extends Component {
           <ResultBox
             result_type={'Discovery Standard'}
             result_rank={index + 1}
-            result={result}
+            result_text={result.answer}
+            result_score={result.score}
             is_full_result_shown={
               this.isFullResultShown(index, 'regular')
             }

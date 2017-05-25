@@ -5,11 +5,12 @@ import './styles.css';
 class RelatedQuestions extends Component {
   filterRelatedQuestions() {
     const { results, max_related_questions } = this.props;
-    const firstTitle = results[0] ? results[0].title : '';
+    const firstTitle = results[0] ? results[0].question.title : '';
 
     return results.reduce((memo, result) => {
-      if (result.title !== firstTitle && memo.indexOf(result.title) === -1) {
-        memo.push(result.title);
+      if (result.question.title !== firstTitle &&
+          memo.indexOf(result.question.title) === -1) {
+        memo.push(result.question.title);
       }
       return memo;
     }, []).slice(0, max_related_questions);

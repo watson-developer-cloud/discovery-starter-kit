@@ -7,7 +7,9 @@ describe('<RelatedQuestions />', () => {
   const onSearchMock = jest.fn();
   const results = [
     {
-      title: 'My title'
+      question: {
+        title: 'My title'
+      }
     }
   ];
 
@@ -43,9 +45,9 @@ describe('<RelatedQuestions />', () => {
 
     beforeEach(() => {
       const duplicates = [
-        { title: 'first question'},
-        { title: duplicateQuestion },
-        { title: duplicateQuestion }
+        { question: { title: 'first question' } },
+        { question: { title: duplicateQuestion } },
+        { question: { title: duplicateQuestion } }
       ];
       wrapper = shallow(
                   <RelatedQuestions
@@ -70,25 +72,39 @@ describe('<RelatedQuestions />', () => {
     beforeEach(() => {
       const results = [
         {
-          title: firstQuestion
+          question: {
+            title: firstQuestion
+          }
         },
         {
-          title: 'question 2'
+          question: {
+            title: 'question 2'
+          }
         },
         {
-          title: 'question 3 duplicate'
+          question: {
+            title: 'question 3 duplicate'
+          }
         },
         {
-          title: 'question 3 duplicate'
+          question: {
+            title: 'question 3 duplicate'
+          }
         },
         {
-          title: 'question 4'
+          question: {
+            title: 'question 4'
+          }
         },
         {
-          title: lastQuestion
+          question: {
+            title: lastQuestion
+          }
         },
         {
-          title: pastLastQuestion
+          question: {
+            title: pastLastQuestion
+          }
         }
       ];
       wrapper = shallow(

@@ -27,7 +27,8 @@ class ResultBox extends Component {
 
   render() {
     const {
-      result,
+      result_text,
+      result_score,
       result_type,
       result_rank,
       is_full_result_shown
@@ -37,10 +38,10 @@ class ResultBox extends Component {
       <div className='result_box--div'>
         { result_rank === 1 ? (<h4>{result_type}</h4>) : null }
         {
-          result
+          result_text
             ? <div className='result_text--div'>
                 <div className='result_answer_snippet--div'>
-                  {this.trimAnswer(result.answer)}
+                  {this.trimAnswer(result_text)}
                 </div>
                 <div className='result_full_answer--div'>
                   <button
@@ -62,7 +63,7 @@ class ResultBox extends Component {
                   </div>
                   <div className='result_rank_right--div'>
                     <span>Relevance Score </span>
-                    <span>{this.roundScore(result.score)}</span>
+                    <span>{this.roundScore(result_score)}</span>
                   </div>
                 </div>
               </div>
@@ -76,7 +77,8 @@ class ResultBox extends Component {
 }
 
 ResultBox.PropTypes = {
-  result: PropTypes.object.isRequired,
+  result_text: PropTypes.string.isRequired,
+  result_score: PropTypes.number.isRequired,
   result_type: PropTypes.string.isRequired,
   result_rank: PropTypes.number.isRequired,
   is_full_result_shown: PropTypes.bool.isRequired,

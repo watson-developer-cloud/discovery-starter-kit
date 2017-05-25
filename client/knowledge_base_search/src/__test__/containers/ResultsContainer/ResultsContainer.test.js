@@ -7,18 +7,31 @@ import { shallow } from 'enzyme';
 
 describe('<ResultsContainer />', () => {
   const results = {
-    'matching_results': 1,
-    'results': [
+    matching_results: 1,
+    results: [
       {
-        'answer': 'a good answer'
+        answer: 'a good answer',
+        question: {
+          title: 'a question title'
+        }
       }
     ]
   };
   const enriched_results = {
-    'matching_results': 1,
-    'results': [
+    matching_results: 1,
+    results: [
       {
-        'answer': 'a great answer'
+        answer: 'a great answer',
+        question: {
+          title: 'a question title'
+        }
+      }
+    ],
+    passages: [
+      {
+        document_id: '1',
+        passage_text: 'a great passage',
+        passage_score: 1.0
       }
     ]
   };
@@ -75,13 +88,14 @@ describe('<ResultsContainer />', () => {
     let wrapper;
 
     beforeEach(() => {
-      const no_results = {
-        'matching_results': 0,
-        'results': []
+      const no_enriched_results = {
+        matching_results: 0,
+        results: [],
+        passages: []
       };
       wrapper = shallow(<ResultsContainer
                           results={results}
-                          enriched_results={no_results}
+                          enriched_results={no_enriched_results}
                         />);
     });
 
