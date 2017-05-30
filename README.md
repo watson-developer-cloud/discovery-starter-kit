@@ -39,6 +39,7 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 #### Development
 
+1. Run `npm install --prefix client/knowledge_base_search` to install the necessary dependencies.
 1. Run `npm start --prefix client/knowledge_base_search` - visit http://locahost:3000/
 1. To run statically through your server, run `npm run build --prefix client/knowledge_base_search` to produce static assets
 
