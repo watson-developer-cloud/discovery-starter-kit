@@ -32,9 +32,13 @@ class App extends Component {
 
     Promise.all([
       query('enriched', {query: input}).then((enriched_response) => {
-        return this.retrieveMissingPassages(enriched_response).then((response) => {
-          return response;
-        });
+        if (enriched_response.passages) {
+          return this.retrieveMissingPassages(enriched_response).then((response) => {
+            return response;
+          });
+        } else {
+          return Promise.resolve(enriched_response);
+        }
       }),
       query('regular', {query: input})
     ]).then((results_array) => {
