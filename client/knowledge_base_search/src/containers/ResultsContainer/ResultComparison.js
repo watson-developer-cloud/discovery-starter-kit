@@ -31,16 +31,16 @@ class ResultComparison extends Component {
     return full_result_type === type && full_result_index === index;
   }
 
-  getFullAnswer() {
-    const { full_result_type, result, enriched_result } = this.props;
+  getFullResult() {
+    const { full_result_type, result, passageFullResult } = this.props;
 
-    return full_result_type === 'enriched' ? enriched_result : result;
+    return full_result_type === 'passage' ? passageFullResult : result;
   }
 
   render() {
     const {
       result,
-      enriched_result,
+      passage,
       index,
       full_result_index,
       full_result_type,
@@ -51,15 +51,15 @@ class ResultComparison extends Component {
       <Element name={'scroll_to_result_' + index}>
         <div className='results_comparison--div'>
           <ResultBox
-            result_type={'Discovery Enriched'}
+            result_type={'Discovery Passage'}
             result_rank={index + 1}
-            result_text={enriched_result.passage_text}
-            result_score={enriched_result.passage_score}
+            result_text={passage.passage_text}
+            result_score={passage.passage_score}
             is_full_result_shown={
-              this.isFullResultShown(index, 'enriched')
+              this.isFullResultShown(index, 'passage')
             }
             onToggleFullResult={
-              () => { this.toggleFullResult(index, 'enriched') }
+              () => { this.toggleFullResult(index, 'passage') }
             }
           />
           <ResultBox
@@ -86,7 +86,7 @@ class ResultComparison extends Component {
                   <FullResult
                     key={full_result_index + '_' + full_result_type}
                     transitionTimeout={fullResultTransitionTimeout}
-                    {...this.getFullAnswer()}
+                    {...this.getFullResult()}
                   />
                 )
               : null
@@ -99,7 +99,8 @@ class ResultComparison extends Component {
 
 ResultComparison.PropTypes = {
   result: PropTypes.object.isRequired,
-  enriched_result: PropTypes.object.isRequired,
+  passage: PropTypes.object.isRequired,
+  passageFullResult: PropTypes.object.isRequired,
   index: PropTypes.number.isRequired,
   onSetFullResult: PropTypes.func.isRequired,
   full_result_index: PropTypes.number.isRequired,

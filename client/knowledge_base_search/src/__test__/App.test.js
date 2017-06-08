@@ -69,10 +69,24 @@ describe('<App />', () => {
   });
 
   describe('when handleSearch is called with a query string', () => {
+    const response = {
+      matching_results: 10,
+      results: [
+        {
+          id: 1,
+          answer: 'one'
+        }
+      ],
+      passages: [
+        {
+          document_id: 1
+        }
+      ]
+    };
     let wrapper;
 
     beforeEach(() => {
-      query.default = jest.fn();
+      query.default = jest.fn((fetch) => { return Promise.resolve(response); });
       wrapper = shallow(<App />);
       wrapper.instance().handleSearch('my query');
     });
@@ -80,10 +94,34 @@ describe('<App />', () => {
     it('submits a query to the regular and enriched collections', () => {
       expect(query.default).toBeCalledWith('enriched', {'query': 'my query'});
       expect(query.default).toBeCalledWith('regular', {'query': 'my query'});
+      expect(query.default).not.toBeCalledWith('enriched', {'filter': 'id:1'});
     });
 
     it('sets the search_input state to the input value', () => {
       expect(wrapper.instance().state.search_input).toEqual('my query');
     });
+  });
+
+  describe('when retrieveMissingPassages contains only some passages', () => {
+    const responseWithExtra = {
+      matching_results: 10,
+      results: [],
+      passages: [
+        {
+          document_id: 1
+        }
+      ]
+    };
+    let wrapper;
+
+    beforeEach(() => {
+      query.default = jest.fn((fetch) => { return Promise.resolve(responseWithExtra); });
+      wrapper = shallow(<App />);
+      wrapper.instance().retrieveMissingPassages(responseWithExtra);
+    });
+
+    it('submits another query to the enriched collection for missing ids', () => {
+      expect(query.default).toBeCalledWith('enriched', {'filter': 'id:1'});
+    })
   });
 });

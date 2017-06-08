@@ -31,11 +31,15 @@ class App extends Component {
     });
 
     Promise.all([
-      query('regular', {query: input}),
-      query('enriched', {query: input})
+      query('enriched', {query: input}).then((enriched_response) => {
+        return this.retrieveMissingPassages(enriched_response).then((response) => {
+          return response;
+        });
+      }),
+      query('regular', {query: input})
     ]).then((results_array) => {
-      const results_response = results_array[0];
-      const enriched_results_response = results_array[1];
+      const enriched_results_response = results_array[0];
+      const results_response = results_array[1];
 
       if (results_response.error || enriched_results_response.error) {
         this.setState({
@@ -48,8 +52,8 @@ class App extends Component {
         this.setState({
           fetching: false,
           results_fetched: true,
-          results: results_array[0],
-          enriched_results: results_array[1]
+          results: results_response,
+          enriched_results: enriched_results_response
         });
       }
     }).catch((error) => {
@@ -59,6 +63,46 @@ class App extends Component {
         results_error: error
       });
     });
+  }
+
+  retrieveMissingPassages(enriched_results) {
+    const uniqueDocumentIds = new Set(
+      enriched_results.passages.map((passage) => {
+        return passage.document_id;
+      })
+    );
+    let missingDocumentIds = [];
+    uniqueDocumentIds.forEach((document_id) => {
+      const targetId = parseInt(document_id, 10);
+
+      let enriched_result = enriched_results.results.find((result) => {
+        return result.id === targetId;
+      });
+
+      if (!enriched_result) {
+        missingDocumentIds.push(targetId);
+      }
+    });
+
+    return missingDocumentIds.length > 0
+      ? query('enriched', {filter: `id:${missingDocumentIds.join('|')}`})
+          .then((response) => {
+            if (response.error) {
+              console.error(response.error);
+              this.setState({enriched_results_error: response.error});
+            }
+
+            if (response.results) {
+              let newResults = enriched_results.results.concat(response.results);
+              enriched_results.results = newResults;
+            }
+
+            return enriched_results;
+          }).catch((error) => {
+            console.error(error);
+            this.setState({enriched_results_error: error});
+          })
+      : Promise.resolve(enriched_results);
   }
 
   render() {
