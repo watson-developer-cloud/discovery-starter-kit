@@ -42,6 +42,10 @@ Client side is built with [React](https://facebook.github.io/react/)
 1. Run `npm install --prefix client/knowledge_base_search` to install the necessary dependencies.
 1. Run `npm start --prefix client/knowledge_base_search` - visit http://locahost:3000/
 1. To run statically through your server, run `npm run build --prefix client/knowledge_base_search` to produce static assets
+1. Linter run with `npm run lint --prefix client/knowledge_base_search`
+1. Unit tests run with `npm run test-unit --prefix client/knowledge_base_search`
+1. Integration tests run with `npm run test-integration --prefix client/knowledge_base_search` (NOTE: `npm run build --prefix client/knowledge_base_search` must be run first)
+1. Run all tests with `npm test --prefix client/knowledge_base_search`
 
 ### Server - Python
 

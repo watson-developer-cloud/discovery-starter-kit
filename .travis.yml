@@ -8,12 +8,13 @@ install:
 - pip install -r server/python/requirements/dev.txt
 - nvm install node
 - nvm use node
-- npm --prefix client/knowledge_base_search install
+- npm install --prefix client/knowledge_base_search
 script:
 - flake8
-- npm --prefix client/knowledge_base_search test
-- npm --prefix client/knowledge_base_search run build
+- npm run test-unit --prefix client/knowledge_base_search
+- npm run build --prefix client/knowledge_base_search
 - python -m pytest
+- npm run test-integration --prefix client/knowledge_base_search
 before_install:
 - openssl aes-256-cbc -K $encrypted_22e51202b5e7_key -iv $encrypted_22e51202b5e7_iv
   -in .env.staging.enc -out .env.staging -d
