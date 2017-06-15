@@ -53,6 +53,15 @@ class ResultsContainer extends Component {
     }
   }
 
+  findPassageResult(passage) {
+    const { enriched_results } = this.props;
+    const targetId = parseInt(passage ? passage.document_id : 0, 10);
+
+    return enriched_results.results.find((result) => {
+      return result.id === targetId;
+    });
+  }
+
   render() {
     const { results, enriched_results } = this.props;
 
@@ -79,7 +88,12 @@ class ResultsContainer extends Component {
                                 <ResultComparison
                                   key={'result_comparison_' + i}
                                   index={i}
-                                  enriched_result={enriched_results.passages[i]}
+                                  passage={enriched_results.passages[i]}
+                                  passageFullResult={
+                                    this.findPassageResult(
+                                      enriched_results.passages[i]
+                                    )
+                                  }
                                   result={results.results[i]}
                                   full_result_index={this.state.full_result_index}
                                   full_result_type={this.state.full_result_type}

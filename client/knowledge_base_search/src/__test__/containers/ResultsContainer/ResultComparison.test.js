@@ -11,7 +11,10 @@ describe('<ResultComparison />', () => {
     result: {
       answer: 'a good answer'
     },
-    enriched_result: {
+    passage: {
+      passage_text: 'a passage'
+    },
+    passageFullResult: {
       answer: 'a great answer'
     },
     index: 0,
@@ -51,17 +54,17 @@ describe('<ResultComparison />', () => {
       expect(fullResult.props().answer).toEqual('a good answer');
     });
 
-    describe('and full_result_type is "enriched"', () => {
+    describe('and full_result_type is "passage"', () => {
       beforeEach(() => {
         const props_with_enriched_type = Object.assign({}, props, {
           full_result_index: props.index,
-          full_result_type: 'enriched'
+          full_result_type: 'passage'
         });
 
         wrapper = shallow(<ResultComparison {...props_with_enriched_type} />);
       });
 
-      it('has <FullResult /> with enriched props passed in', () => {
+      it('has <FullResult /> with passage full result passed in', () => {
         const fullResult = wrapper.find(FullResult);
 
         expect(fullResult).toHaveLength(1);

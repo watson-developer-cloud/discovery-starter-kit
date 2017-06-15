@@ -21,6 +21,7 @@ describe('<ResultsContainer />', () => {
     matching_results: 1,
     results: [
       {
+        id: 1,
         answer: 'a great answer',
         question: {
           title: 'a question title'
@@ -61,6 +62,15 @@ describe('<ResultsContainer />', () => {
                             />);
     expect(wrapper.find(RelatedQuestions).props().results)
       .toEqual(enriched_results.results);
+  });
+
+  it('findPassageResult returns the full result given a passage', () => {
+    const wrapper = shallow(<ResultsContainer
+                              results={results}
+                              enriched_results={enriched_results}
+                            />);
+    expect(wrapper.instance().findPassageResult(enriched_results.passages[0]))
+      .toEqual(enriched_results.results[0]);
   });
 
   describe('when both result sets have 0 results', () => {

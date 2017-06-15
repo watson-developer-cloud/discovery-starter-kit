@@ -69,12 +69,32 @@ describe('<ResultBox />', () => {
       result_text: Array(ResultBox.defaultProps.max_length + 2).join('a')
     });
 
-    it('trims the result and adds an ellipsis', () => {
-      const wrapper = shallow(<ResultBox {...props_with_long_result} />);
-      const resultText = wrapper.find('.result_answer_snippet--div').text();
-      expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
-      expect(resultText).toContain('…');
+    describe('and the result type is "Discovery Standard"', () => {
+      const props_long_standard = Object.assign({}, props_with_long_result, {
+        result_type: 'Discovery Standard'
+      });
+
+      it('trims the result and adds an ellipsis', () => {
+        const wrapper = shallow(<ResultBox {...props_long_standard} />);
+        const resultText = wrapper.find('.result_answer_snippet--div').text();
+        expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
+        expect(resultText).toContain('…');
+      });
     });
+
+    describe('and the result type is "Discovery Passage"', () => {
+      const props_long_passage = Object.assign({}, props_with_long_result, {
+        result_type: 'Discovery Passage'
+      });
+
+      it('does not trim the result', () => {
+        const wrapper = shallow(<ResultBox {...props_long_passage} />);
+        const resultText = wrapper.find('.result_answer_snippet--div').text();
+        expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
+        expect(resultText).not.toContain('…');
+      });
+    });
+
   });
 
   describe('when the score exceeds the decimal_places', () => {

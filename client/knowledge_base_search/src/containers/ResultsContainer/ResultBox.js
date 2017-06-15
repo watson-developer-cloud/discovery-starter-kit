@@ -5,9 +5,9 @@ import './styles.css';
 
 class ResultBox extends Component {
   trimAnswer(answer) {
-    const { max_length } = this.props;
+    const { max_length, result_type } = this.props;
 
-    if (answer.length > max_length) {
+    if (answer.length > max_length && result_type === 'Discovery Standard') {
       return answer.substring(0, max_length) + '…';
     }
     return answer;
@@ -88,7 +88,7 @@ ResultBox.PropTypes = {
 }
 
 ResultBox.defaultProps = {
-  max_length: 130,
+  max_length: 200,
   decimal_places: 2
 }
 
