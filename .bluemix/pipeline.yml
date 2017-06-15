@@ -15,8 +15,8 @@ stages:
     script: |
       #!/bin/bash
       export PATH=/opt/IBM/node-v6.7.0/bin:$PATH
-      npm --prefix client/knowledge_base_search install
-      npm --prefix client/knowledge_base_search run build
+      npm install --prefix client/knowledge_base_search
+      npm run build --prefix client/knowledge_base_search
 
       # setup requirements file in root directory
       cat > ./requirements.txt <<EOL
@@ -32,12 +32,6 @@ stages:
   triggers:
   - type: stage
   properties:
-  - name: NAME
-    value: ''
-    type: text
-  - name: TEST_RESULT_FOR_AD
-    value: ''
-    type: text
   - name: CF_INSTANCES
     value: '1'
     type: text
@@ -47,17 +41,17 @@ stages:
   - name: DISCOVERY_SERVICE_NAME
     value: Discovery-Demo
     type: text
-  - name: NLU_SERVICE_NAME
-    value: Discovery-Demo-NLU
+  - name: DISCOVERY_REGULAR_COLLECTION_NAME
+    value: knowledge_base_regular
     type: text
-  - name: ROUTE_HOSTNAME
-    value: ${CF_APP_NAME}
+  - name: DISCOVERY_ENRICHED_COLLECTION_NAME
+    value: knowledge_base_enriched
     type: text
   - name: ROUTE_DOMAIN
     value: mybluemix.net
     type: text
   jobs:
-  - name: CF Deploy
+  - name: Deploy Dark
     type: deployer
     target:
       region_id: ${PROD_REGION_ID}
@@ -66,77 +60,65 @@ stages:
       application: ${CF_APP_NAME}
     script: |
       #!/bin/bash
+      #set -x
+      #CF_TRACE=true
+
+      # create services that do not exist
+
+      if ! cf service ${DISCOVERY_SERVICE_NAME} ; then
+        cf create-service discovery free ${DISCOVERY_SERVICE_NAME}
+
+        echo "Please create an environment by going to https://discovery-tooling.mybluemix.net"
+        echo "The service instance created is called ${DISCOVERY_SERVICE_NAME}"
+        echo "Then create 2 collections named:"
+        echo "1. ${DISCOVERY_REGULAR_COLLECTION_NAME}"
+        echo "2. ${DISCOVERY_ENRICHED_COLLECTION_NAME}"
+        echo "Then enqueue documents using the script provided in the github repo"
+        exit 1
+      fi
+
+      # Compute a unique app name using the reserved CF_APP name (configured in the
+      # deployer or from the manifest.yml file) and the build number
+
+      export TEMP_APP_NAME="${CF_APP}-${BUILD_NUMBER}"
 
       # write out manifest.yml
       echo "Writing manifest.yml..."
 
       cat > ./manifest.yml <<EOL
-      declared-services:
-        ${DISCOVERY_SERVICE_NAME}:
-          label: discovery
-          plan: free
-        ${NLU_SERVICE_NAME}:
-          label: natural-language-understanding
-          plan: free
-      name: ${CF_APP}
+      name: ${TEMP_APP_NAME}
       instances: ${CF_INSTANCES}
       memory: ${CF_MEMORY}
       buildpack: python_buildpack
       command: python server/python/server.py
-      no-route: true
       services:
        - ${DISCOVERY_SERVICE_NAME}
-       - ${NLU_SERVICE_NAME}
+      env:
+        DISCOVERY_REGULAR_COLLECTION_NAME=${DISCOVERY_REGULAR_COLLECTION_NAME}
+        DISCOVERY_ENRICHED_COLLECTION_NAME=${DISCOVERY_ENRICHED_COLLECTION_NAME}
 
       EOL
 
-      export NAME="${CF_APP}_${BUILD_NUMBER}"
-      cf push "${NAME}"
-  - name: Deploy Begin
-    type: deployer
-    target:
-      region_id: ${PROD_REGION_ID}
-      organization: ${PROD_ORG_NAME}
-      space: ${PROD_SPACE_NAME}
-    extension_id: ibm.devops.services.pipeline.devops.ad_start
-    RAMPUP_DURATION: 30s
-    COMMAND: |-
-      #!/bin/bash
-      #
-      # The following code uses the Active Deploy service to update your new application with zero downtime.
-      # The code used is available at https://github.com/Osthanes/update_service
-      # and https://github.com/Osthanes/activedeploy_common.
-      #
-      # For details about how to set up the Active Deploy extension for the Delivery Pipeline, see
-      # https://console.ng.bluemix.net/docs/services/ActiveDeploy/updatingapps.html#adpipeline.
-      #
-      # Feel free to fork the code. After creating your fork, define the environment variable GIT_HOME to use the forked repositories with the
-      # format https://github.com/${GIT_HOME}/update_service and https://github.com/${GIT_HOME}/activedeploy_common.
-      #
-      # Make sure the following variables are defined as environment properties with no values:
-      # NAME: The name of your new application. This variable has to be exported in the first deploy job.
-      # TEST_RESULT_FOR_AD: Passes the results of the test phase to the Active Deploy - Complete job. Set this variable in the test job.
-      #
-      # The following variables may be defined as environment properties:
-      # GROUP_SIZE: The number of instances that are created during initial deployment. The default value is 1.
-      # CONCURRENT_VERSIONS: The number of application versions to keep at the end of deployment. The default value is 2.
-      # AD_INSTANCE_NAME: The name for Active Deploy Instance, if it does not yet exist. The default value is activedeploy-for-pipeline.
+      echo "Pushing new app:$TEMP_APP_NAME"
+      cf push $TEMP_APP_NAME
+      export TEMP_APP_URL="https://${TEMP_APP_NAME}.${ROUTE_DOMAIN}"
 
-      source ${EXT_DIR}/git_util.sh
-      git_retry clone https://github.com/Osthanes/update_service.git activedeploy
-      activedeploy/activedeploy_step_1.sh
-    RAMPDOWN_DURATION: 30s
-    DEPLOYMENT_METHOD: Red Black
-  - name: Test
+      echo "##############################################################"
+      echo "Deployed new app $TEMP_APP_NAME"
+      echo "on temporary route: $TEMP_APP_URL"
+      echo "##############################################################"
+
+      # View logs
+      #cf logs "${TEMP_APP_NAME}" --recent
+  - name: Sanity Check
     type: tester
-    fail_stage: false
     script: |
       #!/bin/bash
 
-      #!/bin/bash
-      export TEST_RESULT_FOR_AD=1
+      max_health_checks=20
+      expected_response="200"
 
-      ENDPOINT="https://${ROUTE_HOSTNAME}.${ROUTE_DOMAIN}/api/query/regular"
+      ENDPOINT="${TEMP_APP_URL}/api/query/regular"
 
       echo "Testing endpoint: ${ENDPOINT} with POST"
 
@@ -146,33 +128,71 @@ stages:
 
       HTTP_STATUS=$(echo "$HTTP_RESPONSE" | head -n 1| cut -d $' ' -f2)
 
-      if [ "$HTTP_STATUS" = "200" ]; then
-        export TEST_RESULT_FOR_AD=0
+      echo "Check that the new app is ready to serve..."
+      iterations=0
+      while [[ "${iterations}" -lt "${max_health_checks}" ]]
+      do
+        if [[ "${HTTP_STATUS}" == "${expected_response}" ]]; then
+          echo "Got expected ${HTTP_STATUS} status"
+          break
+        else
+          iterations=$(( iterations + 1 ))
+          sleep 3
+          echo "Waiting for ${expected_response} response... Got ${HTTP_RESPONSE} (${iterations}/${max_health_checks})"
+        fi
+      done
+
+      if [[ "${iterations}" == "${max_health_checks}" ]]; then
+        echo "Couldn't get ${expected_response} response. Reverting..."
+        # Delete temporary route
+        cf delete-route $ROUTE_DOMAIN -n $TEMP_APP_NAME -f
+        # Stop temporary app
+        cf stop $TEMP_APP_NAME
+        exit 1
       fi
-  - name: Deploy Finish
+      echo "##############################################################"
+      echo "Sanity checked new app $TEMP_APP_NAME"
+      echo "on temporary route: $TEMP_APP_URL"
+      echo "##############################################################"
+  - name: Roll Out
     type: deployer
     target:
       region_id: ${PROD_REGION_ID}
       organization: ${PROD_ORG_NAME}
       space: ${PROD_SPACE_NAME}
-    extension_id: ibm.devops.services.pipeline.devops.ad_finish
-    COMMAND: |-
+      application: ${CF_APP_NAME}
+    script: |-
       #!/bin/bash
-      #
-      # The following code uses the Active Deploy service to update your new application with zero downtime.
-      # The code used is available at https://github.com/Osthanes/update_service
-      # and https://github.com/Osthanes/activedeploy_common.
-      #
-      # For details about how to set up the Active Deploy extension for the Delivery Pipeline, see
-      # https://console.ng.bluemix.net/docs/services/ActiveDeploy/updatingapps.html#adpipeline.
-      #
-      # Feel free to fork the code. After creating your fork, define the environment variable GIT_HOME to use the forked repositories with the
-      # format https://github.com/${GIT_HOME}/update_service and https://github.com/${GIT_HOME}/activedeploy_common.
-      #
+      #set -x
+      #CF_TRACE=true
 
-      source ${EXT_DIR}/git_util.sh
-      git_retry clone https://github.com/Osthanes/update_service.git activedeploy
-      activedeploy/activedeploy_step_2.sh
+      cf app $TEMP_APP_NAME
+
+      # Map traffic to the new version by binding to the public host.
+      # NOTE: The old version(s) is still taking traffic to avoid disruption in service.
+      cf map-route $TEMP_APP_NAME $ROUTE_DOMAIN -n $CF_APP_NAME
+      cf routes | { grep $TEMP_APP_NAME || true; }
+
+      # Delete the temporary route that was used for testing since it is no longer needed.
+      cf unmap-route $TEMP_APP_NAME $ROUTE_DOMAIN -n $TEMP_APP_NAME
+      cf delete-route $ROUTE_DOMAIN -n $TEMP_APP_NAME -f
+
+      # Delete the old app at this point. They are no longer needed.
+      cf delete -f -r $CF_APP_NAME
+
+      # Rename temp app now it is public
+      cf rename $TEMP_APP_NAME $CF_APP_NAME
+
+      echo "Public route bindings:"
+      cf routes | { grep $CF_APP_NAME || true; }
+      cf app $CF_APP_NAME
+      export APP_URL=http://$(cf app $CF_APP_NAME | grep urls: | awk '{print $2}')
+      echo "##############################################################"
+      echo "You have successfully executed a rolling deployment of $CF_APP_NAME"
+      echo "at: $APP_URL"
+      echo "##############################################################"
+      # View logs
+      #cf logs "${CF_APP_NAME}" --recent
 hooks:
 - enabled: true
   label: null
