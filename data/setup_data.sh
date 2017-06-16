@@ -2,7 +2,7 @@
 
 python --version
 echo "Downloading virtualenv..."
-curl -O https://pypi.python.org/packages/source/v/virtualenv/virtualenv-15.0.0.tar.gz
+curl -O "https://pypi.python.org/packages/source/v/virtualenv/virtualenv-15.0.0.tar.gz"
 echo "Unzipping virtualenv..."
 tar xvfz virtualenv-15.0.0.tar.gz
 echo "Setting up virtualenv..."
@@ -23,11 +23,11 @@ FILE_NAME="travel.stackexchange.com.7z"
 DATA_LOCATION="${DIRECTORY_NAME}/${FILE_NAME}"
 DOWNLOAD_URL="https://archive.org/download/stackexchange/${FILE_NAME}"
 echo "Downloading files from ${DOWNLOAD_URL}"
-curl -k -sL -o "${DATA_LOCATION}" "${DOWNLOAD_URL}"
+curl -L -o "${DATA_LOCATION}" "${DOWNLOAD_URL}"
 echo "Downloads Complete!"
 
 echo "Unzip files..."
-7z e $DATA_LOCATION
+7z e -o$DIRECTORY_NAME $DATA_LOCATION
 
 # run extraction
 echo "Begin extraction"
