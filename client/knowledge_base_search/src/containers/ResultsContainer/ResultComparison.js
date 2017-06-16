@@ -51,18 +51,6 @@ class ResultComparison extends Component {
       <Element name={'scroll_to_result_' + index}>
         <div className='results_comparison--div'>
           <ResultBox
-            result_type={'Discovery Passage'}
-            result_rank={index + 1}
-            result_text={passage.passage_text}
-            result_score={passage.passage_score}
-            is_full_result_shown={
-              this.isFullResultShown(index, 'passage')
-            }
-            onToggleFullResult={
-              () => { this.toggleFullResult(index, 'passage') }
-            }
-          />
-          <ResultBox
             result_type={'Discovery Standard'}
             result_rank={index + 1}
             result_text={result.answer}
@@ -72,6 +60,18 @@ class ResultComparison extends Component {
             }
             onToggleFullResult={
               () => { this.toggleFullResult(index, 'regular') }
+            }
+          />
+          <ResultBox
+            result_type={'Discovery Passage'}
+            result_rank={index + 1}
+            result_text={passage.passage_text}
+            result_score={passage.passage_score}
+            is_full_result_shown={
+              this.isFullResultShown(index, 'passage')
+            }
+            onToggleFullResult={
+              () => { this.toggleFullResult(index, 'passage') }
             }
           />
         </div>
