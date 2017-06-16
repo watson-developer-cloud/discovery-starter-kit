@@ -50,6 +50,12 @@ stages:
   - name: DISCOVERY_ENRICHED_COLLECTION_NAME
     value: knowledge_base_enriched
     type: text
+  - name: TEMP_APP_NAME
+    value: ''
+    type: text
+  - name: TEMP_APP_URL
+    value: ''
+    type: text
   - name: ROUTE_DOMAIN
     value: mybluemix.net
     type: text
