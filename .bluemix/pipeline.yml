@@ -41,11 +41,20 @@ stages:
   - name: DISCOVERY_SERVICE_NAME
     value: Discovery-Demo
     type: text
+  - name: NLU_SERVICE_NAME
+    value: Discovery-Demo-NLU
+    type: text
   - name: DISCOVERY_REGULAR_COLLECTION_NAME
     value: knowledge_base_regular
     type: text
   - name: DISCOVERY_ENRICHED_COLLECTION_NAME
     value: knowledge_base_enriched
+    type: text
+  - name: TEMP_APP_NAME
+    value: ''
+    type: text
+  - name: TEMP_APP_URL
+    value: ''
     type: text
   - name: ROUTE_DOMAIN
     value: mybluemix.net
@@ -77,6 +86,10 @@ stages:
         exit 1
       fi
 
+      if ! cf service ${NLU_SERVICE_NAME} ; then
+        cf create-service natural-language-understanding free ${NLU_SERVICE_NAME}
+      fi
+
       # Compute a unique app name using the reserved CF_APP name (configured in the
       # deployer or from the manifest.yml file) and the build number
 
@@ -93,6 +106,7 @@ stages:
       command: python server/python/server.py
       services:
        - ${DISCOVERY_SERVICE_NAME}
+       - ${NLU_SERVICE_NAME}
       env:
         DISCOVERY_REGULAR_COLLECTION_NAME: ${DISCOVERY_REGULAR_COLLECTION_NAME}
         DISCOVERY_ENRICHED_COLLECTION_NAME: ${DISCOVERY_ENRICHED_COLLECTION_NAME}
@@ -170,7 +184,7 @@ stages:
 
       # Map traffic to the new version by binding to the public host.
       # NOTE: The old version(s) is still taking traffic to avoid disruption in service.
-      cf map-route $TEMP_APP_NAME $ROUTE_DOMAIN -n $CF_APP_NAME
+      cf map-route $TEMP_APP_NAME $ROUTE_DOMAIN -n $CF_APP
       cf routes | { grep $TEMP_APP_NAME || true; }
 
       # Delete the temporary route that was used for testing since it is no longer needed.
@@ -178,21 +192,21 @@ stages:
       cf delete-route $ROUTE_DOMAIN -n $TEMP_APP_NAME -f
 
       # Delete the old app at this point. They are no longer needed.
-      cf delete -f -r $CF_APP_NAME
+      cf delete -f -r $CF_APP
 
       # Rename temp app now it is public
-      cf rename $TEMP_APP_NAME $CF_APP_NAME
+      cf rename $TEMP_APP_NAME $CF_APP
 
       echo "Public route bindings:"
-      cf routes | { grep $CF_APP_NAME || true; }
-      cf app $CF_APP_NAME
-      export APP_URL=http://$(cf app $CF_APP_NAME | grep urls: | awk '{print $2}')
+      cf routes | { grep $CF_APP || true; }
+      cf app $CF_APP
+      export APP_URL=https://$(cf app $CF_APP | grep urls: | awk '{print $2}')
       echo "##############################################################"
-      echo "You have successfully executed a rolling deployment of $CF_APP_NAME"
+      echo "You have successfully executed a rolling deployment of $CF_APP"
       echo "at: $APP_URL"
       echo "##############################################################"
       # View logs
-      #cf logs "${CF_APP_NAME}" --recent
+      #cf logs "${CF_APP}" --recent
 hooks:
 - enabled: true
   label: null
