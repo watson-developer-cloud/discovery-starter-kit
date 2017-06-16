@@ -1,6 +1,6 @@
 ### Discovery Starter Kit [![Build Status](https://api.travis-ci.org/watson-developer-cloud/discovery-starter-kit.svg)](https://travis-ci.org/watson-developer-cloud/discovery-starter-kit)
 
-A repo containing the basics for setting up one of the watson developer cloud SDKs with a use case
+A repo containing the basics for setting up one of the watson developer cloud SDKs with a Q&A use case
 
 ### Knowledge Base Search
 
@@ -8,11 +8,13 @@ Shows the comparison on what the Watson Discovery Service can add to your data t
 
 [![Deploy To Bluemix](https://console.ng.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.ng.bluemix.net/devops/setup/deploy/?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
 
-You will have to modify the `ROUTE_HOSTNAME` environment variable to the name of the host you want to put it at. By default the host for this repo is `knowledge-base-search` which becomes [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
+When this button is clicked, it will deploy the master branch of the repo into Bluemix and you will have to modify the application name to the name of the host you want to put it at. The default will get mapped to {organization/user}-{repo_name}-{timestamp}.
 
-After deployment, you must:
+The running demo of this `knowledge-base-search` is at [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
 
-1. Create 2 collections in the Watson Discovery Service by going to the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net). Make sure to store the names in the `.env` file
+After creating the toolchain, you must:
+
+1. Create 2 collections in the Watson Discovery Service by going to the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net). Make sure to store the names in the `.env` file and add them to the environment variables in your deployment configuration. By default, they are set to:
    ```
    DISCOVERY_REGULAR_COLLECTION_NAME=knowledge_base_regular
    DISCOVERY_ENRICHED_COLLECTION_NAME=knowledge_base_enriched
@@ -21,13 +23,14 @@ After deployment, you must:
    ```
     curl -X POST -H "Content-Type: application/json" -u "<discovery_username_here>:<discovery_password_here>" "https://gateway.watsonplatform.net/discovery/api/v1/environments/<discovery_environment_id_here>/configurations?version=2017-01-01"
    ```
+1. Make sure to use [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to switch the configuration the "enriched" collection is using to the uploaded configuration from the previous step
 1. [Upload](#setting-up-the-data) sample documents to the collections you created
-1. Once the upload is complete, view your running app at the host defined in `ROUTE_HOSTNAME` above
+1. Once the upload is complete, view your running app at the host defined by the application name defined in your toolchain setup above (which by default will be `https://{organization/user}-{repo_name}-{timestamp}.mybluemix.net`)
 
 
 #### Services
 
-If the Deploy to Bluemix button does not create services for you, you must create them manually
+The deployment script found in the "Create Toolchain" should automatically create a NLU service if it doesn't exist, but an instance of Discovery will require additional configuration even when the deployment script creates it. See the section above about creating collections and configurations in Discovery. To do the manual creation of these required services, follow these steps:
 
 1. Make a copy of `.env.example` at `.env` and fill with your service credentials by setting up new services on bluemix
   1. [Discovery](https://console.ng.bluemix.net/catalog/services/discovery?taxonomyNavigation=watson)
