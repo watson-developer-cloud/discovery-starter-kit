@@ -13,19 +13,21 @@ echo "Installing dependencies..."
 pip install -r server/python/requirements/production.txt
 
 # make the directory
-echo "Making directory 'stackexchange_travel'"
-mkdir stackexchange_travel
+DIRECTORY_NAME="stackexchange_travel"
+echo "Making directory '${DIRECTORY_NAME}'"
+mkdir $DIRECTORY_NAME
 echo "Directory created"
 
 # Download from stackexchange
 FILE_NAME="travel.stackexchange.com.7z"
+DATA_LOCATION="${DIRECTORY_NAME}/${FILE_NAME}"
 DOWNLOAD_URL="https://archive.org/download/stackexchange/${FILE_NAME}"
 echo "Downloading files from ${DOWNLOAD_URL}"
-curl --connect-timeout 5 --max-time 10 --retry 5 --retry-delay 0 --retry-max-time 60 -k -sL -o./stackexchange_travel "${DOWNLOAD_URL}"
+curl -k -sL -o "${DATA_LOCATION}" "${DOWNLOAD_URL}"
 echo "Downloads Complete!"
 
 echo "Unzip files..."
-7z e $FILE_NAME
+7z e $DATA_LOCATION
 
 # run extraction
 echo "Begin extraction"
