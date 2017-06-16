@@ -1,13 +1,7 @@
 #!/bin/bash
 
-# python --version
-# echo "Downloading virtualenv..."
-# curl -O https://pypi.python.org/packages/source/v/virtualenv/virtualenv-15.0.0.tar.gz
-# echo "Unzipping virtualenv..."
-# tar xvfz virtualenv-15.0.0.tar.gz
-# echo "Setting up virtualenv..."
-# python virtualenv-15.0.0/virtualenv.py my_new_env
-# . my_new_env/bin/activate
+echo "Upgrading pip..."
+pip install --upgrade pip
 
 echo "Installing dependencies..."
 pip install -r server/python/requirements/production.txt
