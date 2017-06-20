@@ -288,12 +288,17 @@ for posts in postsXML.findall('row'):
             downVotes = int(tempDict[3])  # DownMod vote type id is 3
         tempDict.clear()
         question = {'title': title, 'subtitle': subtitle}
-        item = {'id': postId, 'answerScore': answerScore, 'answer': answer,
-                'question': question, 'accepted': accepted,
-                'userReputation': int(reputation), 'upModVotes': upVotes,
-                'downModVotes': downVotes, 'views': views, 'tags': tags,
-                'userId': userId, 'username': username,
-                'authorUsername': authorUsername, 'authorUserId': authorUserId}
+        question_metadata = {'views': views, 'tags': tags}
+        user_metadata = {'id': userId, 'username': username,
+                         'reputation': int(reputation)}
+        author_metadata = {'id': authorUserId, 'username': authorUsername}
+        answer_metadata = {'score': answerScore, 'accepted': accepted,
+                           'upModVotes': upVotes, 'downModVotes': downVotes}
+        item = {'id': postId, 'question': question, 'answer': answer,
+                'question_metadata': question_metadata,
+                'answer_metadata': answer_metadata,
+                'author_metadata': author_metadata,
+                'user_metadata': user_metadata}
         # write the file
         output_str = json.dumps(item, sort_keys=True).replace('\n', '')
         f2 = open(OUTPUT_DIR + '/travel_' + str(postId) + '.json', 'w+')
