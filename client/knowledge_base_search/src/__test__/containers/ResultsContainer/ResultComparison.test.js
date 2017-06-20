@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ResultComparison from '../../../containers/ResultsContainer/ResultComparison';
 import ResultBox from '../../../containers/ResultsContainer/ResultBox';
-import FullResult from '../../../containers/ResultsContainer/FullResult';
 import { shallow } from 'enzyme';
 
 describe('<ResultComparison />', () => {
+  let wrapper;
   const onSetFullResultMock = jest.fn();
   const props = {
     result: {
@@ -28,11 +28,41 @@ describe('<ResultComparison />', () => {
     ReactDOM.render(<ResultComparison {...props} />, div);
   });
 
-  it('has 2 <ResultBox />', () => {
-    const wrapper = shallow(<ResultComparison {...props} />);
+  it('has 2 <ResultBox /> with expected text', () => {
+    wrapper = shallow(<ResultComparison {...props} />);
 
-    expect(wrapper.find(ResultBox)).toHaveLength(2);
-    expect(wrapper.find(FullResult)).toHaveLength(0);
+    const resultBoxes = wrapper.find(ResultBox);
+    expect(resultBoxes).toHaveLength(2);
+    expect(resultBoxes.at(0).props().result_text).toEqual('a good answer');
+    expect(resultBoxes.at(1).props().result_text).toEqual('a passage');
+  });
+
+  it('has 2 titles', () => {
+    wrapper = shallow(<ResultComparison {...props} />);
+
+    const titles = wrapper.find('.results_comparison_header--div h4');
+
+    expect(titles).toHaveLength(2);
+    expect(titles.at(0).text()).toEqual('Standard Search');
+    expect(titles.at(1).text()).toEqual('Passage Search');
+  });
+
+  describe('when index is not 0', () => {
+    beforeEach(() => {
+      const props_with_nonzero_index = Object.assign({}, props, {
+        index: 1
+      });
+
+      wrapper = shallow(<ResultComparison {...props_with_nonzero_index} />);
+    });
+
+    it('does not show titles', () => {
+      const titles = wrapper.find('.results_comparison_header--div h4');
+
+      expect(titles).toHaveLength(0);
+      expect(wrapper.text()).not.toContain('Standard Search');
+      expect(wrapper.text()).not.toContain('Passage Search');
+    });
   });
 
   describe('when full_result_index is equal to index', () => {
@@ -47,11 +77,11 @@ describe('<ResultComparison />', () => {
       wrapper = shallow(<ResultComparison {...props_with_equal_index} />);
     });
 
-    it('shows the FullResult with regular props passed in', () => {
-      const fullResult = wrapper.find(FullResult);
+    it('has the first <ResultBox /> is_full_result_shown = true', () => {
+      const resultBoxes = wrapper.find(ResultBox);
 
-      expect(fullResult).toHaveLength(1);
-      expect(fullResult.props().answer).toEqual('a good answer');
+      expect(resultBoxes.at(0).props().is_full_result_shown).toBe(true);
+      expect(resultBoxes.at(1).props().is_full_result_shown).toBe(false);
     });
 
     describe('and full_result_type is "passage"', () => {
@@ -64,11 +94,17 @@ describe('<ResultComparison />', () => {
         wrapper = shallow(<ResultComparison {...props_with_enriched_type} />);
       });
 
-      it('has <FullResult /> with passage full result passed in', () => {
-        const fullResult = wrapper.find(FullResult);
+      it('has the second <ResultBox /> is_full_result_shown = true', () => {
+        const resultBoxes = wrapper.find(ResultBox);
 
-        expect(fullResult).toHaveLength(1);
-        expect(fullResult.props().answer).toEqual('a great answer');
+        expect(resultBoxes.at(0).props().is_full_result_shown).toBe(false);
+        expect(resultBoxes.at(1).props().is_full_result_shown).toBe(true);
+      });
+
+      it('has the full passage answer shown', () => {
+        const resultBoxes = wrapper.find(ResultBox);
+
+        expect(resultBoxes.at(1).props().result_text).toEqual('a great answer');
       });
     });
   });
@@ -77,7 +113,7 @@ describe('<ResultComparison />', () => {
     let wrapper;
     const props_with_full_result = Object.assign({}, props, {
       full_result_index: 0,
-      full_result_type: 'enriched'
+      full_result_type: 'passage'
     });
 
     beforeEach(() => {

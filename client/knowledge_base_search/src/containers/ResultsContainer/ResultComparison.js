@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
 import ResultBox from './ResultBox';
-import FullResult from './FullResult';
 import './styles.css';
 
 class ResultComparison extends Component {
   componentWillMount() {
     this.state = {
-      full_result: null
+      passage_result_text: this.getPassageResult(this.props)
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      passage_result_text: this.getPassageResult(nextProps)
+    });
   }
 
   componentDidMount() {
@@ -31,30 +35,48 @@ class ResultComparison extends Component {
     return full_result_type === type && full_result_index === index;
   }
 
-  getFullResult() {
-    const { full_result_type, result, passageFullResult } = this.props;
+  getPassageResult(nextProps) {
+    const {
+      index,
+      full_result_type,
+      full_result_index,
+      passage: {
+        passage_text
+      },
+      passageFullResult: {
+        answer
+      }
+    } = nextProps;
 
-    return full_result_type === 'passage' ? passageFullResult : result;
+    return index === full_result_index && full_result_type === 'passage'
+      ? answer
+      : passage_text;
   }
 
   render() {
     const {
-      result,
-      passage,
-      index,
-      full_result_index,
-      full_result_type,
-      fullResultTransitionTimeout
+      result: {
+        answer
+      },
+      index
     } = this.props;
 
     return (
       <Element name={'scroll_to_result_' + index}>
+        { index === 0
+          ? (
+              <div className='results_comparison_header--div'>
+                <h4>Standard Search</h4>
+                <h4>Passage Search</h4>
+              </div>
+            )
+          : null
+        }
         <div className='results_comparison--div'>
           <ResultBox
-            result_type={'Discovery Standard'}
+            result_type={'regular'}
+            result_text={answer}
             result_rank={index + 1}
-            result_text={result.answer}
-            result_score={result.score}
             is_full_result_shown={
               this.isFullResultShown(index, 'regular')
             }
@@ -63,10 +85,9 @@ class ResultComparison extends Component {
             }
           />
           <ResultBox
-            result_type={'Discovery Passage'}
+            result_type={'passage'}
+            result_text={this.state.passage_result_text}
             result_rank={index + 1}
-            result_text={passage.passage_text}
-            result_score={passage.passage_score}
             is_full_result_shown={
               this.isFullResultShown(index, 'passage')
             }
@@ -75,23 +96,6 @@ class ResultComparison extends Component {
             }
           />
         </div>
-        <CSSTransitionGroup
-          transitionName='full_result'
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={fullResultTransitionTimeout}
-        >
-          {
-            full_result_index === index
-              ? (
-                  <FullResult
-                    key={full_result_index + '_' + full_result_type}
-                    transitionTimeout={fullResultTransitionTimeout}
-                    {...this.getFullResult()}
-                  />
-                )
-              : null
-          }
-        </CSSTransitionGroup>
       </Element>
     );
   }
@@ -104,12 +108,7 @@ ResultComparison.PropTypes = {
   index: PropTypes.number.isRequired,
   onSetFullResult: PropTypes.func.isRequired,
   full_result_index: PropTypes.number.isRequired,
-  full_result_type: PropTypes.string.isRequired,
-  fullResultTransitionTimeout: PropTypes.number.isRequired
-}
-
-ResultComparison.defaultProps = {
-  fullResultTransitionTimeout: 300
+  full_result_type: PropTypes.string.isRequired
 }
 
 export default ResultComparison;
