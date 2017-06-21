@@ -29,7 +29,10 @@ body * + * {
   border-bottom-color: #00b39f;
 }
 
-.base--a:hover,
+.base--a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
 .base--a:active,
 .base--a:focus {
   color: #00a894;

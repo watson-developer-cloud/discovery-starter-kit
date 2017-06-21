@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
-import { Icon, TextInput } from 'watson-react-components';
+import { Icon, TextInput, Tabs, Pane } from 'watson-react-components';
 import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
@@ -9,7 +8,8 @@ import './styles.css';
 class SearchContainer extends Component {
   componentWillMount() {
     this.state = {
-      search_input: ''
+      search_input: '',
+      random_queries: this.getFiveRandomQueries(),
     };
   }
 
@@ -19,12 +19,19 @@ class SearchContainer extends Component {
     }
   }
 
-  handleOnClick = () => {
-    const totalQueries = randomQueries.length;
-    const randomInt = Math.floor(Math.random() * totalQueries);
+  getFiveRandomQueries() {
+    const allQueries = randomQueries.slice(0);
+    let myQueries = [];
+    for(let i = 0; i < 5; i++) {
+      let myIndex = Math.floor(Math.random() * allQueries.length);
+      myQueries.push(allQueries.splice(myIndex, 1)[0]);
+    }
+    return myQueries;
+  }
 
-    this.handleOnInput({'target': { 'value': randomQueries[randomInt]}});
-    this.props.onSubmit(randomQueries[randomInt]);
+  handleQuestionClick(query, index) {
+    this.handleOnInput({'target': { 'value': query}});
+    this.props.onSubmit(query);
   }
 
   handleOnInput = (e) => {
@@ -43,62 +50,51 @@ class SearchContainer extends Component {
   render() {
     return (
       <section className="_full-width-row search_container--section">
-        <div className="_container">
-          <CSSTransitionGroup
-            transitionName='search_header'
-            transitionEnterTimeout={500}
-            transitionLeaveTimeout={300}
-          >
-            {!this.props.hasResults
-              ? (
-                <h2 className="header--input" key='header_input'>
-                  Use a community's expertise to amplify the way you find information.
-                </h2>
-                )
-              : null
-            }
-          </CSSTransitionGroup>
+        <div className="_container _container_large">
           <form onSubmit={this.handleOnSubmit}>
-            <div className="positioned--icon">
-              <Icon type="search" />
-            </div>
-            <TextInput
-              id="search_input"
-              placeholder="Enter words, phrase, or a question about travel"
-              value={this.state.search_input}
-              onInput={this.handleOnInput}
-              style={{width: '100%'}}
-              disabled={this.props.isFetching}
-            />
-            <div className="_container-right">
-              <button
-                type="button"
-                className="random-query--button"
-                onClick={this.handleOnClick}
-                disabled={this.props.isFetching}
-              >
-                Random Query
-              </button>
-            </div>
-            <CSSTransitionGroup
-              transitionName='search_button'
-              transitionEnterTimeout={500}
-              transitionLeaveTimeout={300}
-            >
-              {!this.props.hasResults
-                ? (
-                  <div className="_container-center">
-                    <button
-                      className="white--button"
-                      disabled={this.props.isFetching}
-                    >
-                      Retrieve Answers
-                    </button>
-                  </div>
-                  )
-                : null
-              }
-            </CSSTransitionGroup>
+            <Tabs selected={0}>
+              <Pane label="Preset questions">
+              <div className='clickable-tabs'>
+                {
+                  this.state.random_queries.map((query, index) => {
+                    return (
+                      <span key={'questionButton-'+index}>
+                        <button className={query === this.state.search_input
+                          ? 'active_button clickable-tab'
+                          : 'clickable-tab'}
+                          type='button'
+                          disabled={this.props.isFetching}
+                          onClick={() => {
+                            this.handleQuestionClick(query, index);
+                          }}>
+                            {query}
+                        </button>
+                      </span>
+                    )
+                  })
+                }
+              </div>
+              </Pane>
+              <Pane label='Custom question'>
+                <span className="positioned--icon">
+                  <Icon type="search" />
+                </span>
+                <TextInput
+                  id="search_input"
+                  placeholder="Enter words, phrase, or a question about travel"
+                  value={this.state.search_input}
+                  onInput={this.handleOnInput}
+                  style={{width: '100%'}}
+                  disabled={this.props.isFetching}
+                />
+                <button
+                  className="white--button"
+                  disabled={this.props.isFetching}
+                >
+                  Retrieve Answers
+                </button>
+              </Pane>
+            </Tabs>
           </form>
         </div>
       </section>
