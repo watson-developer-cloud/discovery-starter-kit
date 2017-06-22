@@ -71,7 +71,7 @@ class ResultsContainer extends Component {
           {
             results.matching_results > 0 || enriched_results.matching_results > 0
               ? (
-                  <div id='test' className='_container _container_large'>
+                  <div className='_container _container_large'>
                     <h4>
                       Compare the top Watson result to a standard Discovery search on Stack Exchange.
                     </h4>
@@ -83,7 +83,7 @@ class ResultsContainer extends Component {
                           transitionLeave={false}
                         >
                           {
-                            [...Array(this.state.total_results_shown).keys()].map((i) => {
+                            [...Array(this.state.total_results_shown)].map((x, i) => {
                               return(
                                 <ResultComparison
                                   key={'result_comparison_' + i}

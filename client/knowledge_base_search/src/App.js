@@ -64,17 +64,20 @@ class App extends Component {
       this.setState({
         fetching: false,
         results_fetched: true,
-        results_error: error
+        results_error: error.message
       });
     });
   }
 
   retrieveMissingPassages(enriched_results) {
-    const uniqueDocumentIds = new Set(
-      enriched_results.passages.map((passage) => {
-        return passage.document_id;
-      })
-    );
+    const uniqueDocumentIds = enriched_results.passages.reduce(
+      (uniqueVals, passage) => {
+        if (uniqueVals.indexOf(passage.document_id) === -1) {
+          uniqueVals.push(passage.document_id);
+        }
+        return uniqueVals;
+      }, []);
+
     let missingDocumentIds = [];
     uniqueDocumentIds.forEach((document_id) => {
       const targetId = parseInt(document_id, 10);

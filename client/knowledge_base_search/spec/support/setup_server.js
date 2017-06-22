@@ -15,10 +15,16 @@ casper.kill_server = (callback) => {
   });
 }
 
+// monkey patch a screenshots directory
+casper.screenshots_dir = 'tmp/screenshots';
 // print output to console
 casper.options.verbose = true;
 // set this to 'debug' or 'info' if you want more info printed
 casper.options.logLevel = 'error';
+// increase the timeout
+casper.options.waitTimeout = 10000;
+// add array.find polyfill
+casper.options.clientScripts.push('./node_modules/phantomjs-polyfill-find/find-polyfill.js');
 
 casper.test.setUp((done) => {
   let server = spawn('python', [ '../../server/python/server.py' ]);
@@ -28,6 +34,11 @@ casper.test.setUp((done) => {
   casper.on('exit', (code) => {
     casper.log(`casper exiting with code [${code}]`, 'debug');
     casper.kill_server();
+  });
+
+  // log messages from browser console
+  casper.on('remote.message', (message) => {
+    casper.log(message, 'debug');
   });
 
   server.stdout.on('data', (data) => {

@@ -47,6 +47,22 @@ describe('<ResultComparison />', () => {
     expect(titles.at(1).text()).toEqual('Passage Search');
   });
 
+  describe('when passage is not present', () => {
+    beforeEach(() => {
+      const props_with_no_passage = Object.assign({}, props, {
+        passage: null
+      });
+
+      wrapper = shallow(<ResultComparison {...props_with_no_passage} />);
+    });
+
+    it('passes null to the passage <ResultBox />', () => {
+      const resultBoxes = wrapper.find(ResultBox);
+
+      expect(resultBoxes.at(1).props().result_text).toEqual(null);
+    });
+  });
+
   describe('when index is not 0', () => {
     beforeEach(() => {
       const props_with_nonzero_index = Object.assign({}, props, {
@@ -85,13 +101,13 @@ describe('<ResultComparison />', () => {
     });
 
     describe('and full_result_type is "passage"', () => {
-      beforeEach(() => {
-        const props_with_enriched_type = Object.assign({}, props, {
-          full_result_index: props.index,
-          full_result_type: 'passage'
-        });
+      const props_with_passage_type = Object.assign({}, props, {
+        full_result_index: props.index,
+        full_result_type: 'passage'
+      });
 
-        wrapper = shallow(<ResultComparison {...props_with_enriched_type} />);
+      beforeEach(() => {
+        wrapper = shallow(<ResultComparison {...props_with_passage_type} />);
       });
 
       it('has the second <ResultBox /> is_full_result_shown = true', () => {
@@ -105,6 +121,38 @@ describe('<ResultComparison />', () => {
         const resultBoxes = wrapper.find(ResultBox);
 
         expect(resultBoxes.at(1).props().result_text).toEqual('a great answer');
+      });
+
+      describe('and there is no passageFullResult', () => {
+        const props_with_no_passage = Object.assign({}, props_with_passage_type, {
+          passageFullResult: null
+        });
+
+        beforeEach(() => {
+          wrapper = shallow(<ResultComparison {...props_with_no_passage} />);
+        });
+
+        it('passes null to the passage <ResultBox />', () => {
+          const resultBoxes = wrapper.find(ResultBox);
+
+          expect(resultBoxes.at(1).props().result_text).toEqual(null);
+        });
+
+        describe('and there is no passage_text', () => {
+          const props_with_no_passage_text = Object.assign({}, props_with_no_passage, {
+            passage: null
+          });
+
+          beforeEach(() => {
+            wrapper = shallow(<ResultComparison {...props_with_no_passage_text} />);
+          });
+
+          it('passes null to the passage <ResultBox />', () => {
+            const resultBoxes = wrapper.find(ResultBox);
+
+            expect(resultBoxes.at(1).props().result_text).toEqual(null);
+          });
+        });
       });
     });
   });

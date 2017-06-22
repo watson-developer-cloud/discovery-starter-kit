@@ -40,17 +40,19 @@ class ResultComparison extends Component {
       index,
       full_result_type,
       full_result_index,
-      passage: {
-        passage_text
-      },
-      passageFullResult: {
-        answer
-      }
+      passage,
+      passageFullResult
     } = nextProps;
 
-    return index === full_result_index && full_result_type === 'passage'
-      ? answer
-      : passage_text;
+    if (index === full_result_index && full_result_type === 'passage') {
+      if (passageFullResult) {
+        return passageFullResult.answer;
+      }
+    } else if (passage){
+      return passage.passage_text;
+    }
+
+    return null;
   }
 
   render() {
