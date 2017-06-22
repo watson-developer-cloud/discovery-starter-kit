@@ -4,42 +4,6 @@
   margin-bottom: 2rem;
 }
 
-.clickable-tabs {
-  width: 70rem;
-}
-
-.clickable-tab {
-  color: #ffffff;
-  border: 2px solid #f0f0f0;
-  border-radius: 0.5rem;
-  background-color: inherit;
-  padding: 1rem;
-  font-size: 0.9rem;
-  font-weight: 200;
-  margin-top: -0.7rem;
-  margin-left: 1rem;
-  position: relative;
-  left: -2.9rem;
-  max-width: 11.6rem;
-  text-align: left;
-  vertical-align: middle;
-  min-height: 9rem;
-  line-height: 1.2rem;
-}
-
-.clickable-tab:hover {
-  background-color: #41d6c3;
-  border-color: #ffffff;
-  color: #003c32;
-}
-
-.active_button {
-  border-color: #ffffff;
-  color: #ffffff;
-  background-color: #008571;
-  outline: 0;
-}
-
 .tab-panels {
   background-color: transparent;
   border: none;
@@ -69,13 +33,8 @@
 }
 
 .tab-panels--tab-content {
-  background: transparent;
-  padding-bottom: 0;
-  height: 12rem;
-}
-
-.container {
-  max-width: 65rem;
+  background: inherit;
+  padding: 2rem 0;
 }
 
 .base--radio {
@@ -96,18 +55,20 @@
   padding-bottom: 0;
 }
 
+.custom_question--div {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
 .text-input {
-  top: -2.5rem;
-  left: -1rem;
-  margin-top: 1rem;
-  margin-bottom: 6.25rem;
-  width: 45rem;
+  flex-grow: 1;
+  margin-right: 2rem;
 }
 
 .text-input--input[type="text"] {
   color: #ffffff;
   margin-left: 2.5rem;
-  padding-right: 2.5rem;
   background-color: #00b39f;
   box-shadow: none;
   max-width: 100%;
@@ -120,11 +81,10 @@
 }
 
 .positioned--icon {
-  position: relative;
+  position: absolute;
   display: inline;
+  top: -1.5rem;
   z-index: 1;
-  top: 0.5rem;
-  left: -1rem;
 }
 
 .positioned--icon .icon {
@@ -140,9 +100,6 @@ button.white--button {
   border-color: #ffffff;
   font-size: 1.3125rem;
   font-weight: 300;
-  bottom: 11.6rem;
-  left: 45rem;
-  position: relative;
 }
 
 button.white--button:hover,

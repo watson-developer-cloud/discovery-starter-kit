@@ -4,7 +4,7 @@ casper.test.begin('Knowledge Base Search', (test) => {
   });
 
   casper.then(() => {
-    casper.click('.clickable-tab:first-child');
+    casper.click('.question_bar_button--button:first-child');
     casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
 
     casper.waitForSelector('.result_box--div',

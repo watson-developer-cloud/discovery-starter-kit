@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, TextInput, Tabs, Pane } from 'watson-react-components';
+import QuestionBarContainer from '../QuestionBarContainer/QuestionBarContainer';
 import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class SearchContainer extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
       search_input: '',
-      random_queries: this.getFiveRandomQueries(),
+      presetQueries: this.getShuffledQueries()
     };
   }
 
@@ -19,17 +21,19 @@ class SearchContainer extends Component {
     }
   }
 
-  getFiveRandomQueries() {
+  getShuffledQueries() {
     const allQueries = randomQueries.slice(0);
-    let myQueries = [];
-    for(let i = 0; i < 5; i++) {
-      let myIndex = Math.floor(Math.random() * allQueries.length);
-      myQueries.push(allQueries.splice(myIndex, 1)[0]);
+    let shuffledQueries = [];
+
+    for (let i = 0; i < randomQueries.length; i++) {
+      let queryIndex = Math.floor(Math.random() * allQueries.length);
+      shuffledQueries.push(allQueries.splice(queryIndex, 1)[0]);
     }
-    return myQueries;
+
+    return shuffledQueries;
   }
 
-  handleQuestionClick(query, index) {
+  handleOnQuestionClick = (query, index) => {
     this.handleOnInput({'target': { 'value': query}});
     this.props.onSubmit(query);
   }
@@ -49,50 +53,38 @@ class SearchContainer extends Component {
 
   render() {
     return (
-      <section className="_full-width-row search_container--section">
-        <div className="_container _container_large">
+      <section className='_full-width-row search_container--section'>
+        <div className='_container _container_large'>
           <form onSubmit={this.handleOnSubmit}>
             <Tabs selected={0}>
-              <Pane label="Preset questions">
-              <div className='clickable-tabs'>
-                {
-                  this.state.random_queries.map((query, index) => {
-                    return (
-                      <span key={'questionButton-'+index}>
-                        <button className={query === this.state.search_input
-                          ? 'active_button clickable-tab'
-                          : 'clickable-tab'}
-                          type='button'
-                          disabled={this.props.isFetching}
-                          onClick={() => {
-                            this.handleQuestionClick(query, index);
-                          }}>
-                            {query}
-                        </button>
-                      </span>
-                    )
-                  })
-                }
-              </div>
+              <Pane label='Preset questions'>
+                <QuestionBarContainer
+                  currentQuery={this.state.search_input}
+                  onQuestionClick={this.handleOnQuestionClick}
+                  presetQueries={this.state.presetQueries}
+                  isFetching={this.props.isFetching}
+                />
               </Pane>
               <Pane label='Custom question'>
-                <span className="positioned--icon">
-                  <Icon type="search" />
-                </span>
-                <TextInput
-                  id="search_input"
-                  placeholder="Enter words, phrase, or a question about travel"
-                  value={this.state.search_input}
-                  onInput={this.handleOnInput}
-                  style={{width: '100%'}}
-                  disabled={this.props.isFetching}
-                />
-                <button
-                  className="white--button"
-                  disabled={this.props.isFetching}
-                >
-                  Retrieve Answers
-                </button>
+                <div className='custom_question--div'>
+                  <span className='positioned--icon'>
+                    <Icon type='search' />
+                  </span>
+                  <TextInput
+                    id='search_input'
+                    placeholder='Enter words, phrase, or a question about travel'
+                    value={this.state.search_input}
+                    onInput={this.handleOnInput}
+                    style={{width: 'calc(100% - 3rem)'}}
+                    disabled={this.props.isFetching}
+                  />
+                  <button
+                    className='white--button'
+                    disabled={this.props.isFetching}
+                  >
+                    Retrieve Answers
+                  </button>
+                </div>
               </Pane>
             </Tabs>
           </form>

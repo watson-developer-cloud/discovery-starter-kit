@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchContainer from '../../../containers/SearchContainer/SearchContainer';
+import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 import { TextInput } from 'watson-react-components';
-import { shallow, mount } from 'enzyme';
-import { Pane } from 'watson-react-components';
+import { shallow } from 'enzyme';
 
 describe('<SearchContainer />', () => {
   const onSubmitMock = jest.fn();
@@ -18,19 +18,22 @@ describe('<SearchContainer />', () => {
       />, div);
   });
 
-  it('has the random query buttons displayed on initial load', () => {
+  it('has the Preset Queries shown on initial load', () => {
     const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
                         hasResults={false}
                         isFetching={false}  />
                     );
-    expect(wrapper.find('.clickable-tabs')).toHaveLength(1);
-    expect(wrapper.find('.clickable-tab')).toHaveLength(5);
+    const questionBar = wrapper.find(QuestionBarContainer);
+    expect(questionBar).toHaveLength(1);
+
+    const presetQueries = questionBar.props().presetQueries;
+    expect(presetQueries.length).toBeGreaterThan(0);
   });
 
   describe('when the Custom Query tab is pressed', () => {
-    const wrapper = mount(
+    const wrapper = shallow(
                       <SearchContainer
                         onSubmit={onSubmitMock}
                         hasResults={false}
@@ -43,25 +46,8 @@ describe('<SearchContainer />', () => {
 
     it('has the text search, icon, and submit button displayed', () => {
       expect(wrapper.find('.positioned--icon')).toHaveLength(1);
-      expect(wrapper.find('.text-input--input')).toHaveLength(1);
+      expect(wrapper.find(TextInput)).toHaveLength(1);
       expect(wrapper.find('.white--button')).toHaveLength(1);
-    });
-  });
-
-  describe('when a random query button is pressed', () => {
-    const wrapper = shallow(
-                      <SearchContainer
-                        onSubmit={onSubmitMock}
-                        hasResults={false}
-                        isFetching={false}  />
-                    );
-
-    beforeEach(() => {
-      wrapper.find('.clickable-tab').at(0).simulate('click');
-    });
-
-    it('calls onSubmit with one of the random queries', () => {
-      expect(onSubmitMock).toBeCalledWith(expect.any(String));
     });
   });
 
@@ -101,12 +87,8 @@ describe('<SearchContainer />', () => {
                 );
     });
 
-    describe('and the Preset Queries tab is selected', () => {
-      it('disables all the random query buttons', () => {
-        wrapper.find('.clickable-tab').nodes.forEach(function(button) {
-          expect(button.props.disabled).toBe(true);
-        });
-      });
+    it('passes "true" to the QuestionBarContainer', () => {
+      expect(wrapper.find(QuestionBarContainer).props().isFetching).toBe(true);
     });
 
     describe('and the Custom Query tab is selected', () => {
