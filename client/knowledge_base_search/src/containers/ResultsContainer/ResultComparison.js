@@ -74,9 +74,7 @@ class ResultComparison extends Component {
 
   render() {
     const {
-      result: {
-        answer
-      },
+      result,
       index
     } = this.props;
 
@@ -90,7 +88,7 @@ class ResultComparison extends Component {
             { index === 0 && (<h4>Standard search</h4>) }
             <ResultBox
               result_type={'regular'}
-              result_text={answer}
+              result_text={result ? result.answer : null}
               result_rank={index + 1}
               is_full_result_shown={
                 this.isFullResultShown(index, 'regular')

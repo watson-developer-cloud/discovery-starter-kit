@@ -26,9 +26,7 @@ class ResultsContainer extends Component {
     const { total_results_shown } = this.state;
 
     return results.results.length > total_results_shown ||
-      enriched_results.results.length > total_results_shown
-      ? true
-      : false;
+      enriched_results.passages.length > total_results_shown;
   }
 
   handleMoreResults = () => {

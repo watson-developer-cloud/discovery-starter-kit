@@ -9,10 +9,7 @@ describe('<ResultsContainer />', () => {
     matching_results: 1,
     results: [
       {
-        answer: 'a good answer',
-        question: {
-          title: 'a question title'
-        }
+        answer: 'a good answer'
       }
     ]
   };
@@ -22,16 +19,12 @@ describe('<ResultsContainer />', () => {
       {
         id: 1,
         answer: 'a great answer',
-        question: {
-          title: 'a question title'
-        }
       }
     ],
     passages: [
       {
         document_id: '1',
-        passage_text: 'a great passage',
-        passage_score: 1.0
+        passage_text: 'a great passage'
       }
     ]
   };
@@ -67,12 +60,17 @@ describe('<ResultsContainer />', () => {
 
     beforeEach(() => {
       const no_results = {
-        'matching_results': 0,
-        'results': []
+        matching_results: 0,
+        results: []
       };
+      const no_results_passages = {
+        matching_results: 0,
+        results: [],
+        passages: []
+      }
       wrapper = shallow(<ResultsContainer
                           results={no_results}
-                          enriched_results={no_results}
+                          enriched_results={no_results_passages}
                         />);
     });
 
@@ -120,6 +118,50 @@ describe('<ResultsContainer />', () => {
       it('shows more results', () => {
         expect(wrapper.find(ResultComparison)).toHaveLength(2);
       });
+
+      it('does not show the "Show More Results" button anymore', () => {
+        expect(wrapper.find('.show_results--div button')).toHaveLength(0);
+      });
+    });
+  });
+
+  describe('when there are more passages than results', () => {
+    let wrapper;
+
+    beforeEach(() => {
+      const more_than_one_passage = {
+        matching_results: 1,
+        results: [
+          {
+            answer: 'a great answer'
+          }
+        ],
+        passages: [
+          {
+            document_id: '1',
+            passage_text: 'a great passage'
+          },
+          {
+            document_id: '2',
+            passage_text: 'another great passage'
+          }
+        ]
+      };
+
+      wrapper = shallow(<ResultsContainer
+                          results={results}
+                          enriched_results={more_than_one_passage}
+                        />);
+    });
+
+    it('shows the "Show More Results" button', () => {
+      const buttonSelector = '.show_results--div button';
+      const showMoreButton = wrapper.find(buttonSelector);
+      expect(showMoreButton).toHaveLength(1);
+
+      showMoreButton.simulate('click');
+
+      expect(wrapper.find(buttonSelector)).toHaveLength(0);
     });
   });
 });
