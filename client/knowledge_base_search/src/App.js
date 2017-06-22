@@ -114,21 +114,21 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className='App'>
         <Header
-          mainBreadcrumbs="Starter Kits"
+          mainBreadcrumbs='Starter Kits'
           mainBreadcrumbsUrl={links.starter_kits}
-          subBreadcrumbs="Knowledge Base Search"
-          subBreadcrumbsUrl="/"
+          subBreadcrumbs='Knowledge Base Search'
+          subBreadcrumbsUrl='/'
         />
         <Jumbotron
-          serviceName="Discovery - Knowledge Base Search"
+          serviceName='Discovery - Knowledge Base Search'
           repository={links.repository}
           documentation={links.doc_homepage}
           apiReference={links.doc_api}
           startInBluemix={links.bluemix}
-          version="GA"
-          description="This starter kit uses Stack Exchange Travel data to show the effect of using answer metadata to improve ranking and search relevance. Compared to a default collection, you get better results by enriching the documents and applying them to search."
+          version='GA'
+          description='This starter kit demonstrates how Discovery Passage Search takes you to the most relevant information in documents quickly. Try out the Preset Questions or enter a Custom Question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search in the Stack Exchange Travel data set.'
         />
         <SearchContainer
           onSubmit={this.handleSearch}
@@ -177,7 +177,7 @@ class App extends Component {
         </CSSTransitionGroup>
         <section className='_full-width-row license--section'>
           <a
-            href={links.stack_exhange}
+            href={links.stack_exchange}
             className={'base--a'}
           >
             Stack Exchange
