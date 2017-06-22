@@ -34,16 +34,6 @@
   padding: 0.25rem 0.75rem;
 }
 
-.results_left--div {
-  width: 66%;
-}
-
-.results_right--div {
-  width: 34%;
-  padding-top: 1rem;
-  margin-left: 1rem;
-}
-
 .show_results--div {
   margin-top: 2rem;
 }
@@ -89,22 +79,4 @@
 .result_box_toggle--div button:focus {
   color: #003C32;
   border-color: #003C32;
-}
-
-.related_questions--li {
-  padding: 0.5rem 0;
-}
-
-.teal--link {
-  text-align: left;
-  color: #00b39f;
-  text-decoration: underline;
-  font-weight: 300;
-  width: calc(100% - 1rem);
-}
-
-.teal--link:hover,
-.teal--link:focus,
-.teal--link:active {
-  color: #00b39f;
 }

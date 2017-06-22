@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import ResultsContainer from '../../../containers/ResultsContainer/ResultsContainer';
 import ResultComparison from '../../../containers/ResultsContainer/ResultComparison';
-import RelatedQuestions from '../../../containers/ResultsContainer/RelatedQuestions';
 import { shallow } from 'enzyme';
 
 describe('<ResultsContainer />', () => {
@@ -46,22 +45,12 @@ describe('<ResultsContainer />', () => {
       />, div);
   });
 
-  it('has 1 ResultComparison and 1 RelatedQuestions in it', () => {
+  it('has 1 ResultComparison in it', () => {
     const wrapper = shallow(<ResultsContainer
                               results={results}
                               enriched_results={enriched_results}
                             />);
     expect(wrapper.find(ResultComparison)).toHaveLength(1);
-    expect(wrapper.find(RelatedQuestions)).toHaveLength(1);
-  });
-
-  it('passes enriched_results to the RelatedQuestions', () => {
-    const wrapper = shallow(<ResultsContainer
-                              results={results}
-                              enriched_results={enriched_results}
-                            />);
-    expect(wrapper.find(RelatedQuestions).props().results)
-      .toEqual(enriched_results.results);
   });
 
   it('findPassageResult returns the full result given a passage', () => {
@@ -89,29 +78,7 @@ describe('<ResultsContainer />', () => {
 
     it('shows "No Results"', () => {
       expect(wrapper.find(ResultComparison)).toHaveLength(0);
-      expect(wrapper.find(RelatedQuestions)).toHaveLength(0);
       expect(wrapper.find('h2').text()).toEqual('No Results');
-    });
-  });
-
-  describe('when enriched_results is empty', () => {
-    let wrapper;
-
-    beforeEach(() => {
-      const no_enriched_results = {
-        matching_results: 0,
-        results: [],
-        passages: []
-      };
-      wrapper = shallow(<ResultsContainer
-                          results={results}
-                          enriched_results={no_enriched_results}
-                        />);
-    });
-
-    it('passes results to RelatedQuestions', () => {
-      expect(wrapper.find(RelatedQuestions).props().results)
-        .toEqual(results.results);
     });
   });
 
@@ -152,7 +119,6 @@ describe('<ResultsContainer />', () => {
 
       it('shows more results', () => {
         expect(wrapper.find(ResultComparison)).toHaveLength(2);
-        expect(wrapper.find(RelatedQuestions)).toHaveLength(1);
       });
     });
   });
