@@ -43,16 +43,33 @@ class ResultComparison extends Component {
       passage,
       passageFullResult
     } = nextProps;
+    const passageText = passage ? passage.passage_text : null;
 
     if (index === full_result_index && full_result_type === 'passage') {
       if (passageFullResult) {
-        return passageFullResult.answer;
+        return this.highlightPassage(passageText, passageFullResult.answer);
       }
-    } else if (passage){
-      return passage.passage_text;
+    } else if (passageText){
+      return passageText;
     }
 
     return null;
+  }
+
+  highlightPassage(passage, fullResult) {
+    const passageIndex = fullResult.indexOf(passage);
+
+    if (passageIndex === -1) {
+      return fullResult;
+    }
+
+    return (
+      <span>
+        { fullResult.substr(0, passageIndex) }
+        <b>{passage}</b>
+        { fullResult.substr(passageIndex + passage.length) }
+      </span>
+    )
   }
 
   render() {

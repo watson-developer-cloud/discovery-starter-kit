@@ -117,10 +117,31 @@ describe('<ResultComparison />', () => {
         expect(resultBoxes.at(1).props().is_full_result_shown).toBe(true);
       });
 
-      it('has the full passage answer shown', () => {
-        const resultBoxes = wrapper.find(ResultBox);
+      describe('and the passage_text is not found in the full answer', () => {
+        it('has the only full passage answer shown', () => {
+          const resultBoxes = wrapper.find(ResultBox);
 
-        expect(resultBoxes.at(1).props().result_text).toEqual('a great answer');
+          expect(resultBoxes.at(1).props().result_text).toEqual('a great answer');
+        });
+      });
+
+      describe('and the passage_text is found in the full answer', () => {
+        const props_with_matching_passage = Object.assign({}, props_with_passage_type, {
+          passage: {
+            passage_text: 'great'
+          }
+        });
+
+        beforeEach(() => {
+          wrapper = shallow(<ResultComparison {...props_with_matching_passage} />);
+        });
+
+        it('has the passage text bolded in the full answer', () => {
+          const resultBoxes = wrapper.find(ResultBox);
+          const expected = (<span>a <b>great</b> answer</span>);
+
+          expect(resultBoxes.at(1).props().result_text).toEqual(expected);
+        });
       });
 
       describe('and there is no passageFullResult', () => {

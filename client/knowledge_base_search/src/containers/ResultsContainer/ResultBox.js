@@ -65,7 +65,10 @@ class ResultBox extends Component {
 
 ResultBox.PropTypes = {
   result_type: PropTypes.string.isRequired,
-  result_text: PropTypes.string.isRequired,
+  result_text: PropTypes.oneOf([
+    PropTypes.string,
+    PropTypes.element
+  ]).isRequired,
   result_rank: PropTypes.number.isRequired,
   is_full_result_shown: PropTypes.bool.isRequired,
   max_length: PropTypes.number.isRequired,
