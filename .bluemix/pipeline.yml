@@ -192,7 +192,7 @@ stages:
       cf delete-route $ROUTE_DOMAIN -n $TEMP_APP_NAME -f
 
       # Delete the old app at this point. They are no longer needed.
-      cf delete -f -r $CF_APP
+      cf delete -f $CF_APP
 
       # Rename temp app now it is public
       cf rename $TEMP_APP_NAME $CF_APP
