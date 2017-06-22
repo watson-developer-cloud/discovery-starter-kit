@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
-import RelatedQuestions from './RelatedQuestions';
 import ResultComparison from './ResultComparison';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
@@ -41,16 +40,6 @@ class ResultsContainer extends Component {
       full_result_index: index,
       full_result_type: type
     });
-  }
-
-  getResultsForQuestions() {
-    const { results, enriched_results } = this.props;
-
-    if (enriched_results.results.length > 0) {
-      return enriched_results.results;
-    } else {
-      return results.results;
-    }
   }
 
   findPassageResult(passage) {
@@ -104,10 +93,6 @@ class ResultsContainer extends Component {
                           }
                         </CSSTransitionGroup>
                       </div>
-                      <RelatedQuestions
-                        results={this.getResultsForQuestions()}
-                        onSearch={this.props.onSearch}
-                      />
                     </div>
                   </div>
                 )
