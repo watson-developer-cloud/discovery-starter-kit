@@ -135,17 +135,6 @@
   margin-top: 2rem;
 }
 
-button:active {
-  transform: none;
-}
-
-button:focus {
-  border-color: #ffffff;
-  color: #ffffff;
-  background-color: #008571;
-  outline: 0;
-}
-
 button.white--button {
   color: #ffffff;
   border-color: #ffffff;

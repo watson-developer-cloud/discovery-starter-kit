@@ -40,11 +40,11 @@ describe('<ResultComparison />', () => {
   it('has 2 titles', () => {
     wrapper = shallow(<ResultComparison {...props} />);
 
-    const titles = wrapper.find('.results_comparison_header--div h4');
+    const titles = wrapper.find('.results_comparison_content--div h4');
 
     expect(titles).toHaveLength(2);
-    expect(titles.at(0).text()).toEqual('Standard Search');
-    expect(titles.at(1).text()).toEqual('Passage Search');
+    expect(titles.at(0).text()).toEqual('Standard search');
+    expect(titles.at(1).text()).toEqual('Passage search');
   });
 
   describe('when passage is not present', () => {

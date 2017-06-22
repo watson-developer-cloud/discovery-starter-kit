@@ -7,12 +7,12 @@ casper.test.begin('Knowledge Base Search', (test) => {
     casper.click('.clickable-tab:first-child');
     casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
 
-    casper.waitForSelector('.result_text--div',
+    casper.waitForSelector('.result_box--div',
       () => {
         // wait for transition
         casper.wait(5000, () => {
           casper.capture(`${casper.screenshots_dir}/results_exist.png`);
-          test.assertElementCount('.result_text--div', 2, '2 Results exist');
+          test.assertElementCount('.result_box--div', 2, '2 Results exist');
         });
       },
       () => {

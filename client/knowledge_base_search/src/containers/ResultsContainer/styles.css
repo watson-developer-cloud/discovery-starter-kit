@@ -3,14 +3,6 @@
   display: flex;
 }
 
-.results_comparison--div {
-  display: flex;
-}
-
-.results_comparison--div > div {
-  flex: 1;
-}
-
 .results_comparison-enter {
   opacity: 0.01;
 }
@@ -20,63 +12,74 @@
   transition: opacity 500ms ease-in;
 }
 
-.results_comparison_header--div {
+.results_comparison--div:first-child {
+  padding-top: 1rem;
+}
+
+.results_comparison_content--div {
   display: flex;
 }
 
-.results_comparison_header--div h4 {
-  flex: 1;
+.results_comparison_content_left--div {
+  width: 50%;
+  padding-right: 1rem;
 }
 
-.circle {
-  border-radius: 50%;
-  border: 0.065rem solid;
-  padding: 0.25rem 0.75rem;
+.results_comparison_content_right--div {
+  width: 50%;
+  border-left: 1px solid #e0e0e0;
+  padding-left: 1rem;
 }
 
 .show_results--div {
   margin-top: 2rem;
 }
 
-.result_text--div {
-  font-weight: 300;
-  padding-top: 0.5rem;
-}
-
 .result_box--div {
-  padding: 1.5rem 1.75rem 0.75rem 1.75rem;
-  margin-right: 1rem;
-  background-color: #ececec;
+  flex-basis: 0;
+  flex-grow: 1;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
 }
 
-.result_box_header--div {
+.result_box_empty--div {
+  border: none;
+  background-color: #f9f9f9;
+}
+
+.result_box_items--div {
   display: flex;
 }
 
-.result_box_title--div {
-  flex-grow: 0;
-  margin-bottom: 0.5rem;
+.result_box_item_left--div {
+  font-weight: 500;
+}
+
+.result_box_item_right--div {
+  padding-left: 1rem;
+}
+
+.result_box_text--div {
+  font-weight: 300;
 }
 
 .result_box_toggle--div {
-  text-align: right;
-  flex-grow: 1;
   padding-top: 0.25rem;
 }
 
 .result_box_toggle--div button{
   font-size: 0.9rem;
   padding: 0;
-  color: #323232;
-  border-color: #323232;
+  color: #00b39f;
+  border-color: #00b39f;
   border-radius: 0;
-  border-width: 0 0 1px 0;
+  border-width: 0;
   font-weight: 300;
-  border-bottom-width: 1px;
 }
 
 .result_box_toggle--div button:hover,
 .result_box_toggle--div button:focus {
-  color: #003C32;
-  border-color: #003C32;
+  border-bottom-width: 1px;
 }

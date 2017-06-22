@@ -128,3 +128,7 @@ a:visited {
   opacity: 1;
   transition: opacity 500ms ease-in;
 }
+
+.results_row--section {
+  background-color: #f9f9f9;
+}

@@ -55,70 +55,68 @@ class ResultsContainer extends Component {
     const { results, enriched_results } = this.props;
 
     return (
-      <section className='_full-width-row'>
-        <Element name='scroll_to_results'>
-          {
-            results.matching_results > 0 || enriched_results.matching_results > 0
-              ? (
-                  <div className='_container _container_large'>
-                    <h4>
-                      Compare the top Watson result to a standard Discovery search on Stack Exchange.
-                    </h4>
-                    <div className='results_container--div'>
-                      <div className='results_left--div'>
-                        <CSSTransitionGroup
-                          transitionName='results_comparison'
-                          transitionEnterTimeout={500}
-                          transitionLeave={false}
-                        >
-                          {
-                            [...Array(this.state.total_results_shown)].map((x, i) => {
-                              return(
-                                <ResultComparison
-                                  key={'result_comparison_' + i}
-                                  index={i}
-                                  passage={enriched_results.passages[i]}
-                                  passageFullResult={
-                                    this.findPassageResult(
-                                      enriched_results.passages[i]
-                                    )
-                                  }
-                                  result={results.results[i]}
-                                  full_result_index={this.state.full_result_index}
-                                  full_result_type={this.state.full_result_type}
-                                  onSetFullResult={this.setFullResult}
-                                />
-                              );
-                            })
-                          }
-                        </CSSTransitionGroup>
-                      </div>
+      <Element name='scroll_to_results'>
+        {
+          results.matching_results > 0 || enriched_results.matching_results > 0
+            ? (
+                <div className='_container _container_large'>
+                  <h3>
+                    Compare the top Watson result to a standard Discovery search on Stack Exchange.
+                  </h3>
+                  <div className='results_container--div'>
+                    <div className='results_left--div'>
+                      <CSSTransitionGroup
+                        transitionName='results_comparison'
+                        transitionEnterTimeout={500}
+                        transitionLeave={false}
+                      >
+                        {
+                          [...Array(this.state.total_results_shown)].map((x, i) => {
+                            return(
+                              <ResultComparison
+                                key={'result_comparison_' + i}
+                                index={i}
+                                passage={enriched_results.passages[i]}
+                                passageFullResult={
+                                  this.findPassageResult(
+                                    enriched_results.passages[i]
+                                  )
+                                }
+                                result={results.results[i]}
+                                full_result_index={this.state.full_result_index}
+                                full_result_type={this.state.full_result_type}
+                                onSetFullResult={this.setFullResult}
+                              />
+                            );
+                          })
+                        }
+                      </CSSTransitionGroup>
                     </div>
                   </div>
-                )
-              : (
-                  <div className='_container-center'>
-                    <h2>No Results</h2>
-                  </div>
-                )
-          }
-          {
-            this.isMoreResults()
-              ? (
-                  <div className='_container-center show_results--div'>
-                    <button
-                      className='base--button base--button_teal'
-                      type='button'
-                      onClick={this.handleMoreResults}
-                    >
-                      Show More Results
-                    </button>
-                  </div>
-                )
-              : null
-          }
-        </Element>
-      </section>
+                </div>
+              )
+            : (
+                <div className='_container-center'>
+                  <h2>No Results</h2>
+                </div>
+              )
+        }
+        {
+          this.isMoreResults()
+            ? (
+                <div className='_container-center show_results--div'>
+                  <button
+                    className='base--button base--button_teal'
+                    type='button'
+                    onClick={this.handleMoreResults}
+                  >
+                    Show More Results
+                  </button>
+                </div>
+              )
+            : null
+        }
+      </Element>
     );
   }
 }

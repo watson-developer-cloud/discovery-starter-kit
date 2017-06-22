@@ -64,39 +64,39 @@ class ResultComparison extends Component {
     } = this.props;
 
     return (
-      <Element name={'scroll_to_result_' + index}>
-        { index === 0
-          ? (
-              <div className='results_comparison_header--div'>
-                <h4>Standard Search</h4>
-                <h4>Passage Search</h4>
-              </div>
-            )
-          : null
-        }
-        <div className='results_comparison--div'>
-          <ResultBox
-            result_type={'regular'}
-            result_text={answer}
-            result_rank={index + 1}
-            is_full_result_shown={
-              this.isFullResultShown(index, 'regular')
-            }
-            onToggleFullResult={
-              () => { this.toggleFullResult(index, 'regular') }
-            }
-          />
-          <ResultBox
-            result_type={'passage'}
-            result_text={this.state.passage_result_text}
-            result_rank={index + 1}
-            is_full_result_shown={
-              this.isFullResultShown(index, 'passage')
-            }
-            onToggleFullResult={
-              () => { this.toggleFullResult(index, 'passage') }
-            }
-          />
+      <Element
+        className='results_comparison--div'
+        name={'scroll_to_result_' + index}
+      >
+        <div className='results_comparison_content--div'>
+          <div className='results_comparison_content_left--div'>
+            { index === 0 && (<h4>Standard search</h4>) }
+            <ResultBox
+              result_type={'regular'}
+              result_text={answer}
+              result_rank={index + 1}
+              is_full_result_shown={
+                this.isFullResultShown(index, 'regular')
+              }
+              onToggleFullResult={
+                () => { this.toggleFullResult(index, 'regular') }
+              }
+            />
+          </div>
+          <div className='results_comparison_content_right--div'>
+            { index === 0 && (<h4>Passage search</h4>) }
+            <ResultBox
+              result_type={'passage'}
+              result_text={this.state.passage_result_text}
+              result_rank={index + 1}
+              is_full_result_shown={
+                this.isFullResultShown(index, 'passage')
+              }
+              onToggleFullResult={
+                () => { this.toggleFullResult(index, 'passage') }
+              }
+            />
+          </div>
         </div>
       </Element>
     );

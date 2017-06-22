@@ -68,7 +68,7 @@ describe('<ResultBox />', () => {
 
       it('trims the result and adds an ellipsis', () => {
         const wrapper = shallow(<ResultBox {...props_long_standard} />);
-        const resultText = wrapper.find('.result_text--div').text();
+        const resultText = wrapper.find('.result_box_text--div').text();
         expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
         expect(resultText).toContain('…');
       });
@@ -81,7 +81,7 @@ describe('<ResultBox />', () => {
 
       it('does not trim the result', () => {
         const wrapper = shallow(<ResultBox {...props_long_passage} />);
-        const resultText = wrapper.find('.result_text--div').text();
+        const resultText = wrapper.find('.result_box_text--div').text();
         expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
         expect(resultText).not.toContain('…');
       });
@@ -112,9 +112,9 @@ describe('<ResultBox />', () => {
       wrapper = shallow(<ResultBox {...props_with_full_result_true} />);
     });
 
-    it('has "Hide full answer" as the button text', () => {
+    it('has "Collapse answer" as the button text', () => {
       expect(wrapper.find('.result_box_toggle--div button').text())
-        .toEqual('Collapse Article');
+        .toEqual('Collapse answer');
     });
   });
 
@@ -130,7 +130,7 @@ describe('<ResultBox />', () => {
 
     it('has "Show full answer" as the button text', () => {
       expect(wrapper.find('.result_box_toggle--div button').text())
-        .toEqual('Show Full Article');
+        .toEqual('Show full answer');
     });
   });
 });

@@ -24,44 +24,42 @@ class ResultBox extends Component {
       is_full_result_shown
     } = this.props;
 
-    if (result_text) {
-      return (
-        <div className='result_box--div'>
-          <div className='result_box_header--div'>
-            <div className='result_box_title--div'>
-              <div className='circle'>{result_rank}</div>
-            </div>
-            <div className='result_box_toggle--div'>
-              <button
-                type='button'
-                onClick={this.handleToggleFullAnswer}
-              >
-                {
-                  is_full_result_shown
-                    ? (<span>Collapse Article</span>)
-                    : (<span>Show Full Article</span>)
-                }
-              </button>
-            </div>
-          </div>
-          <hr className='base--hr' />
-          <div className='result_text--div'>
-            { is_full_result_shown
-                ? result_text
-                : this.trimAnswer(result_text)
-            }
-          </div>
-        </div>
-      );
-    } else if (result_rank === 1) {
-      return (
-        <div className='result_box--div'>
-          <div className='result_text--div'>No Results</div>
-        </div>
-      );
-    } else {
-      return null;
-    }
+    return (
+      <div className={'result_box--div' + (result_text ? '' : ' result_box_empty--div')}>
+        { result_text
+          ? (
+              <div className='result_box_items--div'>
+                <div className='result_box_item_left--div'>
+                  {result_rank}
+                </div>
+                <div className='result_box_item_right--div'>
+                  <div className='result_box_text--div'>
+                    { is_full_result_shown
+                        ? result_text
+                        : this.trimAnswer(result_text)
+                    }
+                  </div>
+                  <div className='result_box_toggle--div'>
+                    <button
+                      type='button'
+                      onClick={this.handleToggleFullAnswer}
+                    >
+                      {
+                        is_full_result_shown
+                          ? (<span>Collapse answer</span>)
+                          : (<span>Show full answer</span>)
+                      }
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          : result_rank === 1
+            ? (<div className='result_text--div'>No Results</div>)
+            : null
+        }
+      </div>
+    );
   }
 }
 

@@ -141,29 +141,38 @@ class App extends Component {
           transitionEnterTimeout={500}
           transitionLeave={false}
         >
-          {
-            this.state.fetching
-              ? (<section key={'loader'} className='_full-width-row'>
-                  <div className='_container _container_large _container-center'>
-                    <Icon type='loader' size='large' />
-                  </div>
-                 </section>
+          { this.state.fetching || this.state.results_fetched
+              ? (
+                  <section key='results' className='_full-width-row results_row--section'>
+                    {
+                      this.state.fetching
+                        ? (
+                            <div key='loader' className='_container _container_large _container-center'>
+                              <Icon type='loader' size='large' />
+                            </div>
+                          )
+                        : this.state.results_fetched
+                          ? this.state.results_error || this.state.enriched_results_error
+                            ? (
+                                <ErrorContainer
+                                  key='error_container'
+                                  results_error={this.state.results_error}
+                                  enriched_results_error={this.state.enriched_results_error}
+                                />
+                              )
+                            : (
+                                <ResultsContainer
+                                  key='results_container'
+                                  results={this.state.results}
+                                  enriched_results={this.state.enriched_results}
+                                  onSearch={this.handleSearch}
+                                />
+                              )
+                          : null
+                    }
+                  </section>
                 )
-              : this.state.results_fetched
-                ? this.state.results_error || this.state.enriched_results_error
-                  ? (<ErrorContainer
-                      key={'error_container'}
-                      results_error={this.state.results_error}
-                      enriched_results_error={this.state.enriched_results_error}
-                      />
-                    )
-                  : (<ResultsContainer
-                      key={'results_container'}
-                      results={this.state.results}
-                      enriched_results={this.state.enriched_results}
-                      onSearch={this.handleSearch}
-                      />)
-                : null
+              : null
           }
         </CSSTransitionGroup>
         <section className='_full-width-row license--section'>
