@@ -41,6 +41,10 @@ class TestServer(unittest.TestCase):
     @patch('watson_developer_cloud.DiscoveryV1.query')
     def test_regular_query(self, discovery):
         query_opts = {'query': 'my_query'}
+        expected_query_opts = {
+          'query': 'my_query',
+          'return': 'answer'
+        }
         mock_response = json.loads(
           """
             {
@@ -58,7 +62,7 @@ class TestServer(unittest.TestCase):
         discovery.assert_called_with(
           environment_id='my_environment_id',
           collection_id='my_regular_collection_id',
-          query_options=query_opts
+          query_options=expected_query_opts
         )
         self.assertEqual(actual_response, mock_response)
 
@@ -67,6 +71,7 @@ class TestServer(unittest.TestCase):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
           'query': 'my_query',
+          'return': 'answer',
           'passages': True
         }
         mock_response = json.loads(
