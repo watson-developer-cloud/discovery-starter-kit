@@ -82,7 +82,7 @@ class SearchContainer extends Component {
                     className='white--button'
                     disabled={this.props.isFetching}
                   >
-                    Retrieve Answers
+                    Find Answers
                   </button>
                 </div>
               </Pane>
