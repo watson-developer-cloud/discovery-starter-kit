@@ -59,7 +59,7 @@ class ResultsContainer extends Component {
             ? (
                 <div className='_container _container_large'>
                   <h3>
-                    Compare the top Watson result to a standard Discovery search on Stack Exchange.
+                    Compare the Standard search to the Passage search on Stack Exchange Travel data.
                   </h3>
                   <div className='results_container--div'>
                     <div className='results_left--div'>
