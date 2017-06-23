@@ -17,7 +17,7 @@ describe('<ResultsContainer />', () => {
     matching_results: 1,
     results: [
       {
-        id: 1,
+        id: '1',
         answer: 'a great answer',
       }
     ],

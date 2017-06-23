@@ -42,7 +42,7 @@ class ResultsContainer extends Component {
 
   findPassageResult(passage) {
     const { enriched_results } = this.props;
-    const targetId = parseInt(passage ? passage.document_id : 0, 10);
+    const targetId = passage ? passage.document_id : "0";
 
     return enriched_results.results.find((result) => {
       return result.id === targetId;

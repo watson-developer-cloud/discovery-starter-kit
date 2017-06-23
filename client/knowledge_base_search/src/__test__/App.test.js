@@ -94,7 +94,7 @@ describe('<App />', () => {
     it('submits a query to the regular and enriched collections', () => {
       expect(query.default).toBeCalledWith('enriched', {'query': 'my query'});
       expect(query.default).toBeCalledWith('regular', {'query': 'my query'});
-      expect(query.default).not.toBeCalledWith('enriched', {'filter': 'id:1'});
+      expect(query.default).not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
     });
 
     it('sets the search_input state to the input value', () => {
@@ -121,7 +121,7 @@ describe('<App />', () => {
     });
 
     it('submits another query to the enriched collection for missing ids', () => {
-      expect(query.default).toBeCalledWith('enriched', {'filter': 'id:1'});
+      expect(query.default).toBeCalledWith('enriched', {'filter': 'id:(1)'});
     })
   });
 });

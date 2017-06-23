@@ -84,6 +84,7 @@ def index():
 def query(collection_type):
     collection_id_key = 'collection_id_regular'
     query_options = json.loads(request.data)
+    query_options['return'] = 'answer'
 
     if collection_type == 'enriched':
         collection_id_key = 'collection_id_enriched'
