@@ -50,6 +50,9 @@ coverage.xml
 *.mo
 *.pot
 
+# Pip stuff:
+pip-selfcheck.json
+
 # Django stuff:
 *.log
 local_settings.py

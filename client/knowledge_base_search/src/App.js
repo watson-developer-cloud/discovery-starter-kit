@@ -31,11 +31,19 @@ class App extends Component {
     });
 
     Promise.all([
-      query('regular', {query: input}),
-      query('enriched', {query: input})
+      query('enriched', {query: input}).then((enriched_response) => {
+        if (enriched_response.passages) {
+          return this.retrieveMissingPassages(enriched_response).then((response) => {
+            return response;
+          });
+        } else {
+          return Promise.resolve(enriched_response);
+        }
+      }),
+      query('regular', {query: input})
     ]).then((results_array) => {
-      const results_response = results_array[0];
-      const enriched_results_response = results_array[1];
+      const enriched_results_response = results_array[0];
+      const results_response = results_array[1];
 
       if (results_response.error || enriched_results_response.error) {
         this.setState({
@@ -48,36 +56,79 @@ class App extends Component {
         this.setState({
           fetching: false,
           results_fetched: true,
-          results: results_array[0],
-          enriched_results: results_array[1]
+          results: results_response,
+          enriched_results: enriched_results_response
         });
       }
     }).catch((error) => {
       this.setState({
         fetching: false,
         results_fetched: true,
-        results_error: error
+        results_error: error.message
       });
     });
   }
 
+  retrieveMissingPassages(enriched_results) {
+    const uniqueDocumentIds = enriched_results.passages.reduce(
+      (uniqueVals, passage) => {
+        if (uniqueVals.indexOf(passage.document_id) === -1) {
+          uniqueVals.push(passage.document_id);
+        }
+        return uniqueVals;
+      }, []);
+
+    let missingDocumentIds = [];
+    uniqueDocumentIds.forEach((document_id) => {
+      const targetId = parseInt(document_id, 10);
+
+      let enriched_result = enriched_results.results.find((result) => {
+        return result.id === targetId;
+      });
+
+      if (!enriched_result) {
+        missingDocumentIds.push(targetId);
+      }
+    });
+
+    return missingDocumentIds.length > 0
+      ? query('enriched', {filter: `id:(${missingDocumentIds.join('|')})`})
+          .then((response) => {
+            if (response.error) {
+              console.error(response.error);
+              this.setState({enriched_results_error: response.error});
+            }
+
+            if (response.results) {
+              let newResults = enriched_results.results.concat(response.results);
+              enriched_results.results = newResults;
+            }
+
+            return enriched_results;
+          }).catch((error) => {
+            console.error(error);
+            this.setState({enriched_results_error: error});
+          })
+      : Promise.resolve(enriched_results);
+  }
+
   render() {
     return (
-      <div className="App">
+      <div className='App'>
         <Header
-          mainBreadcrumbs="Starter Kits"
+          mainBreadcrumbs='Starter Kits'
           mainBreadcrumbsUrl={links.starter_kits}
-          subBreadcrumbs="Knowledge Base Search"
-          subBreadcrumbsUrl="/"
+          subBreadcrumbs='Knowledge Base Search'
+          subBreadcrumbsUrl='/'
         />
         <Jumbotron
-          serviceName="Discovery - Knowledge Base Search"
+          serviceName='Discovery - Knowledge Base Search'
           repository={links.repository}
           documentation={links.doc_homepage}
           apiReference={links.doc_api}
           startInBluemix={links.bluemix}
-          version="GA"
-          description="This starter kit uses Stack Exchange Travel data to show the effect of using answer metadata to improve ranking and search relevance. Compared to a default collection, you get better results by enriching the documents and applying them to search."
+          version='GA'
+          description='This starter kit demonstrates how Discovery Passage Search takes you to the most relevant information in documents quickly. Try out the Preset Questions or enter a Custom Question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search in the Stack Exchange Travel data set.'
         />
         <SearchContainer
           onSubmit={this.handleSearch}
@@ -90,34 +141,43 @@ class App extends Component {
           transitionEnterTimeout={500}
           transitionLeave={false}
         >
-          {
-            this.state.fetching
-              ? (<section key={'loader'} className='_full-width-row'>
-                  <div className='_container _container_large _container-center'>
-                    <Icon type='loader' size='large' />
-                  </div>
-                 </section>
+          { this.state.fetching || this.state.results_fetched
+              ? (
+                  <section key='results' className='_full-width-row results_row--section'>
+                    {
+                      this.state.fetching
+                        ? (
+                            <div key='loader' className='_container _container_large _container-center'>
+                              <Icon type='loader' size='large' />
+                            </div>
+                          )
+                        : this.state.results_fetched
+                          ? this.state.results_error || this.state.enriched_results_error
+                            ? (
+                                <ErrorContainer
+                                  key='error_container'
+                                  results_error={this.state.results_error}
+                                  enriched_results_error={this.state.enriched_results_error}
+                                />
+                              )
+                            : (
+                                <ResultsContainer
+                                  key='results_container'
+                                  results={this.state.results}
+                                  enriched_results={this.state.enriched_results}
+                                  onSearch={this.handleSearch}
+                                />
+                              )
+                          : null
+                    }
+                  </section>
                 )
-              : this.state.results_fetched
-                ? this.state.results_error || this.state.enriched_results_error
-                  ? (<ErrorContainer
-                      key={'error_container'}
-                      results_error={this.state.results_error}
-                      enriched_results_error={this.state.enriched_results_error}
-                      />
-                    )
-                  : (<ResultsContainer
-                      key={'results_container'}
-                      results={this.state.results}
-                      enriched_results={this.state.enriched_results}
-                      onSearch={this.handleSearch}
-                      />)
-                : null
+              : null
           }
         </CSSTransitionGroup>
         <section className='_full-width-row license--section'>
           <a
-            href={links.stack_exhange}
+            href={links.stack_exchange}
             className={'base--a'}
           >
             Stack Exchange

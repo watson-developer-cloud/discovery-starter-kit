@@ -5,20 +5,12 @@ import './styles.css';
 
 class ResultBox extends Component {
   trimAnswer(answer) {
-    const { max_length } = this.props;
+    const { max_length, result_type } = this.props;
 
-    if (answer.length > max_length) {
+    if (answer.length > max_length && result_type === 'regular') {
       return answer.substring(0, max_length) + '…';
     }
     return answer;
-  }
-
-  roundScore(score) {
-    const { decimal_places } = this.props;
-
-    return Number(
-      Math.round(score + 'e' + decimal_places) + 'e-' + decimal_places
-    );
   }
 
   handleToggleFullAnswer = () => {
@@ -27,48 +19,44 @@ class ResultBox extends Component {
 
   render() {
     const {
-      result,
-      result_type,
+      result_text,
       result_rank,
       is_full_result_shown
     } = this.props;
 
     return (
-      <div className='result_box--div'>
-        { result_rank === 1 ? (<h4>{result_type}</h4>) : null }
-        {
-          result
-            ? <div className='result_text--div'>
-                <div className='result_answer_snippet--div'>
-                  {this.trimAnswer(result.answer)}
+      <div className={'result_box--div' + (result_text ? '' : ' result_box_empty--div')}>
+        { result_text
+          ? (
+              <div className='result_box_items--div'>
+                <div className='result_box_item_left--div'>
+                  {result_rank}
                 </div>
-                <div className='result_full_answer--div'>
-                  <button
-                    type='button'
-                    onClick={this.handleToggleFullAnswer}
-                  >
-                    {
-                      is_full_result_shown
-                        ? (<span>Hide full answer</span>)
-                        : (<span>Show full answer</span>)
+                <div className='result_box_item_right--div'>
+                  <div className='result_box_text--div'>
+                    { is_full_result_shown
+                        ? result_text
+                        : this.trimAnswer(result_text)
                     }
-                  </button>
-                </div>
-                <hr className='base--hr' />
-                <div className='result_rank--div'>
-                  <div className='result_rank_left--div'>
-                    <span>Rank</span>
-                    <span className='circle'>{result_rank}</span>
                   </div>
-                  <div className='result_rank_right--div'>
-                    <span>Relevance Score </span>
-                    <span>{this.roundScore(result.score)}</span>
+                  <div className='result_box_toggle--div'>
+                    <button
+                      type='button'
+                      onClick={this.handleToggleFullAnswer}
+                    >
+                      {
+                        is_full_result_shown
+                          ? (<span>Collapse answer</span>)
+                          : (<span>Show full answer</span>)
+                      }
+                    </button>
                   </div>
                 </div>
               </div>
-            : result_rank === 1
-              ? <div className='result_text--div'>No Results</div>
-              : null
+            )
+          : result_rank === 1
+            ? (<div className='result_text--div'>No Results</div>)
+            : null
         }
       </div>
     );
@@ -76,18 +64,19 @@ class ResultBox extends Component {
 }
 
 ResultBox.PropTypes = {
-  result: PropTypes.object.isRequired,
   result_type: PropTypes.string.isRequired,
+  result_text: PropTypes.oneOf([
+    PropTypes.string,
+    PropTypes.element
+  ]).isRequired,
   result_rank: PropTypes.number.isRequired,
   is_full_result_shown: PropTypes.bool.isRequired,
   max_length: PropTypes.number.isRequired,
-  decimal_places: PropTypes.number.isRequired,
   onToggleFullResult: PropTypes.func.isRequired
 }
 
 ResultBox.defaultProps = {
-  max_length: 130,
-  decimal_places: 2
+  max_length: 200
 }
 
 export default ResultBox;

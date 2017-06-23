@@ -2,6 +2,7 @@ import requests
 import json
 import os
 import glob
+import sys
 from dotenv import load_dotenv, find_dotenv
 from get_discovery_collections import get_constants
 from watson_developer_cloud import DiscoveryV1
@@ -72,8 +73,8 @@ def upload_document(file_object, collection_id, current_iteration):
     response_json = r.json()
     if r.status_code != 202:
         # sleep and retry
-        print('Retrying document: ' + file_object.name)
         print(response_json)
+        print('Retrying document: ' + file_object.name)
         next_iteration = current_iteration + 1
         time.sleep(seconds_to_sleep * next_iteration)
         upload_document(file_object, collection_id, next_iteration)
@@ -81,20 +82,11 @@ def upload_document(file_object, collection_id, current_iteration):
         print(response_json)
 
 
-def upload_documents():
-    sample_docs_dir = os.path.abspath(
-      os.path.join(
-        os.path.dirname(__file__),
-        '..',
-        '..',
-        'data',
-        'sample',
-        '*.json'
-      )
-    )
-    print('Sample Docs Directory: ' + sample_docs_dir)
-    print('Number of files to process:' + str(len(glob.glob(sample_docs_dir))))
-    for file in glob.glob(sample_docs_dir):
+def upload_documents(sample_docs_glob):
+    print('Sample Docs Directory: ' + sample_docs_glob)
+    print('Number of files to process:' +
+          str(len(glob.glob(sample_docs_glob))))
+    for file in glob.glob(sample_docs_glob):
         file_object = open(file, 'rb')
         print('Processing file: ' + file_object.name + ' for "regular"')
         upload_document(
@@ -112,4 +104,17 @@ def upload_documents():
 
 
 if __name__ == '__main__':
-    upload_documents()
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    else:
+        path = os.path.abspath(
+          os.path.join(
+            os.path.dirname(__file__),
+            '..',
+            '..',
+            'data',
+            'sample',
+            '*.json'
+          )
+        )
+    upload_documents(path)

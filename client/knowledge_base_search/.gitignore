@@ -5,6 +5,8 @@
 
 # testing
 /coverage
+/spec_dest
+/tmp
 
 # production
 /build

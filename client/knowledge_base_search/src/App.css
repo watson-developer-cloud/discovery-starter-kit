@@ -29,7 +29,10 @@ body * + * {
   border-bottom-color: #00b39f;
 }
 
-.base--a:hover,
+.base--a:hover {
+  color: #fff;
+  border-bottom-color: #fff;
+}
 .base--a:active,
 .base--a:focus {
   color: #00a894;
@@ -124,4 +127,8 @@ a:visited {
 .results-enter.results-enter-active {
   opacity: 1;
   transition: opacity 500ms ease-in;
+}
+
+.results_row--section {
+  background-color: #f9f9f9;
 }

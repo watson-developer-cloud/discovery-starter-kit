@@ -1,46 +1,38 @@
 {
-  "name": "knowledge_base_enriched_config",
+  "name": "knowledge_base_enriched_config_metadata",
   "enrichments": [
     {
       "enrichment": "alchemy_language",
-      "source_field": "subtitle",
-      "options": {
-        "extract": "keyword"
-      },
-      "destination_field": "enriched_subtitle"
-    },
-    {
-      "enrichment": "alchemy_language",
       "source_field": "answer",
+      "destination_field": "enriched_answer",
       "options": {
-        "extract": "keyword"
+        "extract": "keyword,entity,taxonomy,concept,relation,doc-sentiment",
+        "sentiment": true,
+        "quotations": true
       },
-      "destination_field": "enriched_answer"
+      "language": "english"
     },
     {
       "enrichment": "alchemy_language",
-      "source_field": "title",
+      "source_field": "question.subtitle",
+      "destination_field": "enriched_question_subtitle",
       "options": {
-        "extract": "keyword"
+        "extract": "keyword,entity,taxonomy,concept,relation,doc-sentiment",
+        "sentiment": true,
+        "quotations": true
       },
-      "destination_field": "enriched_title"
-    }
-  ],
-  "normalizations": [
-    {
-      "operation": "copy",
-      "source_field": "enriched_title.keywords.text",
-      "destination_field": "enriched_text.keywords.text"
+      "language": "english"
     },
     {
-      "operation": "copy",
-      "source_field": "enriched_subtitle.keywords.text",
-      "destination_field": "enriched_text.keywords.text"
-    },
-    {
-      "operation": "copy",
-      "source_field": "enriched_answer.keywords.text",
-      "destination_field": "enriched_text.keywords.text"
+      "enrichment": "alchemy_language",
+      "source_field": "question.title",
+      "destination_field": "enriched_question_title",
+      "options": {
+        "extract": "keyword,entity,taxonomy,concept,relation,doc-sentiment",
+        "sentiment": true,
+        "quotations": true
+      },
+      "language": "english"
     }
   ]
 }

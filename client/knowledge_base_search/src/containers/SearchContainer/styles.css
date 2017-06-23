@@ -1,17 +1,73 @@
 .header--input {
   color: #ffffff;
   text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tab-panels {
+  background-color: transparent;
+  border: none;
+}
+
+.tab-panels--tab.base--a {
+  color: #a7fae6;
+  font-weight: 200;
+  margin-right: 2rem;
+  border-bottom-width: 0.2rem;
+  padding: 0.5rem 0rem;
+}
+
+.tab-panels--tab.base--a:hover {
+  border-bottom-color: transparent;
+}
+
+.tab-panels--tab.active {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.tab-panels--tab.base--a:focus {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.tab-panels--tab-content {
+  background: inherit;
+  padding: 2rem 0;
+}
+
+.base--radio {
+  border-left-color: transparent;
+}
+
+.base--radio:checked {
+  border-left-color: #9855d4;
+}
+
+.base--radio::before {
+  display: none;
 }
 
 .search_container--section {
   background-color: #00b39f;
   padding-top: 0;
+  padding-bottom: 0;
+}
+
+.custom_question--div {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.text-input {
+  flex-grow: 1;
+  margin-right: 2rem;
 }
 
 .text-input--input[type="text"] {
   color: #ffffff;
   margin-left: 2.5rem;
-  padding-right: 2.5rem;
   background-color: #00b39f;
   box-shadow: none;
   max-width: 100%;
@@ -24,9 +80,9 @@
 }
 
 .positioned--icon {
-  position: relative;
-  top: 2rem;
+  position: absolute;
   display: inline;
+  top: -1.5rem;
   z-index: 1;
 }
 
@@ -35,24 +91,7 @@
   width: 1.5rem;
   color: #ffffff;
   fill: currentColor;
-}
-
-button.random-query--button {
-  font-size: 0.9rem;
-  padding: 0;
-  color: #ffffff;
-  border-color: #ffffff;
-  border-radius: 0;
-  border-width: 0 0 1px 0;
-  font-weight: 300;
-  border-bottom-width: 1px;
-}
-
-
-button.random-query--button:hover,
-button.random-query--button:focus {
-  color: #003C32;
-  border-color: #003C32;
+  margin-top: 2rem;
 }
 
 button.white--button {
@@ -73,6 +112,10 @@ button.white--button:focus {
 
 ._container-right {
   text-align: right;
+}
+
+.container-large {
+  padding-top: 1.7rem;
 }
 
 .search_header-enter,

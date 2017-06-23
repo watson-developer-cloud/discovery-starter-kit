@@ -14,8 +14,8 @@ const query = (collection_type, query) => {
     return json;
   })
   .catch((error) => {
-    console.error(error);
-    return {error};
+    console.error(error.message);
+    return {error: error.message};
   })
 };
 

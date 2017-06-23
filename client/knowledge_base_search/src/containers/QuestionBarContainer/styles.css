@@ -1,0 +1,34 @@
+.question_bar_container--div {
+  display: flex;
+}
+
+.question_bar_button--button {
+  flex: 1 0 0;
+  color: #ffffff;
+  border: 2px solid #f0f0f0;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 300;
+  text-align: left;
+  padding: 0.5rem;
+  margin: 0 0.5rem;
+}
+
+.question_bar_button--button:hover,
+.question_bar_button--button:focus {
+  background-color: #41d6c3;
+  border-color: #ffffff;
+  color: #003c32;
+}
+
+.question_bar_button--button.active {
+  border-color: #ffffff;
+  color: #ffffff;
+  background-color: #008571;
+  outline: 0;
+}
+
+.question_bar_button--button.right,
+.question_bar_button--button.left {
+  flex-grow: 0;
+}

@@ -5,19 +5,12 @@ import { shallow } from 'enzyme';
 
 describe('<ResultBox />', () => {
   const onToggleFullResultMock = jest.fn();
-  const result = {
-    'answer': 'result',
-    'score': 1.0
-  };
-  const result_type = 'result type';
-  const result_rank = 1;
-  const is_full_result_shown = false;
   const props = {
-    result,
-    result_type,
-    onToggleFullResult: onToggleFullResultMock,
-    result_rank,
-    is_full_result_shown
+    result_type: 'regular',
+    result_text: 'result',
+    result_rank: 1,
+    is_full_result_shown: false,
+    onToggleFullResult: onToggleFullResultMock
   };
 
   it('renders without crashing', () => {
@@ -27,9 +20,9 @@ describe('<ResultBox />', () => {
 
   describe('when there is no result', () => {
     let wrapper;
-    const noResult = null;
+
     const props_no_result = Object.assign({}, props, {
-      result: noResult
+      result_text: null
     });
 
     describe('and it is the first rank', () => {
@@ -42,9 +35,8 @@ describe('<ResultBox />', () => {
         wrapper = shallow(<ResultBox {...props_with_first_rank} />);
       });
 
-      it('has "No Results" and title', () => {
+      it('has "No Results"', () => {
         const text = wrapper.text();
-        expect(text).toContain(result_type);
         expect(text).toContain('No Results');
       });
     });
@@ -57,43 +49,44 @@ describe('<ResultBox />', () => {
         wrapper = shallow(<ResultBox {...props_with_not_first_rank} />);
       });
 
-      it('does not have "No Results" or title', () => {
+      it('does not have "No Results"', () => {
         const text = wrapper.text();
-        expect(text).not.toContain(result_type);
         expect(text).not.toContain('No Results');
       });
     });
   });
 
   describe('when the result exceeds the max_length', () => {
-    const long_result = Object.assign({}, result, {
-      'answer': Array(ResultBox.defaultProps.max_length + 2).join('a')
-    });
     const props_with_long_result = Object.assign({}, props, {
-      'result': long_result
+      result_text: Array(ResultBox.defaultProps.max_length + 2).join('a')
     });
 
-    it('trims the result and adds an ellipsis', () => {
-      const wrapper = shallow(<ResultBox {...props_with_long_result} />);
-      const resultText = wrapper.find('.result_answer_snippet--div').text();
-      expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
-      expect(resultText).toContain('…');
-    });
-  });
+    describe('and the result type is "regular"', () => {
+      const props_long_standard = Object.assign({}, props_with_long_result, {
+        result_type: 'regular'
+      });
 
-  describe('when the score exceeds the decimal_places', () => {
-    const really_precise_score_result = Object.assign({}, result, {
-      'score': 5.012345
-    });
-    const props_with_precise_score = Object.assign({}, props, {
-      'result': really_precise_score_result
+      it('trims the result and adds an ellipsis', () => {
+        const wrapper = shallow(<ResultBox {...props_long_standard} />);
+        const resultText = wrapper.find('.result_box_text--div').text();
+        expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
+        expect(resultText).toContain('…');
+      });
     });
 
-    it('rounds the score', () => {
-      const wrapper = shallow(<ResultBox {...props_with_precise_score} />);
-      const scoreText = wrapper.find('.result_rank_right--div').text();
-      expect(scoreText).toEqual('Relevance Score 5.01');
+    describe('and the result type is "passage"', () => {
+      const props_long_passage = Object.assign({}, props_with_long_result, {
+        result_type: 'passage'
+      });
+
+      it('does not trim the result', () => {
+        const wrapper = shallow(<ResultBox {...props_long_passage} />);
+        const resultText = wrapper.find('.result_box_text--div').text();
+        expect(resultText.length).toEqual(ResultBox.defaultProps.max_length + 1);
+        expect(resultText).not.toContain('…');
+      });
     });
+
   });
 
   describe('when the "See full answer" button is clicked', () => {
@@ -101,7 +94,7 @@ describe('<ResultBox />', () => {
 
     beforeEach(() => {
       wrapper = shallow(<ResultBox {...props} />);
-      wrapper.find('.result_full_answer--div button').simulate('click');
+      wrapper.find('.result_box_toggle--div button').simulate('click');
     });
 
     it('calls the onShowFullAnswer method', () => {
@@ -119,9 +112,9 @@ describe('<ResultBox />', () => {
       wrapper = shallow(<ResultBox {...props_with_full_result_true} />);
     });
 
-    it('has "Hide full answer" as the button text', () => {
-      expect(wrapper.find('.result_full_answer--div button').text())
-        .toEqual('Hide full answer');
+    it('has "Collapse answer" as the button text', () => {
+      expect(wrapper.find('.result_box_toggle--div button').text())
+        .toEqual('Collapse answer');
     });
   });
 
@@ -136,7 +129,7 @@ describe('<ResultBox />', () => {
     });
 
     it('has "Show full answer" as the button text', () => {
-      expect(wrapper.find('.result_full_answer--div button').text())
+      expect(wrapper.find('.result_box_toggle--div button').text())
         .toEqual('Show full answer');
     });
   });

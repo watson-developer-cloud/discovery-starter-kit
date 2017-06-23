@@ -15,15 +15,13 @@ class ErrorContainer extends Component {
     const errorToShow = results_error ? results_error : enriched_results_error;
 
     return (
-      <section className='_full-width-row'>
-        <Element name='scroll_to_error' className='_container'>
-          <Alert type='error' color='red'>
-            <p className='base--p'>
-              { errorToShow }
-            </p>
-          </Alert>
-        </Element>
-      </section>
+      <Element name='scroll_to_error' className='_container'>
+        <Alert type='error' color='red'>
+          <p className='base--p'>
+            { errorToShow }
+          </p>
+        </Alert>
+      </Element>
     );
   }
 }
