@@ -6,25 +6,47 @@ import { shallow } from 'enzyme';
 
 describe('<ResultsContainer />', () => {
   const results = {
-    matching_results: 1,
+    matching_results: 3,
     results: [
       {
         answer: 'a good answer'
+      },
+      {
+        answer: 'a good answer 2'
+      },
+      {
+        answer: 'a good answer 3'
       }
     ]
   };
   const enriched_results = {
-    matching_results: 1,
+    matching_results: 3,
     results: [
       {
         id: '1',
         answer: 'a great answer',
+      },
+      {
+        id: '2',
+        answer: 'a great answer 2',
+      },
+      {
+        id: '3',
+        answer: 'a great answer 3',
       }
     ],
     passages: [
       {
         document_id: '1',
         passage_text: 'a great passage'
+      },
+      {
+        document_id: '2',
+        passage_text: 'a great passage 2'
+      },
+      {
+        document_id: '3',
+        passage_text: 'a great passage 3'
       }
     ]
   };
@@ -38,12 +60,12 @@ describe('<ResultsContainer />', () => {
       />, div);
   });
 
-  it('has 1 ResultComparison in it', () => {
+  it('has 3 ResultComparison in it', () => {
     const wrapper = shallow(<ResultsContainer
                               results={results}
                               enriched_results={enriched_results}
                             />);
-    expect(wrapper.find(ResultComparison)).toHaveLength(1);
+    expect(wrapper.find(ResultComparison)).toHaveLength(3);
   });
 
   it('findPassageResult returns the full result given a passage', () => {
@@ -85,13 +107,19 @@ describe('<ResultsContainer />', () => {
 
     beforeEach(() => {
       const more_than_one_result = {
-        'matching_results': 2,
-        'results': [
+        matching_results: 4,
+        results: [
           {
-            'answer': 'a good answer'
+            answer: 'a good answer'
           },
           {
-            'answer': 'another good answer'
+            answer: 'a good answer 2'
+          },
+          {
+            answer: 'a good answer 3'
+          },
+          {
+            answer: 'a good answer 4'
           }
         ]
       };
@@ -112,11 +140,11 @@ describe('<ResultsContainer />', () => {
       });
 
       it('increments the total_results_shown', () => {
-        expect(wrapper.instance().state.total_results_shown).toEqual(2);
+        expect(wrapper.instance().state.total_results_shown).toEqual(4);
       });
 
       it('shows more results', () => {
-        expect(wrapper.find(ResultComparison)).toHaveLength(2);
+        expect(wrapper.find(ResultComparison)).toHaveLength(4);
       });
 
       it('does not show the "Show More Results" button anymore', () => {
@@ -143,6 +171,14 @@ describe('<ResultsContainer />', () => {
           },
           {
             document_id: '2',
+            passage_text: 'another great passage'
+          },
+          {
+            document_id: '3',
+            passage_text: 'another great passage'
+          },
+          {
+            document_id: '4',
             passage_text: 'another great passage'
           }
         ]

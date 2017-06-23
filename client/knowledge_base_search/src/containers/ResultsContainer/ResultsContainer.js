@@ -7,9 +7,10 @@ import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class ResultsContainer extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
-      total_results_shown: 1,
+      total_results_shown: 3,
       full_answer_index: -1,
       full_answer_type: null
     };
