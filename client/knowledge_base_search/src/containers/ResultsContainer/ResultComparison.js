@@ -44,16 +44,35 @@ class ResultComparison extends Component {
       passageFullResult
     } = nextProps;
     const passageText = passage ? passage.passage_text : null;
+    const fullResult = passageFullResult ? passageFullResult.answer : null;
 
     if (index === full_result_index && full_result_type === 'passage') {
-      if (passageFullResult) {
-        return this.highlightPassage(passageText, passageFullResult.answer);
+      if (fullResult) {
+        return this.highlightPassage(passageText, fullResult);
       }
     } else if (passageText){
+      if (fullResult) {
+        return this.ellipsizePassage(passageText, fullResult);
+      }
       return passageText;
     }
 
     return null;
+  }
+
+  ellipsizePassage(passage, fullResult) {
+    const passageIndex = fullResult.indexOf(passage);
+    let shownPassage = passage;
+
+    if (passageIndex !== 0) {
+      shownPassage = '…' + shownPassage;
+    }
+
+    if (passageIndex + passage.length < fullResult.length) {
+      shownPassage += '…';
+    }
+
+    return shownPassage;
   }
 
   highlightPassage(passage, fullResult) {

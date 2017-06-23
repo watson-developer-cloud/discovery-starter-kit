@@ -15,7 +15,7 @@ describe('<ResultComparison />', () => {
       passage_text: 'a passage'
     },
     passageFullResult: {
-      answer: 'a great answer'
+      answer: 'a passage full answer'
     },
     index: 0,
     onSetFullResult: onSetFullResultMock,
@@ -34,7 +34,7 @@ describe('<ResultComparison />', () => {
     const resultBoxes = wrapper.find(ResultBox);
     expect(resultBoxes).toHaveLength(2);
     expect(resultBoxes.at(0).props().result_text).toEqual('a good answer');
-    expect(resultBoxes.at(1).props().result_text).toEqual('a passage');
+    expect(resultBoxes.at(1).props().result_text).toEqual('a passage…');
   });
 
   it('has 2 titles', () => {
@@ -60,6 +60,76 @@ describe('<ResultComparison />', () => {
       const resultBoxes = wrapper.find(ResultBox);
 
       expect(resultBoxes.at(1).props().result_text).toEqual(null);
+    });
+  });
+
+  describe('when the passageFullResult is the same as the passage', () => {
+    const props_with_same_passage = Object.assign({}, props, {
+      passageFullResult: {
+        answer: 'a passage'
+      }
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<ResultComparison {...props_with_same_passage} />);
+    });
+
+    it('does not ellipsize the passage', () => {
+      expect(wrapper.find(ResultBox).at(1).props().result_text)
+        .toEqual('a passage');
+    });
+  });
+
+  describe('when the passageFullResult is longer than the passage', () => {
+    describe('and the passageFullResult starts with the passage', () => {
+      const props_with_start_passage = Object.assign({}, props, {
+        passageFullResult: {
+          answer: 'a passage starts this answer'
+        }
+      });
+
+      beforeEach(() => {
+        wrapper = shallow(<ResultComparison {...props_with_start_passage} />);
+      });
+
+      it('ellipsizes the end of the passage', () => {
+        expect(wrapper.find(ResultBox).at(1).props().result_text)
+          .toEqual('a passage…');
+      });
+    });
+
+    describe('and the passageFullResult ends with the passage', () => {
+      const props_with_end_passage = Object.assign({}, props, {
+        passageFullResult: {
+          answer: 'ends with a passage'
+        }
+      });
+
+      beforeEach(() => {
+        wrapper = shallow(<ResultComparison {...props_with_end_passage} />);
+      });
+
+      it('ellipsizes the start of the passage', () => {
+        expect(wrapper.find(ResultBox).at(1).props().result_text)
+          .toEqual('…a passage');
+      });
+    });
+
+    describe('and the passageFullResult has the passage in the middle', () => {
+      const props_with_middle_passage = Object.assign({}, props, {
+        passageFullResult: {
+          answer: 'has a passage in the middle'
+        }
+      });
+
+      beforeEach(() => {
+        wrapper = shallow(<ResultComparison {...props_with_middle_passage} />);
+      });
+
+      it('ellipsizes both the start and end of the passage', () => {
+        expect(wrapper.find(ResultBox).at(1).props().result_text)
+          .toEqual('…a passage…');
+      });
     });
   });
 
@@ -118,6 +188,16 @@ describe('<ResultComparison />', () => {
       });
 
       describe('and the passage_text is not found in the full answer', () => {
+        const props_with_different_passage = Object.assign({}, props_with_passage_type, {
+          passageFullResult: {
+            answer: 'a great answer'
+          }
+        });
+
+        beforeEach(() => {
+          wrapper = shallow(<ResultComparison {...props_with_different_passage} />);
+        });
+
         it('has the only full passage answer shown', () => {
           const resultBoxes = wrapper.find(ResultBox);
 
@@ -126,19 +206,13 @@ describe('<ResultComparison />', () => {
       });
 
       describe('and the passage_text is found in the full answer', () => {
-        const props_with_matching_passage = Object.assign({}, props_with_passage_type, {
-          passage: {
-            passage_text: 'great'
-          }
-        });
-
         beforeEach(() => {
-          wrapper = shallow(<ResultComparison {...props_with_matching_passage} />);
+          wrapper = shallow(<ResultComparison {...props_with_passage_type} />);
         });
 
         it('has the passage text bolded in the full answer', () => {
           const resultBoxes = wrapper.find(ResultBox);
-          const expected = (<span>a <b>great</b> answer</span>);
+          const expected = (<span>{''}<b>a passage</b> full answer</span>);
 
           expect(resultBoxes.at(1).props().result_text).toEqual(expected);
         });

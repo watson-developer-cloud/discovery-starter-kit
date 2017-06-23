@@ -12,7 +12,10 @@ casper.test.begin('Knowledge Base Search', (test) => {
         // wait for transition
         casper.wait(5000, () => {
           casper.capture(`${casper.screenshots_dir}/results_exist.png`);
-          test.assertElementCount('.result_box--div', 2, '2 Results exist');
+          test.assertElementCount(
+            '.result_box--div',
+            6,
+            '6 Results exist when a search is clicked');
         });
       },
       () => {
