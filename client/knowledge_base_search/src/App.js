@@ -8,6 +8,7 @@ import links from './utils/links';
 import query from './actions/query';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './App.css';
+import Sticky from 'react-stickynode';
 
 class App extends Component {
   componentWillMount() {
@@ -130,12 +131,14 @@ class App extends Component {
           version='GA'
           description='This starter kit demonstrates how Watson Discovery&#39;s Passage Search quickly finds the most relevant information in your documents to answer your natural language questions. Try out the preset questions or enter a custom question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search on the Stack Exchange Travel data set.'
         />
-        <SearchContainer
-          onSubmit={this.handleSearch}
-          hasResults={this.state.results_fetched}
-          search_input={this.state.search_input}
-          isFetching={this.state.fetching}
-        />
+        <Sticky>
+          <SearchContainer
+            onSubmit={this.handleSearch}
+            hasResults={this.state.results_fetched}
+            search_input={this.state.search_input}
+            isFetching={this.state.fetching}
+          />
+        </Sticky>
         <CSSTransitionGroup
           transitionName='results'
           transitionEnterTimeout={500}
