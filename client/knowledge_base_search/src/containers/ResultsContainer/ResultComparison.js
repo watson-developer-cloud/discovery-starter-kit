@@ -104,7 +104,7 @@ class ResultComparison extends Component {
       >
         <div className='results_comparison_content--div'>
           <div className='results_comparison_content_left--div'>
-            { index === 0 && (<h4>Standard search</h4>) }
+            { index === 0 && (<h5>Standard search</h5>) }
             <ResultBox
               result_type={'regular'}
               result_text={result ? result.answer : null}
@@ -118,7 +118,7 @@ class ResultComparison extends Component {
             />
           </div>
           <div className='results_comparison_content_right--div'>
-            { index === 0 && (<h4>Passage search</h4>) }
+            { index === 0 && (<h5>Passage search</h5>) }
             <ResultBox
               result_type={'passage'}
               result_text={this.state.passage_result_text}

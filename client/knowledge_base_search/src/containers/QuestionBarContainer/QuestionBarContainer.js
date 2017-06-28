@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Isvg from 'react-inlinesvg';
+import arrow_back from '../../images/arrow_back_24.svg';
+import arrow_forward from '../../images/arrow_forward_24.svg';
 import './styles.css';
 
 class QuestionBarContainer extends Component {
@@ -44,10 +47,10 @@ class QuestionBarContainer extends Component {
           (
             <button
               type='button'
-              className='question_bar_button--button left'
+              className='question_bar_arrow--button left'
               onClick={this.handlePaginateLeft}
             >
-              Previous Questions
+              <Isvg src={arrow_back} className='arrow--span' />
             </button>
           )
         }
@@ -74,10 +77,10 @@ class QuestionBarContainer extends Component {
           (
             <button
               type='button'
-              className='question_bar_button--button right'
+              className='question_bar_arrow--button right'
               onClick={this.handlePaginateRight}
             >
-              More Questions
+              <Isvg src={arrow_forward} className='arrow--span' />
             </button>
           )
         }
@@ -95,7 +98,7 @@ QuestionBarContainer.PropTypes = {
 }
 
 QuestionBarContainer.defaultProps = {
-  questionsShown: 5
+  questionsShown: 4
 }
 
 export default QuestionBarContainer;

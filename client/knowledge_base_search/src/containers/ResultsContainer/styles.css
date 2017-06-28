@@ -13,7 +13,7 @@
 }
 
 .results_comparison--div:first-child {
-  padding-top: 1rem;
+  padding-top: 1.5rem;
 }
 
 .results_comparison_content--div {
@@ -63,6 +63,7 @@
 
 .result_box_text--div {
   font-weight: 300;
+  font-size: 0.9rem;
 }
 
 .result_box_toggle--div {
@@ -70,7 +71,7 @@
 }
 
 .result_box_toggle--div button{
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   padding: 0;
   color: #00b39f;
   border-color: #00b39f;

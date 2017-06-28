@@ -40,7 +40,7 @@ describe('<ResultComparison />', () => {
   it('has 2 titles', () => {
     wrapper = shallow(<ResultComparison {...props} />);
 
-    const titles = wrapper.find('.results_comparison_content--div h4');
+    const titles = wrapper.find('.results_comparison_content--div h5');
 
     expect(titles).toHaveLength(2);
     expect(titles.at(0).text()).toEqual('Standard search');

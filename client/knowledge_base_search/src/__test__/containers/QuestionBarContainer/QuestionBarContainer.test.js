@@ -19,13 +19,13 @@ describe('<QuestionBarContainer />', () => {
     ReactDOM.render(<QuestionBarContainer {...props} />, div);
   });
 
-  it('shows 5 preset queries and a "More Questions" button', () => {
+  it('shows 4 preset queries and a "More Questions" button', () => {
     wrapper = shallow(<QuestionBarContainer {...props} />);
 
     const buttons = wrapper.find('.question_bar_button--button');
 
     expect(buttons)
-      .toHaveLength(QuestionBarContainer.defaultProps.questionsShown + 1);
+      .toHaveLength(QuestionBarContainer.defaultProps.questionsShown);
   });
 
   describe('when the first preset query button is clicked', () => {
@@ -61,40 +61,46 @@ describe('<QuestionBarContainer />', () => {
     });
   });
 
-  describe('when the "More Questions" button is clicked', () => {
+  describe('when the right arrow is clicked', () => {
     beforeEach(() => {
       wrapper = wrapper = shallow(<QuestionBarContainer {...props} />);
-      wrapper.find('.question_bar_button--button.right').simulate('click');
+      wrapper.find('.question_bar_arrow--button.right').simulate('click');
     });
 
-    it('shows the "Previous Questions" button', () => {
-      const previousButton = wrapper.find('.question_bar_button--button.left');
-      const moreButton = wrapper.find('.question_bar_button--button.right');
+    it('shows the left arrow button only', () => {
+      const leftArrow = wrapper.find('.question_bar_arrow--button.left');
+      const rightArrow = wrapper.find('.question_bar_arrow--button.right');
 
-      expect(previousButton).toHaveLength(1);
-      expect(previousButton.text()).toEqual('Previous Questions');
-
-      expect(moreButton).toHaveLength(0);
+      expect(leftArrow).toHaveLength(1);
+      expect(rightArrow).toHaveLength(0);
     });
 
-    it('shows the next question', () => {
-      const buttons = wrapper.find('.question_bar_button--button');
-      expect(buttons.at(1).text()).toEqual('six');
+    it('shows the next questions', () => {
+      const questionButtons = wrapper.find('.question_bar_button--button');
+
+      expect(questionButtons).toHaveLength(2);
+      expect(questionButtons.at(0).text()).toEqual('five');
+      expect(questionButtons.at(1).text()).toEqual('six');
     });
 
-    describe('and then the "Previous Questions" button is clicked', () => {
+    describe('and then the left arrow is clicked', () => {
       beforeEach(() => {
-        wrapper.find('.question_bar_button--button.left').simulate('click');
+        wrapper.find('.question_bar_arrow--button.left').simulate('click');
       });
 
-      it('shows the original 5 questions', () => {
-        const buttons = wrapper.find('.question_bar_button--button');
-        const moreButton = buttons
-          .at(QuestionBarContainer.defaultProps.questionsShown);
+      it('shows the right arrow button only', () => {
+        const leftArrow = wrapper.find('.question_bar_arrow--button.left');
+        const rightArrow = wrapper.find('.question_bar_arrow--button.right');
 
-        expect(moreButton.text()).toEqual('More Questions');
-        expect(buttons)
-          .toHaveLength(QuestionBarContainer.defaultProps.questionsShown + 1);
+        expect(leftArrow).toHaveLength(0);
+        expect(rightArrow).toHaveLength(1);
+      });
+
+      it('shows the original 4 questions', () => {
+        const questionButtons = wrapper.find('.question_bar_button--button');
+
+        expect(questionButtons)
+          .toHaveLength(QuestionBarContainer.defaultProps.questionsShown);
       });
     });
   });
