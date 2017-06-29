@@ -68,7 +68,9 @@ class SearchContainer extends Component {
 
   render() {
     return (
-      <section className='_full-width-row search_container--section'>
+      <section
+        className='_full-width-row search_container--section'
+        ref={(section) => { this.searchSection = section }}>
         <div className='_container _container_large'>
           <form onSubmit={this.handleOnSubmit}>
             <Tabs selected={0}>
