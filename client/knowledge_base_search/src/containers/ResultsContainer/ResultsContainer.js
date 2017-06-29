@@ -18,7 +18,8 @@ class ResultsContainer extends Component {
 
   componentDidMount() {
     scroller.scrollTo('scroll_to_results', {
-      smooth: true
+      smooth: true,
+      offset: -this.props.searchContainerHeight
     });
   }
 
@@ -130,7 +131,8 @@ ResultsContainer.PropTypes = {
     results: PropTypes.arrayOf(PropTypes.object),
     passages: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
-  onSearch: PropTypes.func.isRequired
+  onSearch: PropTypes.func.isRequired,
+  searchContainerHeight: PropTypes.number.isRequired
 }
 
 export default ResultsContainer;

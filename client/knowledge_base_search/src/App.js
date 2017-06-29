@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import Sticky from 'react-stickynode';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
@@ -8,7 +9,6 @@ import links from './utils/links';
 import query from './actions/query';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './App.css';
-import Sticky from 'react-stickynode';
 
 class App extends Component {
   componentWillMount() {
@@ -18,7 +18,16 @@ class App extends Component {
       results: [],
       enriched_results: [],
       search_input: '',
-      results_error: null
+      results_error: null,
+      searchContainerHeight: 0
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const searchContainer = this.searchContainer;
+    if (searchContainer) {
+      nextState.searchContainerHeight = searchContainer
+        .searchSection.getBoundingClientRect().height
     }
   }
 
@@ -123,6 +132,7 @@ class App extends Component {
         />
         <Sticky>
           <SearchContainer
+            ref={(container) => { this.searchContainer = container }}
             onSubmit={this.handleSearch}
             hasResults={this.state.results_fetched}
             search_input={this.state.search_input}
@@ -158,6 +168,7 @@ class App extends Component {
                                   results={this.state.results}
                                   enriched_results={this.state.enriched_results}
                                   onSearch={this.handleSearch}
+                                  searchContainerHeight={this.state.searchContainerHeight}
                                 />
                               )
                           : null

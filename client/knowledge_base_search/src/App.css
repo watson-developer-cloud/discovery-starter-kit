@@ -139,7 +139,6 @@ a:visited {
 
 .results_row--section {
   background-color: #f9f9f9;
-  box-shadow: inset 0 7px 9px -6px rgba(0,0,0,0.7);
 }
 
 button:active, .base--button:active {
