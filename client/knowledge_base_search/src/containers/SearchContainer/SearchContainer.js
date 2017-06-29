@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, TextInput, Tabs, Pane } from 'watson-react-components';
 import QuestionBarContainer from '../QuestionBarContainer/QuestionBarContainer';
-import randomQueries from '../../utils/randomQueries';
+import ErrorContainer from '../ErrorContainer/ErrorContainer';
+import questions from '../../actions/questions';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
@@ -11,29 +12,43 @@ class SearchContainer extends Component {
     super(props);
     this.state = {
       search_input: '',
-      presetQueries: this.getShuffledQueries()
+      presetQueries: [],
+      questionsError: null,
+      fetchingQuestions: false
     };
+  }
+
+  componentDidMount() {
+    this.setState({ fetchingQuestions: true, questionsError: null });
+    questions().then((response) => {
+      this.setState({ fetchingQuestions: false });
+      if (response.error) {
+        this.setState({ questionsError: response.error });
+      } else {
+        this.setState({ presetQueries: this.shuffleQuestions(response) });
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.search_input !== this.state.search_input) {
-      this.setState({search_input: nextProps.search_input});
+      this.setState({ search_input: nextProps.search_input });
     }
   }
 
-  getShuffledQueries() {
-    const allQueries = randomQueries.slice(0);
-    let shuffledQueries = [];
+  shuffleQuestions(questions) {
+    const questionsCopy = questions.slice(0);
+    let shuffledQuestions = [];
 
-    for (let i = 0; i < randomQueries.length; i++) {
-      let queryIndex = Math.floor(Math.random() * allQueries.length);
-      shuffledQueries.push(allQueries.splice(queryIndex, 1)[0]);
+    for (let i = 0; i < questions.length; i++) {
+      let questionIndex = Math.floor(Math.random() * questionsCopy.length);
+      shuffledQuestions.push(questionsCopy.splice(questionIndex, 1)[0]);
     }
 
-    return shuffledQueries;
+    return shuffledQuestions;
   }
 
-  handleOnQuestionClick = (query, index) => {
+  handleOnQuestionClick = (query) => {
     this.handleOnInput({'target': { 'value': query}});
     this.props.onSubmit(query);
   }
@@ -58,12 +73,27 @@ class SearchContainer extends Component {
           <form onSubmit={this.handleOnSubmit}>
             <Tabs selected={0}>
               <Pane label='Preset questions'>
-                <QuestionBarContainer
-                  currentQuery={this.state.search_input}
-                  onQuestionClick={this.handleOnQuestionClick}
-                  presetQueries={this.state.presetQueries}
-                  isFetching={this.props.isFetching}
-                />
+                { this.state.fetchingQuestions
+                  ? (
+                      <div key='loader' className='_container _container_large _container-center'>
+                        <Icon type='loader' size='large' />
+                      </div>
+                    )
+                  : this.state.questionsError
+                    ? (
+                        <ErrorContainer
+                          errorMessage={this.state.questionsError}
+                        />
+                      )
+                    : (
+                        <QuestionBarContainer
+                          currentQuery={this.state.search_input}
+                          onQuestionClick={this.handleOnQuestionClick}
+                          presetQueries={this.state.presetQueries}
+                          isFetching={this.props.isFetching}
+                        />
+                      )
+                }
               </Pane>
               <Pane label='Custom question'>
                 <div className='custom_question--div'>
@@ -96,7 +126,6 @@ class SearchContainer extends Component {
 
 SearchContainer.PropTypes = {
   onSubmit: PropTypes.func.isRequired,
-  hasResults: PropTypes.bool.isRequired,
   search_input: PropTypes.string.isRequired,
   isFetching: PropTypes.bool.isRequired
 }

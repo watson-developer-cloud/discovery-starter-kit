@@ -5,9 +5,14 @@ import ResultsContainer from '../containers/ResultsContainer/ResultsContainer';
 import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import { Icon } from 'watson-react-components';
 import * as query from '../actions/query';
+import * as questions from '../actions/questions';
 import { shallow } from 'enzyme';
 
 describe('<App />', () => {
+  questions.default = jest.fn(() => {
+    return Promise.resolve([]);
+  });
+
   it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(<App />, div);
@@ -92,9 +97,12 @@ describe('<App />', () => {
     });
 
     it('submits a query to the regular and enriched collections', () => {
-      expect(query.default).toBeCalledWith('enriched', {'query': 'my query'});
-      expect(query.default).toBeCalledWith('regular', {'query': 'my query'});
-      expect(query.default).not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
+      expect(query.default)
+        .toBeCalledWith('enriched', {'natural_language_query': 'my query'});
+      expect(query.default)
+        .toBeCalledWith('regular', {'natural_language_query': 'my query'});
+      expect(query.default)
+        .not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
     });
 
     it('sets the search_input state to the input value', () => {
@@ -115,7 +123,9 @@ describe('<App />', () => {
     let wrapper;
 
     beforeEach(() => {
-      query.default = jest.fn((fetch) => { return Promise.resolve(responseWithExtra); });
+      query.default = jest.fn((fetch) => {
+        return Promise.resolve(responseWithExtra);
+      });
       wrapper = shallow(<App />);
       wrapper.instance().retrieveMissingPassages(responseWithExtra);
     });

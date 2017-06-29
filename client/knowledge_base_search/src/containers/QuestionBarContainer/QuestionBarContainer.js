@@ -67,7 +67,7 @@ class QuestionBarContainer extends Component {
                 }
                 type='button'
                 disabled={isFetching}
-                onClick={() => { onQuestionClick(query, i) }}>
+                onClick={() => { onQuestionClick(query) }}>
                   {query}
               </button>
             )

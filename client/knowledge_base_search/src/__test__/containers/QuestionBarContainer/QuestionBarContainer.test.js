@@ -35,7 +35,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('calls onSubmit with the first preset query', () => {
-      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0], 0);
+      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0]);
     });
   });
 
@@ -115,11 +115,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('disables all the query buttons', () => {
-      wrapper.find('.question_bar_button--button').nodes.filter((button) => {
-        const buttonText = button.props.children;
-        return buttonText !== 'More Questions' &&
-               buttonText !== 'Previous Questions';
-      }).forEach((button) => {
+      wrapper.find('.question_bar_button--button').nodes.forEach((button) => {
         expect(button.props.disabled).toBe(true);
       });
     });

@@ -18,8 +18,7 @@ class App extends Component {
       results: [],
       enriched_results: [],
       search_input: '',
-      results_error: null,
-      enriched_results_error: null
+      results_error: null
     }
   }
 
@@ -27,21 +26,22 @@ class App extends Component {
     this.setState({
       fetching: true,
       search_input: input,
-      results_error: null,
-      enriched_results_error: null
+      results_error: null
     });
 
     Promise.all([
-      query('enriched', {query: input}).then((enriched_response) => {
-        if (enriched_response.passages) {
-          return this.retrieveMissingPassages(enriched_response).then((response) => {
-            return response;
-          });
-        } else {
-          return Promise.resolve(enriched_response);
-        }
-      }),
-      query('regular', {query: input})
+      query('enriched', {natural_language_query: input})
+        .then((enriched_response) => {
+          if (enriched_response.passages) {
+            return this.retrieveMissingPassages(enriched_response)
+              .then((response) => {
+                return response;
+              });
+          } else {
+            return Promise.resolve(enriched_response);
+          }
+        }),
+      query('regular', {natural_language_query: input})
     ]).then((results_array) => {
       const enriched_results_response = results_array[0];
       const results_response = results_array[1];
@@ -50,8 +50,7 @@ class App extends Component {
         this.setState({
           fetching: false,
           results_fetched: true,
-          results_error: results_response.error,
-          enriched_results_error:  enriched_results_response.error
+          results_error: results_response.error || enriched_results_response.error
         });
       } else {
         this.setState({
@@ -61,12 +60,6 @@ class App extends Component {
           enriched_results: enriched_results_response
         });
       }
-    }).catch((error) => {
-      this.setState({
-        fetching: false,
-        results_fetched: true,
-        results_error: error.message
-      });
     });
   }
 
@@ -97,7 +90,7 @@ class App extends Component {
           .then((response) => {
             if (response.error) {
               console.error(response.error);
-              this.setState({enriched_results_error: response.error});
+              this.setState({results_error: response.error});
             }
 
             if (response.results) {
@@ -106,9 +99,6 @@ class App extends Component {
             }
 
             return enriched_results;
-          }).catch((error) => {
-            console.error(error);
-            this.setState({enriched_results_error: error});
           })
       : Promise.resolve(enriched_results);
   }
@@ -155,12 +145,11 @@ class App extends Component {
                             </div>
                           )
                         : this.state.results_fetched
-                          ? this.state.results_error || this.state.enriched_results_error
+                          ? this.state.results_error
                             ? (
                                 <ErrorContainer
                                   key='error_container'
-                                  results_error={this.state.results_error}
-                                  enriched_results_error={this.state.enriched_results_error}
+                                  errorMessage={this.state.results_error}
                                 />
                               )
                             : (

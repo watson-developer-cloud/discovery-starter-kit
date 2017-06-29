@@ -1,6 +1,6 @@
 import os
 import json
-from get_discovery_collections import get_constants
+from helpers import get_constants, get_questions
 from flask import Flask, jsonify, render_template, request
 from flask_sslify import SSLify
 from flask_cors import CORS
@@ -72,6 +72,7 @@ constants = get_constants(
                             'knowledge_base_enriched'
                           )
             )
+question_cache = get_questions(discovery, constants)
 
 
 @app.route('/')
@@ -97,6 +98,11 @@ def query(collection_type):
                 query_options=query_options
               )
             )
+
+
+@app.route('/api/questions', methods=['GET'])
+def questions():
+    return jsonify(question_cache)
 
 
 @app.errorhandler(429)

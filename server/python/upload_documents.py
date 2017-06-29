@@ -4,7 +4,7 @@ import os
 import glob
 import sys
 from dotenv import load_dotenv, find_dotenv
-from get_discovery_collections import get_constants
+from helpers import get_constants
 from watson_developer_cloud import DiscoveryV1
 import time
 

@@ -11,14 +11,13 @@ class ErrorContainer extends Component {
   }
 
   render() {
-    const { results_error, enriched_results_error } = this.props;
-    const errorToShow = results_error ? results_error : enriched_results_error;
+    const { errorMessage } = this.props;
 
     return (
       <Element name='scroll_to_error' className='_container'>
         <Alert type='error' color='red'>
           <p className='base--p'>
-            { errorToShow }
+            { errorMessage }
           </p>
         </Alert>
       </Element>
@@ -27,8 +26,7 @@ class ErrorContainer extends Component {
 }
 
 ErrorContainer.PropTypes = {
-  results_error: PropTypes.string.isRequired,
-  enriched_results_error: PropTypes.string.isRequired
+  errorMessage: PropTypes.string.isRequired
 }
 
 export default ErrorContainer;

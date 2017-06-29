@@ -4,6 +4,11 @@ casper.test.begin('Knowledge Base Search', (test) => {
   });
 
   casper.then(() => {
+    test.assertElementCount(
+      '.question_bar_button--button',
+      4,
+      '4 Preset Questions shown on initial load'
+    );
     casper.click('.question_bar_button--button:first-child');
     casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
 
