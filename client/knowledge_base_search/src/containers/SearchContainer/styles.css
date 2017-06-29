@@ -48,10 +48,9 @@
   display: none;
 }
 
-.search_container--section {
+.search_container--section._full-width-row {
   background-color: #00b39f;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding: 0;
   box-shadow: 0 7px 9px -6px rgba(0,0,0,0.7);
 }
 
