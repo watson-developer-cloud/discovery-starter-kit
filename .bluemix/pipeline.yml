@@ -33,7 +33,7 @@ stages:
   - type: stage
   properties:
   - name: CF_INSTANCES
-    value: '1'
+    value: '5'
     type: text
   - name: CF_MEMORY
     value: 512M
