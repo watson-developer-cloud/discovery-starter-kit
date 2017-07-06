@@ -33,7 +33,7 @@ describe('<ViewAllContainer />', () => {
   describe('when there are presetQueries', () => {
     const { questionsPerPage } = ViewAllContainer.defaultProps;
     const questionButtonSelector = '.view_all_question--button';
-    const queries = [...Array(questionsPerPage + 1)].map((i) => {
+    const queries = [...Array(questionsPerPage + 1)].map((el, i) => {
       return `query_${i}`;
     });
 
@@ -83,8 +83,47 @@ describe('<ViewAllContainer />', () => {
       });
     });
 
-    describe('and loadMore is triggered', () => {
+    describe('and loadMore is triggered without a filter', () => {
       beforeEach(() => {
+        wrapper.instance().loadMore();
+      });
+
+      it('shows more questions', () => {
+        const questionButtons = wrapper.find(questionButtonSelector);
+
+        expect(questionButtons).toHaveLength(queries.length);
+      });
+    });
+
+    describe('and handleOnInput is triggered with a filter matching less', () => {
+      beforeEach(() => {
+        wrapper.instance().handleOnInput({target: {value: '50'}});
+      });
+
+      it('filters the question set', () => {
+        const questionButtons = wrapper.find(questionButtonSelector);
+
+        expect(questionButtons).toHaveLength(1);
+        expect(questionButtons.text()).toEqual('query_50');
+      });
+
+      describe('and then loadMore is triggered', () => {
+        beforeEach(() => {
+          wrapper.instance().loadMore();
+        });
+
+        it('does not show more questions', () => {
+          const questionButtons = wrapper.find(questionButtonSelector);
+
+          expect(questionButtons).toHaveLength(1);
+          expect(questionButtons.text()).toEqual('query_50');
+        });
+      });
+    });
+
+    describe('and loadMore is triggered with a filter matching more', () => {
+      beforeEach(() => {
+        wrapper.instance().handleOnInput({target: {value: 'query'}});
         wrapper.instance().loadMore();
       });
 

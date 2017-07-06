@@ -65,7 +65,7 @@
   margin-right: 2rem;
 }
 
-.text-input--input[type="text"] {
+#searchInput {
   color: #ffffff;
   margin-left: 2.5rem;
   background-color: #00b39f;
@@ -73,8 +73,7 @@
   max-width: 100%;
 }
 
-::placeholder,
-.text-input--input[type="text"]:focus::placeholder {
+#searchInput:focus::placeholder {
   color: #ffffff;
   opacity: 0.5;
 }
