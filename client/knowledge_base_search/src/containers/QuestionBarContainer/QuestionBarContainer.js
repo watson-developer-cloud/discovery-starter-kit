@@ -35,7 +35,7 @@ class QuestionBarContainer extends Component {
       presetQueries,
       currentQuery,
       questionsShown,
-      isFetching,
+      isFetchingResults,
       onQuestionClick
     } = this.props;
 
@@ -66,7 +66,7 @@ class QuestionBarContainer extends Component {
                   )
                 }
                 type='button'
-                disabled={isFetching}
+                disabled={isFetchingResults}
                 onClick={() => { onQuestionClick(query) }}>
                   {query}
               </button>
@@ -92,7 +92,7 @@ class QuestionBarContainer extends Component {
 QuestionBarContainer.PropTypes = {
   presetQueries: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentQuery: PropTypes.string.isRequired,
-  isFetching: PropTypes.bool.isRequired,
+  isFetchingResults: PropTypes.bool.isRequired,
   questionsShown: PropTypes.number.isRequired,
   onQuestionClick: PropTypes.func.isRequired
 }

@@ -10,7 +10,7 @@ describe('<QuestionBarContainer />', () => {
   const props = {
     presetQueries: [ 'one', 'two', 'three', 'four', 'five', 'six' ],
     currentQuery: '',
-    isFetching: false,
+    isFetchingResults: false,
     onQuestionClick: onQuestionClickMock
   };
 
@@ -107,7 +107,7 @@ describe('<QuestionBarContainer />', () => {
 
   describe('when isFetching is true', () => {
     const props_is_fetching = Object.assign({}, props, {
-      isFetching: true
+      isFetchingResults: true
     });
 
     beforeEach(() => {

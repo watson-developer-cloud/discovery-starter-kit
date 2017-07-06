@@ -5,22 +5,45 @@ import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
 import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
+import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
 import links from './utils/links';
 import query from './actions/query';
+import questions from './actions/questions';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './App.css';
 
 class App extends Component {
-  componentWillMount() {
+  constructor(props) {
+    super(props);
     this.state = {
-      fetching: false,
-      results_fetched: false,
+      fetchingQuestions: true,
+      fetchingResults: false,
+      resultsFetched: false,
       results: [],
       enriched_results: [],
       search_input: '',
       results_error: null,
-      searchContainerHeight: 0
+      questionsError: null,
+      searchContainerHeight: 0,
+      showViewAll: false,
+      presetQueries: []
     }
+  }
+
+  componentDidMount() {
+    questions().then((response) => {
+      if (response.error) {
+        this.setState({
+          questionsError: response.error,
+          fetchingQuestions: false
+        });
+      } else {
+        this.setState({
+          presetQueries: this.shuffleQuestions(response),
+          fetchingQuestions: false
+        });
+      }
+    });
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -33,7 +56,7 @@ class App extends Component {
 
   handleSearch = (input) => {
     this.setState({
-      fetching: true,
+      fetchingResults: true,
       search_input: input,
       results_error: null
     });
@@ -57,14 +80,14 @@ class App extends Component {
 
       if (results_response.error || enriched_results_response.error) {
         this.setState({
-          fetching: false,
-          results_fetched: true,
+          fetchingResults: false,
+          resultsFetched: true,
           results_error: results_response.error || enriched_results_response.error
         });
       } else {
         this.setState({
-          fetching: false,
-          results_fetched: true,
+          fetchingResults: false,
+          resultsFetched: true,
           results: results_response,
           enriched_results: enriched_results_response
         });
@@ -112,6 +135,30 @@ class App extends Component {
       : Promise.resolve(enriched_results);
   }
 
+  shuffleQuestions(questions) {
+    const allQuestions = questions.slice(0);
+    let shuffledQueries = [];
+
+    for (let i = 0; i < questions.length; i++) {
+      let questionIndex = Math.floor(Math.random() * allQuestions.length);
+      shuffledQueries.push(allQuestions.splice(questionIndex, 1)[0]);
+    }
+
+    return shuffledQueries;
+  }
+
+  onQuestionClick = (query) => {
+    this.setState({
+      showViewAll: false,
+      search_input: query
+    })
+    this.handleSearch(query);
+  }
+
+  toggleViewAll = () => {
+    this.setState({ showViewAll: !this.state.showViewAll });
+  }
+
   render() {
     return (
       <div className='App'>
@@ -133,28 +180,50 @@ class App extends Component {
         <Sticky>
           <SearchContainer
             ref={(container) => { this.searchContainer = container }}
+            errorMessage={this.state.questionsError}
+            isFetchingQuestions={this.state.fetchingQuestions}
+            isFetchingResults={this.state.fetchingResults}
+            onQuestionClick={this.onQuestionClick}
             onSubmit={this.handleSearch}
-            hasResults={this.state.results_fetched}
-            search_input={this.state.search_input}
-            isFetching={this.state.fetching}
+            onViewAllClick={this.toggleViewAll}
+            presetQueries={this.state.presetQueries}
+            searchInput={this.state.search_input}
           />
         </Sticky>
+        <CSSTransitionGroup
+          transitionName='view_all'
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={500}
+        >
+          {
+            this.state.showViewAll &&
+            (
+              <ViewAllContainer
+                key='view_all'
+                onQuestionClick={this.onQuestionClick}
+                onCloseClick={this.toggleViewAll}
+                isFetchingResults={this.state.fetchingResults}
+                presetQueries={this.state.presetQueries}
+              />
+            )
+          }
+        </CSSTransitionGroup>
         <CSSTransitionGroup
           transitionName='results'
           transitionEnterTimeout={500}
           transitionLeave={false}
         >
-          { this.state.fetching || this.state.results_fetched
+          { this.state.fetchingResults || this.state.resultsFetched
               ? (
                   <section key='results' className='_full-width-row results_row--section'>
                     {
-                      this.state.fetching
+                      this.state.fetchingResults
                         ? (
                             <div key='loader' className='_container _container_large _container-center'>
                               <Icon type='loader' size='large' />
                             </div>
                           )
-                        : this.state.results_fetched
+                        : this.state.resultsFetched
                           ? this.state.results_error
                             ? (
                                 <ErrorContainer

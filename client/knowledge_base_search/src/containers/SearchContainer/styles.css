@@ -94,7 +94,8 @@
   margin-top: 2rem;
 }
 
-button.white--button {
+button.white--button,
+button.view_all--button {
   color: #ffffff;
   border-color: #ffffff;
   font-size: 1.3125rem;
@@ -104,6 +105,24 @@ button.white--button {
 button.white--button:hover,
 button.white--button:focus {
   opacity: 0.8;
+}
+
+.view_all_button--div {
+  text-align: right;
+  padding: 1rem;
+}
+
+button.view_all--button {
+  border-radius: 0;
+  padding: 0;
+  border-width: 0 0 1px 0;
+  border-color: transparent;
+  font-size: 0.9rem;
+}
+
+button.view_all--button:hover,
+button.view_all--button:focus {
+  border-bottom-color: #ffffff;
 }
 
 ._container-center {

@@ -137,6 +137,24 @@ a:visited {
   transition: opacity 500ms ease-in;
 }
 
+.view_all-enter {
+  transform: translateX(30vw);
+}
+
+.view_all-enter.view_all-enter-active {
+  transform: translateX(0);
+  transition: transform 500ms ease-in;
+}
+
+.view_all-leave {
+  transform: translateX(0);
+  transition: transform 500ms ease-out;
+}
+
+.view_all-leave.view_all-leave-active {
+  transform: translateX(30vw);
+}
+
 .results_row--section {
   background-color: #f9f9f9;
 }

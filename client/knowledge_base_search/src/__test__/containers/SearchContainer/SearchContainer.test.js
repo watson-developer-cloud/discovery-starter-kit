@@ -5,98 +5,110 @@ import QuestionBarContainer from '../../../containers/QuestionBarContainer/Quest
 import ErrorContainer from '../../../containers/ErrorContainer/ErrorContainer';
 import { TextInput, Icon } from 'watson-react-components';
 import { shallow } from 'enzyme';
-import * as questions from '../../../actions/questions';
 
 describe('<SearchContainer />', () => {
   let wrapper;
   const onSubmitMock = jest.fn();
-  const response = [
-    'a question?',
-    'another question?'
-  ];
-  // mock the fetch request to return mock data
-  questions.default = jest.fn(() => {
-    return Promise.resolve(response);
-  });
+  const onQuestionClickMock = jest.fn();
+  const onViewAllClickMock = jest.fn();
+  const props = {
+    errorMessage: null,
+    isFetchingQuestions: true,
+    isFetchingResults: false,
+    onQuestionClick: onQuestionClickMock,
+    onSubmit: onSubmitMock,
+    onViewAllClick: onViewAllClickMock,
+    presetQueries: [],
+    searchInput: ''
+  };
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(
-      <SearchContainer
-        onSubmit={onSubmitMock}
-        isFetching={false}
-      />, div);
+    ReactDOM.render(<SearchContainer {...props} />, div);
   });
-
-  describe('when it is fetchingQuestions', () => {
-    beforeEach(() => {
-      wrapper = shallow(
-                        <SearchContainer
-                          onSubmit={onSubmitMock}
-                          isFetching={false}  />
-                      );
-
-      wrapper.instance().componentDidMount();
-      // don't wait
-    });
-
-    it('shows the loading spinner', () => {
-      expect(wrapper.find({ type: 'loader' })).toHaveLength(1);
-      expect(wrapper.find(QuestionBarContainer)).toHaveLength(0);
-    });
-  });
-
 
   describe('when it has fetched questions', () => {
-    describe('and results are present', () => {
-      beforeEach((done) => {
-        wrapper = shallow(
-                    <SearchContainer
-                      onSubmit={onSubmitMock}
-                      isFetching={false}  />
-                  );
-        wrapper.instance().componentDidMount();
-        // "wait" for response
-        setTimeout(() => {
-          done();
-        }, 1)
+    const props_questions_fetched = Object.assign({}, props, {
+      isFetchingQuestions: false
+    });
+
+    describe('and questions are present', () => {
+      const questions = [ 'one', 'two' ];
+      const props_questions_present = Object.assign({}, props_questions_fetched, {
+        presetQueries: questions
+      });
+      beforeEach(() => {
+        wrapper = shallow(<SearchContainer {...props_questions_present} />);
       });
 
       it('shows the QuestionBarContainer with expected props', () => {
-        const questionBar = wrapper.find(QuestionBarContainer);
+        const questionBarProps = wrapper.find(QuestionBarContainer).props();
 
-        expect(questionBar).toHaveLength(1);
-        expect(questionBar.props().currentQuery).toEqual('');
-        expect(questionBar.props().presetQueries)
-          .toEqual(expect.arrayContaining(response));
-        expect(questionBar.props().isFetching).toBe(false);
+        expect(wrapper.find(ErrorContainer)).toHaveLength(0);
+
+        expect(questionBarProps.currentQuery).toEqual('');
+        expect(questionBarProps.presetQueries)
+          .toEqual(expect.arrayContaining(questions));
+        expect(questionBarProps.isFetchingResults).toBe(false);
+      });
+
+      describe('when the "View All Questions" button is clicked', () => {
+        beforeEach(() => {
+          wrapper.find('.view_all--button').simulate('click');
+        });
+
+        it('calls the onViewAllClick', () => {
+          expect(onViewAllClickMock).toBeCalled();
+        });
       });
     });
 
     describe('and an error is present', () => {
-      beforeEach((done) => {
-        // mock the fetch request to return an error
-        questions.default = jest.fn(() => {
-          return Promise.resolve({error: 'my bad'});
-        });
+      const props_with_error = Object.assign({}, props_questions_fetched, {
+        errorMessage: 'whoops'
+      });
 
-        wrapper = shallow(
-                  <SearchContainer
-                    onSubmit={onSubmitMock}
-                    isFetching={false}  />
-                );
-        wrapper.instance().componentDidMount();
-        // "wait" for response
-        setTimeout(() => {
-          done();
-        }, 1)
+      beforeEach(() => {
+        wrapper = shallow(<SearchContainer {...props_with_error} />);
       });
 
       it('shows an ErrorContainer', () => {
         const errorContainer = wrapper.find(ErrorContainer);
 
+        expect(wrapper.find(QuestionBarContainer)).toHaveLength(0);
+
         expect(errorContainer).toHaveLength(1);
-        expect(errorContainer.props().errorMessage).toEqual('my bad');
+        expect(errorContainer.props().errorMessage).toEqual('whoops');
+      });
+    });
+
+    describe('and isFetchingResults is true', () => {
+      const props_results_fetching = Object.assign({}, props_questions_fetched, {
+        isFetchingResults: true
+      });
+
+      beforeEach(() => {
+        wrapper = shallow(<SearchContainer {...props_results_fetching} />);
+      });
+
+      it('passes "true" to the QuestionBarContainer', () => {
+        expect(wrapper.find(QuestionBarContainer).props().isFetchingResults)
+          .toBe(true);
+      });
+
+      it('disables the "View All Questions" button', () => {
+        expect(wrapper.find('.view_all--button').props().disabled).toBe(true);
+      });
+
+      describe('and the Custom Query tab is selected', () => {
+        beforeEach(() => {
+          wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
+        });
+
+        it('disables all the inputs', () => {
+          expect(wrapper.find(TextInput).props().disabled).toBe(true);
+          expect(wrapper.find('.white--button').props().disabled).toBe(true);
+        });
       });
     });
   });
@@ -118,51 +130,17 @@ describe('<SearchContainer />', () => {
     });
   });
 
-  describe('when a query is submitted', () => {
+  describe('when the form is submitted with text', () => {
     const text = 'my question';
 
     beforeEach(() => {
-      wrapper = shallow(
-                  <SearchContainer
-                    onSubmit={onSubmitMock}
-                    isFetching={false}  />
-                );
-      wrapper.setState({search_input: text});
+      wrapper = shallow(<SearchContainer {...props} />);
+      wrapper.setState({searchInput: text});
+      wrapper.find('form').simulate('submit', { preventDefault: () => {}});
     });
 
-    describe('and the form is submitted', () => {
-      beforeEach(() => {
-        wrapper.find('form').simulate('submit', { preventDefault: () => {}});
-      });
-
-      it('calls onSubmit with the text', () => {
-        expect(onSubmitMock).toBeCalledWith(text);
-      });
-    });
-  });
-
-  describe('when isFetching is true', () => {
-    beforeEach(() => {
-      wrapper = shallow(
-                  <SearchContainer
-                    onSubmit={onSubmitMock}
-                    isFetching={true}  />
-                );
-    });
-
-    it('passes "true" to the QuestionBarContainer', () => {
-      expect(wrapper.find(QuestionBarContainer).props().isFetching).toBe(true);
-    });
-
-    describe('and the Custom Query tab is selected', () => {
-      beforeEach(() => {
-        wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
-      });
-
-      it('disables all the inputs', () => {
-        expect(wrapper.find(TextInput).props().disabled).toBe(true);
-        expect(wrapper.find('.white--button').props().disabled).toBe(true);
-      });
+    it('calls onSubmit with the text', () => {
+      expect(onSubmitMock).toBeCalledWith(text);
     });
   });
 });
