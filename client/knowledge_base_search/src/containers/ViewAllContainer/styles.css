@@ -1,4 +1,6 @@
 .view_all_container--div {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   right: 0;
@@ -12,18 +14,19 @@
 .view_all_questions_header--div {
   padding: 1rem;
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
 }
 
 .view_all_questions_list--div {
   overflow-y: auto;
-  height: 100%;
   text-align: left;
 }
 
 button.view_all_question--button,
 button.close_view_all--button {
   font-weight: 500;
+  font-size: 0.8rem;
   padding: 0;
   color: #00b39f;
   border-color: transparent;

@@ -31,7 +31,10 @@ describe('<ViewAllContainer />', () => {
   });
 
   describe('when there are presetQueries', () => {
-    const queries = [ 'one', 'two' ];
+    const { questionsPerPage } = ViewAllContainer.defaultProps;
+    const queries = [...Array(questionsPerPage + 1)].map((i) => {
+      return `query_${i}`;
+    });
 
     const props_with_queries = Object.assign({}, props, {
       presetQueries: queries
@@ -41,10 +44,10 @@ describe('<ViewAllContainer />', () => {
       wrapper = shallow(<ViewAllContainer {...props_with_queries} />);
     });
 
-    it('renders all queries as enabled buttons', () => {
+    it('renders only first set of questions as enabled buttons', () => {
       const questionButtons = wrapper.find('.view_all_question--button');
 
-      expect(questionButtons).toHaveLength(queries.length);
+      expect(questionButtons).toHaveLength(questionsPerPage);
       questionButtons.nodes.forEach((button) => {
         expect(button.props.disabled).toBe(false);
       });
@@ -59,10 +62,10 @@ describe('<ViewAllContainer />', () => {
         wrapper = shallow(<ViewAllContainer {...props_fetching_results} />);
       });
 
-      it('renders all queries as disabled buttons', () => {
+      it('renders only first set of questions as disabled buttons', () => {
         const questionButtons = wrapper.find('.view_all_question--button');
 
-        expect(questionButtons).toHaveLength(queries.length);
+        expect(questionButtons).toHaveLength(questionsPerPage);
         questionButtons.nodes.forEach((button) => {
           expect(button.props.disabled).toBe(true);
         });
