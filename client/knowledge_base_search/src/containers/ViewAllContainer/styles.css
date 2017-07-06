@@ -18,6 +18,20 @@
   justify-content: space-between;
 }
 
+.view_all_questions_filter--div {
+  position: relative;
+}
+
+.view_all_questions_filter--div input[type='text'] {
+  background-color: #f9f9f9;
+  box-shadow: none;
+}
+
+.view_all_questions_filter--icon {
+  position: absolute;
+  right: 2.5rem;
+}
+
 .view_all_questions_list--div {
   overflow-y: auto;
   text-align: left;
