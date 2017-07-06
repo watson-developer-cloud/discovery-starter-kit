@@ -32,6 +32,7 @@ describe('<ViewAllContainer />', () => {
 
   describe('when there are presetQueries', () => {
     const { questionsPerPage } = ViewAllContainer.defaultProps;
+    const questionButtonSelector = '.view_all_question--button';
     const queries = [...Array(questionsPerPage + 1)].map((i) => {
       return `query_${i}`;
     });
@@ -45,7 +46,7 @@ describe('<ViewAllContainer />', () => {
     });
 
     it('renders only first set of questions as enabled buttons', () => {
-      const questionButtons = wrapper.find('.view_all_question--button');
+      const questionButtons = wrapper.find(questionButtonSelector);
 
       expect(questionButtons).toHaveLength(questionsPerPage);
       questionButtons.nodes.forEach((button) => {
@@ -63,7 +64,7 @@ describe('<ViewAllContainer />', () => {
       });
 
       it('renders only first set of questions as disabled buttons', () => {
-        const questionButtons = wrapper.find('.view_all_question--button');
+        const questionButtons = wrapper.find(questionButtonSelector);
 
         expect(questionButtons).toHaveLength(questionsPerPage);
         questionButtons.nodes.forEach((button) => {
@@ -74,11 +75,23 @@ describe('<ViewAllContainer />', () => {
 
     describe('and the first button is clicked', () => {
       beforeEach(() => {
-        wrapper.find('.view_all_question--button').at(0).simulate('click');
+        wrapper.find(questionButtonSelector).at(0).simulate('click');
       });
 
       it('calls onQuestionClick with the first query', () => {
         expect(onQuestionClickMock).toBeCalledWith(queries[0]);
+      });
+    });
+
+    describe('and loadMore is triggered', () => {
+      beforeEach(() => {
+        wrapper.instance().loadMore();
+      });
+
+      it('shows more questions', () => {
+        const questionButtons = wrapper.find(questionButtonSelector);
+
+        expect(questionButtons).toHaveLength(queries.length);
       });
     });
   });
