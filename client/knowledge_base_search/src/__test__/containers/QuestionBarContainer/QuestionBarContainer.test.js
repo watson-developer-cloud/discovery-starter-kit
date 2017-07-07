@@ -7,10 +7,13 @@ describe('<QuestionBarContainer />', () => {
   let wrapper;
 
   const onQuestionClickMock = jest.fn();
+  const onOffsetUpdateMock = jest.fn();
   const props = {
     presetQueries: [ 'one', 'two', 'three', 'four', 'five', 'six' ],
     currentQuery: '',
     isFetchingResults: false,
+    offset: 0,
+    onOffsetUpdate: onOffsetUpdateMock,
     onQuestionClick: onQuestionClickMock
   };
 
@@ -19,7 +22,7 @@ describe('<QuestionBarContainer />', () => {
     ReactDOM.render(<QuestionBarContainer {...props} />, div);
   });
 
-  it('shows 4 preset queries and a "More Questions" button', () => {
+  it('shows 4 preset queries and a right arrow button', () => {
     wrapper = shallow(<QuestionBarContainer {...props} />);
 
     const buttons = wrapper.find('.question_bar_button--button');
@@ -61,10 +64,24 @@ describe('<QuestionBarContainer />', () => {
     });
   });
 
-  describe('when the right arrow is clicked', () => {
+  describe('when right arrow is clicked', () => {
     beforeEach(() => {
-      wrapper = wrapper = shallow(<QuestionBarContainer {...props} />);
+      wrapper = shallow(<QuestionBarContainer {...props} />);
       wrapper.find('.question_bar_arrow--button.right').simulate('click');
+    });
+
+    it('calls onOffsetUpdate', () => {
+      expect(onOffsetUpdateMock).toBeCalledWith(4);
+    });
+  });
+
+  describe('when offset is greater than questionsShown', () => {
+    const props_greater_offset = Object.assign({}, props, {
+      offset: QuestionBarContainer.defaultProps.questionsShown
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<QuestionBarContainer {...props_greater_offset} />);
     });
 
     it('shows the left arrow button only', () => {
@@ -83,24 +100,13 @@ describe('<QuestionBarContainer />', () => {
       expect(questionButtons.at(1).text()).toEqual('six');
     });
 
-    describe('and then the left arrow is clicked', () => {
+    describe('when left arrow is clicked', () => {
       beforeEach(() => {
         wrapper.find('.question_bar_arrow--button.left').simulate('click');
       });
 
-      it('shows the right arrow button only', () => {
-        const leftArrow = wrapper.find('.question_bar_arrow--button.left');
-        const rightArrow = wrapper.find('.question_bar_arrow--button.right');
-
-        expect(leftArrow).toHaveLength(0);
-        expect(rightArrow).toHaveLength(1);
-      });
-
-      it('shows the original 4 questions', () => {
-        const questionButtons = wrapper.find('.question_bar_button--button');
-
-        expect(questionButtons)
-          .toHaveLength(QuestionBarContainer.defaultProps.questionsShown);
+      it('calls onOffsetUpdate', () => {
+        expect(onOffsetUpdateMock).toBeCalledWith(0);
       });
     });
   });

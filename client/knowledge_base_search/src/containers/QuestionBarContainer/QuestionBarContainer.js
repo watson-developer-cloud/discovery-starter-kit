@@ -6,28 +6,26 @@ import arrow_forward from '../../images/arrow_forward_24.svg';
 import './styles.css';
 
 class QuestionBarContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      offset: 0
-    };
-  }
-
   handlePaginateRight = (e) => {
-    const { presetQueries, questionsShown } = this.props;
+    const {
+      presetQueries,
+      questionsShown,
+      offset,
+      onOffsetUpdate
+    } = this.props;
     const paginateTo = Math.min(
-                        this.state.offset + questionsShown,
+                        offset + questionsShown,
                         presetQueries.length - 1
                       );
 
-    this.setState({offset: paginateTo });
+    onOffsetUpdate(paginateTo);
   }
 
   handlePaginateLeft = (e) => {
-    const { questionsShown } = this.props;
-    const paginateTo = Math.max(this.state.offset - questionsShown, 0);
+    const { questionsShown, offset, onOffsetUpdate } = this.props;
+    const paginateTo = Math.max(offset - questionsShown, 0);
 
-    this.setState({offset: paginateTo });
+    onOffsetUpdate(paginateTo);
   }
 
   render() {
@@ -36,10 +34,9 @@ class QuestionBarContainer extends Component {
       currentQuery,
       questionsShown,
       isFetchingResults,
-      onQuestionClick
+      onQuestionClick,
+      offset
     } = this.props;
-
-    let { offset } = this.state;
 
     return (
       <div className='question_bar_container--div'>
@@ -94,7 +91,9 @@ QuestionBarContainer.PropTypes = {
   currentQuery: PropTypes.string.isRequired,
   isFetchingResults: PropTypes.bool.isRequired,
   questionsShown: PropTypes.number.isRequired,
-  onQuestionClick: PropTypes.func.isRequired
+  onQuestionClick: PropTypes.func.isRequired,
+  onOffsetUpdate: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired
 }
 
 QuestionBarContainer.defaultProps = {
