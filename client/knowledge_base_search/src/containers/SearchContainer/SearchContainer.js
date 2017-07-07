@@ -39,6 +39,8 @@ class SearchContainer extends Component {
       isFetchingQuestions,
       isFetchingResults,
       presetQueries,
+      offset,
+      onOffsetUpdate,
       onQuestionClick,
       onViewAllClick
     } = this.props;
@@ -67,6 +69,8 @@ class SearchContainer extends Component {
                           <div>
                             <QuestionBarContainer
                               currentQuery={this.state.searchInput}
+                              offset={offset}
+                              onOffsetUpdate={onOffsetUpdate}
                               onQuestionClick={onQuestionClick}
                               presetQueries={presetQueries}
                               isFetchingResults={isFetchingResults}
@@ -118,6 +122,8 @@ SearchContainer.PropTypes = {
   errorMessage: PropTypes.string,
   isFetchingQuestions: PropTypes.bool.isRequired,
   isFetchingResults: PropTypes.bool.isRequired,
+  offset: PropTypes.number.isRequired,
+  onOffsetUpdate: PropTypes.func.isRequired,
   onQuestionClick: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onViewAllClick: PropTypes.func.isRequired,

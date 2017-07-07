@@ -14,7 +14,10 @@ describe('<App />', () => {
   let wrapper;
   const questionsResponse = [
     'a question?',
-    'another question?'
+    'another question?',
+    'a third question?',
+    'a fourth question?',
+    'a fifth question?'
   ];
   const resultsResponse = {
     matching_results: 10,
@@ -59,6 +62,7 @@ describe('<App />', () => {
     expect(searchContainerProps.isFetchingQuestions).toBe(true);
     expect(searchContainerProps.isFetchingResults).toBe(false);
     expect(searchContainerProps.presetQueries).toEqual([]);
+    expect(searchContainerProps.offset).toEqual(0);
   });
 
   describe('when toggleViewAll is invoked', () => {
@@ -84,7 +88,7 @@ describe('<App />', () => {
       // "wait" for response
       setTimeout(() => {
         done();
-      }, 1)
+      }, 1);
     });
 
     it('passes expected props to the SearchContainer', () => {
@@ -95,6 +99,7 @@ describe('<App />', () => {
       expect(searchContainerProps.isFetchingResults).toBe(false);
       expect(searchContainerProps.presetQueries)
         .toEqual(expect.arrayContaining(questionsResponse));
+      expect(searchContainerProps.offset).toEqual(0);
     });
 
     describe('and showViewAll is true', () => {
@@ -222,22 +227,69 @@ describe('<App />', () => {
     });
   });
 
-  describe('when onQuestionClick is invoked', () => {
-    const questionText = 'some question text';
-
-    beforeEach(() => {
+  describe('onQuestionClick', () => {
+    beforeEach((done) => {
+      questions.default = jest.fn(() => {
+        return Promise.resolve(questionsResponse);
+      });
       wrapper = shallow(<App />);
-      wrapper.instance().onQuestionClick(questionText);
+      wrapper.instance().componentDidMount();
+      // "wait" for response
+      setTimeout(() => {
+        done();
+      }, 1);
     });
 
-    it('hides the view all container and runs a search', () => {
-      expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
-      expect(wrapper.state().search_input).toEqual(questionText);
-      expect(query.default).toBeCalledWith('regular', {
-        natural_language_query: questionText
+    describe('when invoked with a question being shown', () => {
+      let originalState;
+      let questionText;
+
+      beforeEach(() => {
+        originalState = Object.assign({}, wrapper.state());
+        questionText = originalState.presetQueries[3];
+        wrapper.instance().handleQuestionClick(questionText);
       });
-      expect(query.default).toBeCalledWith('enriched', {
-        natural_language_query: questionText
+
+      it('hides the view all container, keeps questions, and runs a search', () => {
+        expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
+        expect(wrapper.state().search_input).toEqual(questionText);
+        expect(wrapper.state().presetQueries).toEqual(originalState.presetQueries);
+        expect(wrapper.state().offset).toEqual(originalState.offset);
+        expect(query.default).toBeCalledWith('regular', {
+          natural_language_query: questionText
+        });
+        expect(query.default).toBeCalledWith('enriched', {
+          natural_language_query: questionText
+        });
+      });
+    });
+
+    describe('when invoked with a question before the questions shown', () => {
+      let questionText;
+
+      beforeEach(() => {
+        questionText = wrapper.state().presetQueries[1];
+        wrapper.setState({offset: 4});
+        wrapper.instance().handleQuestionClick(questionText);
+      });
+
+      it('pushes the question to the beginning and resets the offset', () => {
+        expect(wrapper.state().presetQueries[0]).toEqual(questionText);
+        expect(wrapper.state().offset).toEqual(0);
+      });
+    });
+
+    describe('when invoked with a question after the questions shown', () => {
+      let questionText;
+
+      beforeEach(() => {
+        questionText = wrapper.state().presetQueries[5];
+        wrapper.instance().handleQuestionClick(questionText);
+      });
+
+      it('pushes the question to the beginning and resets the offset', () => {
+        expect(wrapper.state().presetQueries[0]).toEqual(questionText);
+        expect(wrapper.state().offset).toEqual(0);
       });
     });
   });

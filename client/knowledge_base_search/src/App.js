@@ -3,6 +3,7 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import Sticky from 'react-stickynode';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
+import QuestionBarContainer from './containers/QuestionBarContainer/QuestionBarContainer';
 import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
 import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
@@ -26,7 +27,8 @@ class App extends Component {
       questionsError: null,
       searchContainerHeight: 0,
       showViewAll: false,
-      presetQueries: []
+      presetQueries: [],
+      offset: 0
     }
   }
 
@@ -147,12 +149,31 @@ class App extends Component {
     return shuffledQueries;
   }
 
-  onQuestionClick = (query) => {
+  handleQuestionClick = (query) => {
+    const { presetQueries, offset } = this.state;
+    const questionIndex = presetQueries.indexOf(query);
+    const beginQuestions = offset;
+    const endQuestions = offset + QuestionBarContainer.defaultProps.questionsShown;
+    let newPresetQueries = presetQueries.slice(0);
+    let newOffset = offset;
+
+    if (questionIndex < beginQuestions || questionIndex > endQuestions) {
+      newPresetQueries.splice(questionIndex, 1);
+      newPresetQueries.unshift(query);
+      newOffset = 0;
+    }
+
     this.setState({
       showViewAll: false,
-      search_input: query
+      search_input: query,
+      presetQueries: newPresetQueries,
+      offset: newOffset
     })
     this.handleSearch(query);
+  }
+
+  handleOffsetUpdate = (offset) => {
+    this.setState({ offset: offset });
   }
 
   toggleViewAll = () => {
@@ -183,7 +204,9 @@ class App extends Component {
             errorMessage={this.state.questionsError}
             isFetchingQuestions={this.state.fetchingQuestions}
             isFetchingResults={this.state.fetchingResults}
-            onQuestionClick={this.onQuestionClick}
+            offset={this.state.offset}
+            onOffsetUpdate={this.handleOffsetUpdate}
+            onQuestionClick={this.handleQuestionClick}
             onSubmit={this.handleSearch}
             onViewAllClick={this.toggleViewAll}
             presetQueries={this.state.presetQueries}
@@ -200,7 +223,7 @@ class App extends Component {
             (
               <ViewAllContainer
                 key='view_all'
-                onQuestionClick={this.onQuestionClick}
+                onQuestionClick={this.handleQuestionClick}
                 onCloseClick={this.toggleViewAll}
                 isFetchingResults={this.state.fetchingResults}
                 presetQueries={this.state.presetQueries}

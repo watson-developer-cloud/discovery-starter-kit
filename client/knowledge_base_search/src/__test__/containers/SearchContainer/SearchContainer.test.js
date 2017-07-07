@@ -9,12 +9,15 @@ import { shallow } from 'enzyme';
 describe('<SearchContainer />', () => {
   let wrapper;
   const onSubmitMock = jest.fn();
+  const onOffsetUpdateMock = jest.fn();
   const onQuestionClickMock = jest.fn();
   const onViewAllClickMock = jest.fn();
   const props = {
     errorMessage: null,
     isFetchingQuestions: true,
     isFetchingResults: false,
+    offset: 0,
+    onOffsetUpdate: onOffsetUpdateMock,
     onQuestionClick: onQuestionClickMock,
     onSubmit: onSubmitMock,
     onViewAllClick: onViewAllClickMock,
@@ -50,6 +53,7 @@ describe('<SearchContainer />', () => {
         expect(questionBarProps.presetQueries)
           .toEqual(expect.arrayContaining(questions));
         expect(questionBarProps.isFetchingResults).toBe(false);
+        expect(questionBarProps.offset).toEqual(0);
       });
 
       describe('when the "View All Questions" button is clicked', () => {
