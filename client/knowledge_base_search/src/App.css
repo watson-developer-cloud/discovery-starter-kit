@@ -3,6 +3,10 @@ body * + * {
   font-weight: 300;
 }
 
+div::before, div::after {
+  content: none;
+}
+
 .header {
   background-color: #003C32;
 }
@@ -20,6 +24,7 @@ body * + * {
 
 .jumbotron--description {
   font-weight: initial;
+  float: none;
 }
 
 .base--h5 {

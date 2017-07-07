@@ -76,7 +76,7 @@ class ViewAllContainer extends Component {
             X Close
           </button>
         </div>
-        <h5>
+        <h5 className='view_all_questions_description--h5'>
           These are a list of available questions we have prepared
           for you. Click one below to see how Watson delivers
           meaningful results with Passage Search.
@@ -90,7 +90,7 @@ class ViewAllContainer extends Component {
             placeholder='Filter available questions'
             value={this.state.questionFilter}
             onInput={this.handleOnInput}
-            style={{width: 'calc(100% - 3rem)'}}
+            style={{width: 'calc(100% - 2.5rem)'}}
             disabled={isFetchingResults}
           />
         </div>

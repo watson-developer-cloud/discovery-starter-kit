@@ -73,8 +73,11 @@
   max-width: 100%;
 }
 
-#searchInput:focus::placeholder {
+#searchInput::placeholder {
   color: #ffffff;
+}
+
+#searchInput:focus::placeholder {
   opacity: 0.5;
 }
 
