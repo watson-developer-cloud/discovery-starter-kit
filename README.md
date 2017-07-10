@@ -6,9 +6,9 @@ A repo containing the basics for setting up one of the watson developer cloud SD
 
 Shows the comparison on what the Watson Discovery Service can add to your data to make the search experience return more relevant results
 
-[![Deploy To Bluemix](https://console.ng.bluemix.net/devops/graphics/create_toolchain_button.png)](https://console.ng.bluemix.net/devops/setup/deploy/?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
+[![Deploy to Bluemix](https://deployment-tracker.mybluemix.net/stats/24261964d00b59942cda0befd0535f50/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
 
-When this button is clicked, it will create a toolchain based on the master branch of the repo into Bluemix and you will have to modify the application name to the name of the host you want to put it at. The default will get mapped to {organization/user}-{repo_name}-{timestamp}.
+When this button is clicked, it will begin the process of creating a deployment toolchain based on the master branch of the repo into Bluemix and you will have to modify the application name to the name of the host you want to put it at. The default will get mapped to {organization/user}-{repo_name}-{timestamp}.
 
 The running demo of this `knowledge-base-search` is at [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
 
