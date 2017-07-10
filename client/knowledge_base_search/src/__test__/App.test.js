@@ -283,7 +283,7 @@ describe('<App />', () => {
       let questionText;
 
       beforeEach(() => {
-        questionText = wrapper.state().presetQueries[5];
+        questionText = wrapper.state().presetQueries[4];
         wrapper.instance().handleQuestionClick(questionText);
       });
 

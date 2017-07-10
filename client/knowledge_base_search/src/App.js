@@ -153,7 +153,7 @@ class App extends Component {
     const { presetQueries, offset } = this.state;
     const questionIndex = presetQueries.indexOf(query);
     const beginQuestions = offset;
-    const endQuestions = offset + QuestionBarContainer.defaultProps.questionsShown;
+    const endQuestions = offset + QuestionBarContainer.defaultProps.questionsShown - 1;
     let newPresetQueries = presetQueries.slice(0);
     let newOffset = offset;
 
