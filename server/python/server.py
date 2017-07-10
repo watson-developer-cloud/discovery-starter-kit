@@ -17,8 +17,9 @@ try:
 except IOError:
     print('warning: no .env file loaded')
 
-# Emit Bluemix deployment event
-cf_deployment_tracker.track()
+# Emit Bluemix deployment event if not a demo deploy
+if not(os.getenv('DEMO_DEPLOY')):
+    cf_deployment_tracker.track()
 
 app = Flask(
         __name__,
