@@ -56,6 +56,11 @@ describe('<SearchContainer />', () => {
         expect(questionBarProps.offset).toEqual(0);
       });
 
+      it('shows the expected text for the "View all x Questions" button', () => {
+        expect(wrapper.find('.view_all--button').text())
+          .toEqual('View All 2+ Questions');
+      });
+
       describe('when the "View All Questions" button is clicked', () => {
         beforeEach(() => {
           wrapper.find('.view_all--button').simulate('click');
@@ -119,11 +124,7 @@ describe('<SearchContainer />', () => {
 
   describe('when the Custom Query tab is pressed', () => {
     beforeEach(() => {
-      wrapper = shallow(
-                  <SearchContainer
-                    onSubmit={onSubmitMock}
-                    isFetching={false}  />
-                );
+      wrapper = shallow(<SearchContainer {...props} />);
       wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
     });
 

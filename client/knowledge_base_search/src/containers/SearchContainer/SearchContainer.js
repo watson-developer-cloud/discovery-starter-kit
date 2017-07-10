@@ -33,6 +33,16 @@ class SearchContainer extends Component {
     }
   }
 
+  getViewAllButtonText() {
+    const { presetQueries } = this.props;
+    const numQuestions = presetQueries.length;
+    const numZeroes = numQuestions.toString().length;
+    const scale = Math.pow(10, numZeroes - 1);
+    const numPresetQueries = Math.floor(numQuestions / scale) * scale;
+
+    return `View All ${numPresetQueries.toLocaleString()}+ Questions`;
+  }
+
   render() {
     const {
       errorMessage,
@@ -82,7 +92,7 @@ class SearchContainer extends Component {
                                 disabled={isFetchingResults}
                                 onClick={onViewAllClick}
                               >
-                                View All Questions
+                                {this.getViewAllButtonText()}
                               </button>
                             </div>
                           </div>

@@ -38,10 +38,10 @@ def find_collection_id(collections_response, collection_name):
     return '' if len(my_coll) == 0 else my_coll[0]
 
 
-def get_questions(discovery, constants):
-    # return the top 4000 questions from the dataset
+def get_questions(discovery, constants, question_count):
+    # return the top question_count questions from the dataset
     query_options = {
-     'aggregation': 'term(question.title,count:4000)',
+     'aggregation': 'term(question.title,count:' + str(question_count) + ')',
      'count': 0
     }
 

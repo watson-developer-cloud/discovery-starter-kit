@@ -28,8 +28,10 @@ class TestHelpers(unittest.TestCase):
 
     @patch('watson_developer_cloud.DiscoveryV1')
     def test_questions(self, discovery):
+        question_count = 5000
+        expected_agg = 'term(question.title,count:' + str(question_count) + ')'
         expected_query_opts = {
-          'aggregation': 'term(question.title,count:4000)',
+          'aggregation': expected_agg,
           'count': 0
         }
         expected_value = [
@@ -58,7 +60,7 @@ class TestHelpers(unittest.TestCase):
         )
         discovery.query = MagicMock(return_value=mock_response)
 
-        actual_value = get_questions(discovery, constants)
+        actual_value = get_questions(discovery, constants, question_count)
         discovery.query.assert_called_with(
           environment_id='my_environment_id',
           collection_id='my_regular_collection_id',

@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 from helpers import get_constants, get_questions
 from flask import Flask, jsonify, render_template, request
@@ -73,7 +74,12 @@ constants = get_constants(
                             'knowledge_base_enriched'
                           )
             )
-question_cache = get_questions(discovery, constants)
+try:
+    total_questions = int(os.getenv('DISCOVERY_QUESTION_COUNT', 5000))
+except ValueError:
+    sys.exit('DISCOVERY_QUESTION_COUNT not an integer, terminating...')
+
+question_cache = get_questions(discovery, constants, total_questions)
 
 
 @app.route('/')
