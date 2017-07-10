@@ -58,6 +58,7 @@ button.close_view_all--button {
 
 button.view_all_question--button {
   margin: 0.5rem 0;
+  width: 100%;
 }
 
 button.view_all_question--button:hover,
