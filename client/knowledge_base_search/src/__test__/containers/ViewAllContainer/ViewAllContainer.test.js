@@ -95,16 +95,30 @@ describe('<ViewAllContainer />', () => {
       });
     });
 
+    describe('and handleOnInput is triggered with a filter matching nothing', () => {
+      beforeEach(() => {
+        wrapper.instance().handleOnInput({target: {value: 'foo'}});
+      });
+
+      it('shows something indicating no results matched', () => {
+        expect(wrapper.find('.view_all_questions_no_results--span'))
+          .toHaveLength(1);
+      });
+    });
+
     describe('and handleOnInput is triggered with a filter matching less', () => {
       beforeEach(() => {
         wrapper.instance().handleOnInput({target: {value: '50'}});
       });
 
-      it('filters the question set', () => {
+      it('filters the question set and does not show a no results message', () => {
         const questionButtons = wrapper.find(questionButtonSelector);
 
         expect(questionButtons).toHaveLength(1);
         expect(questionButtons.text()).toEqual('query_50');
+
+        expect(wrapper.find('.view_all_questions_no_results--span'))
+          .toHaveLength(0);
       });
 
       describe('and then loadMore is triggered', () => {

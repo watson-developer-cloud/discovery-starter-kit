@@ -104,19 +104,24 @@ class ViewAllContainer extends Component {
             useWindow={false}
           >
             {
-              this.state.shownQuestions.map((query, i) => {
-                return (
-                  <button
-                    key={'query_button_' + i}
-                    className='view_all_question--button'
-                    disabled={isFetchingResults}
-                    type='button'
-                    onClick={() => { onQuestionClick(query) }}
-                  >
-                    {query}
-                  </button>
-                )
-              })
+              this.state.shownQuestions.length > 0
+                ? this.state.shownQuestions.map((query, i) => {
+                    return (
+                      <button
+                        key={'query_button_' + i}
+                        className='view_all_question--button'
+                        disabled={isFetchingResults}
+                        type='button'
+                        onClick={() => { onQuestionClick(query) }}
+                      >
+                        {query}
+                      </button>
+                    )
+                  })
+                : <span className='view_all_questions_no_results--span'>
+                    No questions found that match your filter,
+                    try broadening your query
+                  </span>
             }
           </InfiniteScroll>
         </div>
