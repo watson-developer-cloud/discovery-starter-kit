@@ -67,3 +67,7 @@ button.close_view_all--button:hover,
 button.close_view_all--button:focus {
   text-decoration: underline;
 }
+
+.view_all_questions_no_results--span {
+  font-weight: 500;
+}
