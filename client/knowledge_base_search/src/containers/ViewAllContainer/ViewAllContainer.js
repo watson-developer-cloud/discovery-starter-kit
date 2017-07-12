@@ -71,7 +71,7 @@ class ViewAllContainer extends Component {
     return (
       <div className='view_all_container--div'>
         <div className='view_all_questions_header--div'>
-          <h4>Available questions</h4>
+          <h3>Available questions</h3>
           <button
             type='button'
             className='close_view_all--button'

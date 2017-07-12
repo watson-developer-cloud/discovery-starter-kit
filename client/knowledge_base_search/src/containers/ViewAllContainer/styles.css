@@ -18,7 +18,7 @@
 }
 
 .view_all_questions_description--h5 {
-  padding: 1rem 0;
+  padding: 0.3rem 0 1rem 0;
   font-size: 0.9rem;
   color: #5a5a5a;
 }
@@ -52,13 +52,16 @@
   overflow-y: auto;
   text-align: center;
   flex-grow: 1;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 0;
 }
 
 .close_view_all--button svg{
   color: #959595;
   fill: currentColor;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
 .close_view_all--button:hover svg,

@@ -215,8 +215,8 @@ class App extends Component {
         </Sticky>
         <CSSTransitionGroup
           transitionName='view_all'
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={500}
+          transitionEnterTimeout={230}
+          transitionLeaveTimeout={230}
         >
           {
             this.state.showViewAll &&
