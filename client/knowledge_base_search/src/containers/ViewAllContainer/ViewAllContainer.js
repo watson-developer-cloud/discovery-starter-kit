@@ -38,11 +38,16 @@ class ViewAllContainer extends Component {
     return this.state.shownQuestions.length < this.props.presetQueries.length;
   }
 
+  escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   getFilteredQuestions(questionFilter) {
     const { presetQueries } = this.props;
+    const filterRexExp = new RegExp(this.escapeRegExp(questionFilter), 'i');
 
     return presetQueries.filter((question) => {
-      return question.includes(questionFilter);
+      return filterRexExp.test(question);
     });
   }
 
@@ -66,14 +71,14 @@ class ViewAllContainer extends Component {
     return (
       <div className='view_all_container--div'>
         <div className='view_all_questions_header--div'>
-          <h4>Available Questions</h4>
+          <h4>Available questions</h4>
           <button
             type='button'
             className='close_view_all--button'
             disabled={isFetchingResults}
             onClick={onCloseClick}
           >
-            X Close
+            <Icon type='close' />
           </button>
         </div>
         <h5 className='view_all_questions_description--h5'>
@@ -83,14 +88,14 @@ class ViewAllContainer extends Component {
         </h5>
         <div className='view_all_questions_filter--div'>
           <span className='view_all_questions_filter--icon'>
-            <Icon type='search' />
+            <Icon type='search' size='small' />
           </span>
           <TextInput
             id='questionFilterInput'
             placeholder='Filter available questions'
             value={this.state.questionFilter}
             onInput={this.handleOnInput}
-            style={{width: 'calc(100% - 2.5rem)'}}
+            style={{width: 'calc(100% - 1.5rem)'}}
             disabled={isFetchingResults}
           />
         </div>

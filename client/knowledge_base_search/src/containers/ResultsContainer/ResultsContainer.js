@@ -110,7 +110,7 @@ class ResultsContainer extends Component {
                     type='button'
                     onClick={this.handleMoreResults}
                   >
-                    Show More Results
+                    Show more results
                   </button>
                 </div>
               )

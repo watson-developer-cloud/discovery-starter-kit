@@ -40,7 +40,7 @@ class SearchContainer extends Component {
     const scale = Math.pow(10, numZeroes - 1);
     const numPresetQueries = Math.floor(numQuestions / scale) * scale;
 
-    return `View All ${numPresetQueries.toLocaleString()}+ Questions`;
+    return `View all ${numPresetQueries.toLocaleString()}+ questions`;
   }
 
   render() {

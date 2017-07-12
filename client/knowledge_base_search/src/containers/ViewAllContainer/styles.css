@@ -7,7 +7,7 @@
   height: 100%;
   background-color: #f9f9f9;
   width: 30vw;
-  padding: 1rem;
+  padding: 2rem;
   box-shadow: -2px 0 1px 0 rgba(0,0,0,0.3);;
 }
 
@@ -19,6 +19,8 @@
 
 .view_all_questions_description--h5 {
   padding: 1rem 0;
+  font-size: 0.9rem;
+  color: #5a5a5a;
 }
 
 .view_all_questions_filter--div {
@@ -28,6 +30,7 @@
 .view_all_questions_filter--div input[type='text'] {
   background-color: #f9f9f9;
   box-shadow: none;
+  margin-left: 1.5rem;
 }
 
 .view_all_questions_filter--div label {
@@ -36,29 +39,46 @@
 
 .view_all_questions_filter--icon {
   position: absolute;
-  right: 0;
+  left: 0;
+  top: 0.5rem;
+}
+
+.view_all_questions_filter--icon svg {
+  color: #323232;
+  fill: currentColor;
 }
 
 .view_all_questions_list--div {
   overflow-y: auto;
-  text-align: left;
+  text-align: center;
   flex-grow: 1;
   margin-top: 1rem;
+  padding: 0;
+}
+
+.close_view_all--button svg{
+  color: #959595;
+  fill: currentColor;
+}
+
+.close_view_all--button:hover svg,
+.close_view_all--button:focus svg{
+  color: #777677;
 }
 
 button.view_all_question--button,
 button.close_view_all--button {
-  font-weight: 500;
-  font-size: 0.8rem;
   padding: 0;
-  color: #00b39f;
   border: none;
-  text-align:left;
 }
 
 button.view_all_question--button {
   margin: 0.5rem 0;
   width: 100%;
+  font-weight: 500;
+  font-size: 0.8rem;
+  color: #008571;
+  text-align: left;
 }
 
 button.view_all_question--button:hover,
@@ -69,5 +89,6 @@ button.close_view_all--button:focus {
 }
 
 .view_all_questions_no_results--span {
-  font-weight: 500;
+  color: #777677;
+  font-size: 0.8rem;
 }

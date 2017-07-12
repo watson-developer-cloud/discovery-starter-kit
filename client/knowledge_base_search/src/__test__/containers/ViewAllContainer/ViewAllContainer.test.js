@@ -137,7 +137,7 @@ describe('<ViewAllContainer />', () => {
 
     describe('and loadMore is triggered with a filter matching more', () => {
       beforeEach(() => {
-        wrapper.instance().handleOnInput({target: {value: 'query'}});
+        wrapper.instance().handleOnInput({target: {value: 'QUERY'}});
         wrapper.instance().loadMore();
       });
 

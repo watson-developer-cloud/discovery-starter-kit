@@ -58,7 +58,7 @@ describe('<SearchContainer />', () => {
 
       it('shows the expected text for the "View all x Questions" button', () => {
         expect(wrapper.find('.view_all--button').text())
-          .toEqual('View All 2+ Questions');
+          .toEqual('View all 2+ questions');
       });
 
       describe('when the "View All Questions" button is clicked', () => {
