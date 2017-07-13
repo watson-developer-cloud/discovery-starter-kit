@@ -116,7 +116,7 @@ class SearchContainer extends Component {
                     className='white--button'
                     disabled={isFetchingResults}
                   >
-                    Find Answers
+                    Find answers
                   </button>
                 </div>
               </Pane>
