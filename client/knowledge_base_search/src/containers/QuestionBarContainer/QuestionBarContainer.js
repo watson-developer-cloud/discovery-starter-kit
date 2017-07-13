@@ -1,30 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Isvg from 'react-inlinesvg';
+import arrow_back from '../../images/arrow_back_24.svg';
+import arrow_forward from '../../images/arrow_forward_24.svg';
 import './styles.css';
 
 class QuestionBarContainer extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      offset: 0
-    };
-  }
-
   handlePaginateRight = (e) => {
-    const { presetQueries, questionsShown } = this.props;
+    const {
+      presetQueries,
+      questionsShown,
+      offset,
+      onOffsetUpdate
+    } = this.props;
     const paginateTo = Math.min(
-                        this.state.offset + questionsShown,
+                        offset + questionsShown,
                         presetQueries.length - 1
                       );
 
-    this.setState({offset: paginateTo });
+    onOffsetUpdate(paginateTo);
   }
 
   handlePaginateLeft = (e) => {
-    const { questionsShown } = this.props;
-    const paginateTo = Math.max(this.state.offset - questionsShown, 0);
+    const { questionsShown, offset, onOffsetUpdate } = this.props;
+    const paginateTo = Math.max(offset - questionsShown, 0);
 
-    this.setState({offset: paginateTo });
+    onOffsetUpdate(paginateTo);
   }
 
   render() {
@@ -32,11 +33,10 @@ class QuestionBarContainer extends Component {
       presetQueries,
       currentQuery,
       questionsShown,
-      isFetching,
-      onQuestionClick
+      isFetchingResults,
+      onQuestionClick,
+      offset
     } = this.props;
-
-    let { offset } = this.state;
 
     return (
       <div className='question_bar_container--div'>
@@ -44,10 +44,10 @@ class QuestionBarContainer extends Component {
           (
             <button
               type='button'
-              className='question_bar_button--button left'
+              className='question_bar_arrow--button left'
               onClick={this.handlePaginateLeft}
             >
-              Previous Questions
+              <Isvg src={arrow_back} className='arrow--span' />
             </button>
           )
         }
@@ -63,8 +63,8 @@ class QuestionBarContainer extends Component {
                   )
                 }
                 type='button'
-                disabled={isFetching}
-                onClick={() => { onQuestionClick(query, i) }}>
+                disabled={isFetchingResults}
+                onClick={() => { onQuestionClick(query) }}>
                   {query}
               </button>
             )
@@ -74,10 +74,10 @@ class QuestionBarContainer extends Component {
           (
             <button
               type='button'
-              className='question_bar_button--button right'
+              className='question_bar_arrow--button right'
               onClick={this.handlePaginateRight}
             >
-              More Questions
+              <Isvg src={arrow_forward} className='arrow--span' />
             </button>
           )
         }
@@ -89,13 +89,15 @@ class QuestionBarContainer extends Component {
 QuestionBarContainer.PropTypes = {
   presetQueries: PropTypes.arrayOf(PropTypes.string).isRequired,
   currentQuery: PropTypes.string.isRequired,
-  isFetching: PropTypes.bool.isRequired,
+  isFetchingResults: PropTypes.bool.isRequired,
   questionsShown: PropTypes.number.isRequired,
-  onQuestionClick: PropTypes.func.isRequired
+  onQuestionClick: PropTypes.func.isRequired,
+  onOffsetUpdate: PropTypes.func.isRequired,
+  offset: PropTypes.number.isRequired
 }
 
 QuestionBarContainer.defaultProps = {
-  questionsShown: 5
+  questionsShown: 4
 }
 
 export default QuestionBarContainer;

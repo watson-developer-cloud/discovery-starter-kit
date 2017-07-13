@@ -3,6 +3,10 @@ body * + * {
   font-weight: 300;
 }
 
+div::before, div::after {
+  content: none;
+}
+
 .header {
   background-color: #003C32;
 }
@@ -16,6 +20,11 @@ body * + * {
 
 .jumbotron--get-started {
   padding-right: 1rem;
+}
+
+.jumbotron--description {
+  font-weight: initial;
+  float: none;
 }
 
 .base--h5 {
@@ -79,6 +88,10 @@ a:visited {
   background-color: #00b39f;
 }
 
+._full-width-row {
+  padding-top: 3rem;
+}
+
 .description {
   margin-top: 1rem;
 }
@@ -129,6 +142,28 @@ a:visited {
   transition: opacity 500ms ease-in;
 }
 
+.view_all-enter {
+  transform: translateX(30vw);
+}
+
+.view_all-enter.view_all-enter-active {
+  transform: translateX(0);
+  transition: transform 230ms;
+}
+
+.view_all-leave {
+  transform: translateX(0);
+  transition: transform 230ms;
+}
+
+.view_all-leave.view_all-leave-active {
+  transform: translateX(30vw);
+}
+
 .results_row--section {
   background-color: #f9f9f9;
+}
+
+button:active, .base--button:active {
+  transform: none;
 }

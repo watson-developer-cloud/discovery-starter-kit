@@ -7,10 +7,13 @@ describe('<QuestionBarContainer />', () => {
   let wrapper;
 
   const onQuestionClickMock = jest.fn();
+  const onOffsetUpdateMock = jest.fn();
   const props = {
     presetQueries: [ 'one', 'two', 'three', 'four', 'five', 'six' ],
     currentQuery: '',
-    isFetching: false,
+    isFetchingResults: false,
+    offset: 0,
+    onOffsetUpdate: onOffsetUpdateMock,
     onQuestionClick: onQuestionClickMock
   };
 
@@ -19,13 +22,13 @@ describe('<QuestionBarContainer />', () => {
     ReactDOM.render(<QuestionBarContainer {...props} />, div);
   });
 
-  it('shows 5 preset queries and a "More Questions" button', () => {
+  it('shows 4 preset queries and a right arrow button', () => {
     wrapper = shallow(<QuestionBarContainer {...props} />);
 
     const buttons = wrapper.find('.question_bar_button--button');
 
     expect(buttons)
-      .toHaveLength(QuestionBarContainer.defaultProps.questionsShown + 1);
+      .toHaveLength(QuestionBarContainer.defaultProps.questionsShown);
   });
 
   describe('when the first preset query button is clicked', () => {
@@ -35,7 +38,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('calls onSubmit with the first preset query', () => {
-      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0], 0);
+      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0]);
     });
   });
 
@@ -61,47 +64,56 @@ describe('<QuestionBarContainer />', () => {
     });
   });
 
-  describe('when the "More Questions" button is clicked', () => {
+  describe('when right arrow is clicked', () => {
     beforeEach(() => {
-      wrapper = wrapper = shallow(<QuestionBarContainer {...props} />);
-      wrapper.find('.question_bar_button--button.right').simulate('click');
+      wrapper = shallow(<QuestionBarContainer {...props} />);
+      wrapper.find('.question_bar_arrow--button.right').simulate('click');
     });
 
-    it('shows the "Previous Questions" button', () => {
-      const previousButton = wrapper.find('.question_bar_button--button.left');
-      const moreButton = wrapper.find('.question_bar_button--button.right');
+    it('calls onOffsetUpdate', () => {
+      expect(onOffsetUpdateMock).toBeCalledWith(4);
+    });
+  });
 
-      expect(previousButton).toHaveLength(1);
-      expect(previousButton.text()).toEqual('Previous Questions');
-
-      expect(moreButton).toHaveLength(0);
+  describe('when offset is greater than questionsShown', () => {
+    const props_greater_offset = Object.assign({}, props, {
+      offset: QuestionBarContainer.defaultProps.questionsShown
     });
 
-    it('shows the next question', () => {
-      const buttons = wrapper.find('.question_bar_button--button');
-      expect(buttons.at(1).text()).toEqual('six');
+    beforeEach(() => {
+      wrapper = shallow(<QuestionBarContainer {...props_greater_offset} />);
     });
 
-    describe('and then the "Previous Questions" button is clicked', () => {
+    it('shows the left arrow button only', () => {
+      const leftArrow = wrapper.find('.question_bar_arrow--button.left');
+      const rightArrow = wrapper.find('.question_bar_arrow--button.right');
+
+      expect(leftArrow).toHaveLength(1);
+      expect(rightArrow).toHaveLength(0);
+    });
+
+    it('shows the next questions', () => {
+      const questionButtons = wrapper.find('.question_bar_button--button');
+
+      expect(questionButtons).toHaveLength(2);
+      expect(questionButtons.at(0).text()).toEqual('five');
+      expect(questionButtons.at(1).text()).toEqual('six');
+    });
+
+    describe('when left arrow is clicked', () => {
       beforeEach(() => {
-        wrapper.find('.question_bar_button--button.left').simulate('click');
+        wrapper.find('.question_bar_arrow--button.left').simulate('click');
       });
 
-      it('shows the original 5 questions', () => {
-        const buttons = wrapper.find('.question_bar_button--button');
-        const moreButton = buttons
-          .at(QuestionBarContainer.defaultProps.questionsShown);
-
-        expect(moreButton.text()).toEqual('More Questions');
-        expect(buttons)
-          .toHaveLength(QuestionBarContainer.defaultProps.questionsShown + 1);
+      it('calls onOffsetUpdate', () => {
+        expect(onOffsetUpdateMock).toBeCalledWith(0);
       });
     });
   });
 
   describe('when isFetching is true', () => {
     const props_is_fetching = Object.assign({}, props, {
-      isFetching: true
+      isFetchingResults: true
     });
 
     beforeEach(() => {
@@ -109,11 +121,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('disables all the query buttons', () => {
-      wrapper.find('.question_bar_button--button').nodes.filter((button) => {
-        const buttonText = button.props.children;
-        return buttonText !== 'More Questions' &&
-               buttonText !== 'Previous Questions';
-      }).forEach((button) => {
+      wrapper.find('.question_bar_button--button').nodes.forEach((button) => {
         expect(button.props.disabled).toBe(true);
       });
     });

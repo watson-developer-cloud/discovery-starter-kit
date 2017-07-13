@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, TextInput, Tabs, Pane } from 'watson-react-components';
+import ErrorContainer from '../ErrorContainer/ErrorContainer';
 import QuestionBarContainer from '../QuestionBarContainer/QuestionBarContainer';
-import randomQueries from '../../utils/randomQueries';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
@@ -10,40 +10,22 @@ class SearchContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search_input: '',
-      presetQueries: this.getShuffledQueries()
+      searchInput: ''
     };
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.search_input !== this.state.search_input) {
-      this.setState({search_input: nextProps.search_input});
+    if (nextProps.searchInput !== this.state.searchInput) {
+      this.setState({ searchInput: nextProps.searchInput });
     }
-  }
-
-  getShuffledQueries() {
-    const allQueries = randomQueries.slice(0);
-    let shuffledQueries = [];
-
-    for (let i = 0; i < randomQueries.length; i++) {
-      let queryIndex = Math.floor(Math.random() * allQueries.length);
-      shuffledQueries.push(allQueries.splice(queryIndex, 1)[0]);
-    }
-
-    return shuffledQueries;
-  }
-
-  handleOnQuestionClick = (query, index) => {
-    this.handleOnInput({'target': { 'value': query}});
-    this.props.onSubmit(query);
   }
 
   handleOnInput = (e) => {
-    this.setState({search_input: e.target.value});
+    this.setState({ searchInput: e.target.value });
   }
 
   handleOnSubmit = (e) => {
-    const input = this.state.search_input;
+    const input = this.state.searchInput;
 
     e.preventDefault();
     if (input && input.length > 0) {
@@ -51,19 +33,71 @@ class SearchContainer extends Component {
     }
   }
 
+  getViewAllButtonText() {
+    const { presetQueries } = this.props;
+    const numQuestions = presetQueries.length;
+    const numZeroes = numQuestions.toString().length;
+    const scale = Math.pow(10, numZeroes - 1);
+    const numPresetQueries = Math.floor(numQuestions / scale) * scale;
+
+    return `View all ${numPresetQueries.toLocaleString()}+ questions`;
+  }
+
   render() {
+    const {
+      errorMessage,
+      isFetchingQuestions,
+      isFetchingResults,
+      presetQueries,
+      offset,
+      onOffsetUpdate,
+      onQuestionClick,
+      onViewAllClick
+    } = this.props;
+
     return (
-      <section className='_full-width-row search_container--section'>
+      <section
+        className='_full-width-row search_container--section'
+        ref={(section) => { this.searchSection = section }}
+      >
         <div className='_container _container_large'>
           <form onSubmit={this.handleOnSubmit}>
             <Tabs selected={0}>
               <Pane label='Preset questions'>
-                <QuestionBarContainer
-                  currentQuery={this.state.search_input}
-                  onQuestionClick={this.handleOnQuestionClick}
-                  presetQueries={this.state.presetQueries}
-                  isFetching={this.props.isFetching}
-                />
+                {
+                  isFetchingQuestions
+                    ? (
+                        <div key='loader' className='_container _container_large _container-center'>
+                          <Icon type='loader' size='large' />
+                        </div>
+                      )
+                    : errorMessage
+                      ? (
+                          <ErrorContainer errorMessage={errorMessage} />
+                        )
+                      : (
+                          <div>
+                            <QuestionBarContainer
+                              currentQuery={this.state.searchInput}
+                              offset={offset}
+                              onOffsetUpdate={onOffsetUpdate}
+                              onQuestionClick={onQuestionClick}
+                              presetQueries={presetQueries}
+                              isFetchingResults={isFetchingResults}
+                            />
+                            <div className='view_all_button--div'>
+                              <button
+                                type='button'
+                                className='view_all--button'
+                                disabled={isFetchingResults}
+                                onClick={onViewAllClick}
+                              >
+                                {this.getViewAllButtonText()}
+                              </button>
+                            </div>
+                          </div>
+                        )
+                }
               </Pane>
               <Pane label='Custom question'>
                 <div className='custom_question--div'>
@@ -71,18 +105,18 @@ class SearchContainer extends Component {
                     <Icon type='search' />
                   </span>
                   <TextInput
-                    id='search_input'
+                    id='searchInput'
                     placeholder='Enter words, phrase, or a question about travel'
-                    value={this.state.search_input}
+                    value={this.state.searchInput}
                     onInput={this.handleOnInput}
                     style={{width: 'calc(100% - 3rem)'}}
-                    disabled={this.props.isFetching}
+                    disabled={isFetchingResults}
                   />
                   <button
                     className='white--button'
-                    disabled={this.props.isFetching}
+                    disabled={isFetchingResults}
                   >
-                    Find Answers
+                    Find answers
                   </button>
                 </div>
               </Pane>
@@ -95,10 +129,16 @@ class SearchContainer extends Component {
 }
 
 SearchContainer.PropTypes = {
+  errorMessage: PropTypes.string,
+  isFetchingQuestions: PropTypes.bool.isRequired,
+  isFetchingResults: PropTypes.bool.isRequired,
+  offset: PropTypes.number.isRequired,
+  onOffsetUpdate: PropTypes.func.isRequired,
+  onQuestionClick: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  hasResults: PropTypes.bool.isRequired,
-  search_input: PropTypes.string.isRequired,
-  isFetching: PropTypes.bool.isRequired
+  onViewAllClick: PropTypes.func.isRequired,
+  presetQueries: PropTypes.arrayOf(PropTypes.string).isRequired,
+  searchInput: PropTypes.string.isRequired
 }
 
 export default SearchContainer;

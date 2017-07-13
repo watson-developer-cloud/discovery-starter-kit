@@ -36,3 +36,22 @@ def find_collection_id(collections_response, collection_name):
                if collection['name'] == collection_name]
 
     return '' if len(my_coll) == 0 else my_coll[0]
+
+
+def get_questions(discovery, constants, question_count):
+    # return the top question_count questions from the dataset
+    query_options = {
+     'aggregation': 'term(question.title,count:' + str(question_count) + ')',
+     'count': 0
+    }
+
+    response = discovery.query(
+                  environment_id=constants['environment_id'],
+                  collection_id=constants['collection_id_regular'],
+                  query_options=query_options
+                )
+
+    questions = map(lambda result: result['key'],
+                    response['aggregations'][0]['results'])
+
+    return questions

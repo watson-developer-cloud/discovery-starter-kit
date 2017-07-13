@@ -129,12 +129,12 @@ describe('<ResultsContainer />', () => {
                         />);
     });
 
-    it('shows a "Show More Results" button', () => {
+    it('shows a "Show more results" button', () => {
       expect(wrapper.find('.show_results--div button').text())
-        .toEqual('Show More Results');
+        .toEqual('Show more results');
     });
 
-    describe('when the "Show More Results" button is clicked', () => {
+    describe('when the "Show more results" button is clicked', () => {
       beforeEach(() => {
         wrapper.find('.show_results--div button').simulate('click');
       });
@@ -147,7 +147,7 @@ describe('<ResultsContainer />', () => {
         expect(wrapper.find(ResultComparison)).toHaveLength(4);
       });
 
-      it('does not show the "Show More Results" button anymore', () => {
+      it('does not show the "Show more results" button anymore', () => {
         expect(wrapper.find('.show_results--div button')).toHaveLength(0);
       });
     });

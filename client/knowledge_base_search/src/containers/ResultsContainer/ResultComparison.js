@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { scroller, Element } from 'react-scroll';
 import ResultBox from './ResultBox';
 import './styles.css';
 
@@ -14,12 +13,6 @@ class ResultComparison extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({
       passage_result_text: this.getPassageResult(nextProps)
-    });
-  }
-
-  componentDidMount() {
-    scroller.scrollTo('scroll_to_result_' + this.props.index, {
-      smooth: true
     });
   }
 
@@ -98,13 +91,10 @@ class ResultComparison extends Component {
     } = this.props;
 
     return (
-      <Element
-        className='results_comparison--div'
-        name={'scroll_to_result_' + index}
-      >
+      <div className='results_comparison--div'>
         <div className='results_comparison_content--div'>
           <div className='results_comparison_content_left--div'>
-            { index === 0 && (<h4>Standard search</h4>) }
+            { index === 0 && (<h5>Standard search</h5>) }
             <ResultBox
               result_type={'regular'}
               result_text={result ? result.answer : null}
@@ -118,7 +108,7 @@ class ResultComparison extends Component {
             />
           </div>
           <div className='results_comparison_content_right--div'>
-            { index === 0 && (<h4>Passage search</h4>) }
+            { index === 0 && (<h5>Passage search</h5>) }
             <ResultBox
               result_type={'passage'}
               result_text={this.state.passage_result_text}
@@ -132,7 +122,7 @@ class ResultComparison extends Component {
             />
           </div>
         </div>
-      </Element>
+      </div>
     );
   }
 }

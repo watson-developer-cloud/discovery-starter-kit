@@ -16,13 +16,16 @@ project_dir = os.path.abspath(
 sys.path.insert(0, project_dir)
 
 # Mock service interaction for unit tests
-mocked_collections = MagicMock()
-mocked_collections.get_constants.return_value = {
+helpers = MagicMock()
+helpers.get_constants.return_value = {
   'environment_id': 'my_environment_id',
   'collection_id_regular': 'my_regular_collection_id',
   'collection_id_enriched': 'my_enriched_collection_id'
 }
-sys.modules['get_discovery_collections'] = mocked_collections
+helpers.get_questions.return_value = [
+  'Can you tell a cabbie which route to take?'
+]
+sys.modules['helpers'] = helpers
 
 from server import app # noqa
 
@@ -39,7 +42,7 @@ class TestServer(unittest.TestCase):
         self.assertIn('Knowledge Base Search', response_text)
 
     @patch('watson_developer_cloud.DiscoveryV1.query')
-    def test_regular_query(self, discovery):
+    def test_regular_query(self, query):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
           'query': 'my_query',
@@ -53,13 +56,13 @@ class TestServer(unittest.TestCase):
             }
           """ # noqa
         )
-        discovery.return_value = mock_response
+        query.return_value = mock_response
         rv = self.app.post(
               '/api/query/regular',
               data=json.dumps(query_opts)
              )
         actual_response = json.loads(rv.data.decode('UTF-8'))
-        discovery.assert_called_with(
+        query.assert_called_with(
           environment_id='my_environment_id',
           collection_id='my_regular_collection_id',
           query_options=expected_query_opts
@@ -67,7 +70,7 @@ class TestServer(unittest.TestCase):
         self.assertEqual(actual_response, mock_response)
 
     @patch('watson_developer_cloud.DiscoveryV1.query')
-    def test_enriched_query(self, discovery):
+    def test_enriched_query(self, query):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
           'query': 'my_query',
@@ -82,18 +85,26 @@ class TestServer(unittest.TestCase):
             }
           """ # noqa
         )
-        discovery.return_value = mock_response
+        query.return_value = mock_response
         rv = self.app.post(
               '/api/query/enriched',
               data=json.dumps(query_opts)
              )
         actual_response = json.loads(rv.data.decode('UTF-8'))
-        discovery.assert_called_with(
+        query.assert_called_with(
           environment_id='my_environment_id',
           collection_id='my_enriched_collection_id',
           query_options=expected_query_opts
         )
         self.assertEqual(actual_response, mock_response)
+
+    def test_questions(self):
+        expected_response = [
+          'Can you tell a cabbie which route to take?'
+        ]
+        rv = self.app.get('/api/questions')
+        actual_response = json.loads(rv.data.decode('UTF-8'))
+        self.assertEqual(actual_response, expected_response)
 
 
 if __name__ == '__main__':

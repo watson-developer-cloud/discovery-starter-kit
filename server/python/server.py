@@ -1,6 +1,7 @@
 import os
+import sys
 import json
-from get_discovery_collections import get_constants
+from helpers import get_constants, get_questions
 from flask import Flask, jsonify, render_template, request
 from flask_sslify import SSLify
 from flask_cors import CORS
@@ -17,8 +18,9 @@ try:
 except IOError:
     print('warning: no .env file loaded')
 
-# Emit Bluemix deployment event
-cf_deployment_tracker.track()
+# Emit Bluemix deployment event if not a demo deploy
+if not(os.getenv('DEMO_DEPLOY')):
+    cf_deployment_tracker.track()
 
 app = Flask(
         __name__,
@@ -72,6 +74,12 @@ constants = get_constants(
                             'knowledge_base_enriched'
                           )
             )
+try:
+    total_questions = int(os.getenv('DISCOVERY_QUESTION_COUNT', 5000))
+except ValueError:
+    sys.exit('DISCOVERY_QUESTION_COUNT not an integer, terminating...')
+
+question_cache = get_questions(discovery, constants, total_questions)
 
 
 @app.route('/')
@@ -97,6 +105,11 @@ def query(collection_type):
                 query_options=query_options
               )
             )
+
+
+@app.route('/api/questions', methods=['GET'])
+def questions():
+    return jsonify(question_cache)
 
 
 @app.errorhandler(429)
