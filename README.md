@@ -24,23 +24,16 @@ The deployment script found in the "Create Toolchain" should automatically creat
 
 ### Setting up Discovery
 
-1. Create 2 collections in the Watson Discovery Service by going to the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net). Make sure to store the names in the `.env` file and add them to the environment variables in your deployment configuration. By default, they are set to:
+You may use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) UI to complete these next steps.
+
+Or if you prefer using python scripts aided by markdown-formatted explanation (known as [Jupyter Notebooks](http://jupyter.readthedocs.io/en/latest/index.html)), you can use the steps found in `notebooks/Setup_Discovery.ipynb` of this repo. The `notebook` section can be run locally by doing `pip install -r server/requirements/dev.txt` followed by `jupyter notebook` which will prompt you to open your browser to follow the steps in the interactive code guide. Each script can be run independently as each step is located in the `notebooks/scripts` directory.
+
+1. Create 2 collections in the Watson Discovery Service. Make sure to store the names in the `.env` file and add them to the environment variables in your deployment configuration. By default, they are set to:
    ```
    DISCOVERY_REGULAR_COLLECTION_NAME=knowledge_base_regular
    DISCOVERY_ENRICHED_COLLECTION_NAME=knowledge_base_enriched
    ```
-1. Create a configuration by posting the file found in `data/enriched_config.json` using the following command (making sure to replace <discovery_username_here>, <discovery_password_here>, and <discovery_environment_id_here> -> see [Services](#services) for more information):
-   ```
-    curl -X POST -H "Content-Type: application/json" -u "<discovery_username_here>:<discovery_password_here>" "https://gateway.watsonplatform.net/discovery/api/v1/environments/<discovery_environment_id_here>/configurations?version=2017-01-01"
-   ```
-1. Switch the configuration of the "enriched" collection to the uploaded configuration using the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net)
-1. [Upload](#setting-up-the-data) sample documents to the collections you created
-
-### Setting up the Data
-
-After [setting up python](#server-python) and the Bluemix [Services](#services), run `python server/python/upload_documents.py`
-
-It will take all the documents in the `data/sample` directory and push them into both "regular" and "enriched" collections as named by the `DISCOVERY_REGULAR_COLLECTION_NAME` and `DISCOVERY_ENRICHED_COLLECTION_NAME` in your `.env` file
+1. Upload sample documents to the collections you created by dragging and dropping files from the `data/sample` directory into each collection created in the Watson Discovery Tooling UI
 
 ### Running the application
 
