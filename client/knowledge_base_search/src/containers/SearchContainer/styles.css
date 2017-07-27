@@ -162,3 +162,7 @@ button.view_all--button:focus {
   overflow-y: hidden;
   transition: max-height 300ms ease-in;
 }
+
+.sticky-inner-wrapper {
+  z-index: 1;
+}

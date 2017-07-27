@@ -5,34 +5,20 @@ import ResultComparison from '../../../containers/ResultsContainer/ResultCompari
 import { shallow } from 'enzyme';
 
 describe('<ResultsContainer />', () => {
-  const results = {
-    matching_results: 3,
-    results: [
-      {
-        answer: 'a good answer'
-      },
-      {
-        answer: 'a good answer 2'
-      },
-      {
-        answer: 'a good answer 3'
-      }
-    ]
-  };
   const enriched_results = {
     matching_results: 3,
     results: [
       {
         id: '1',
-        answer: 'a great answer',
+        text: 'a great answer with a great passage',
       },
       {
         id: '2',
-        answer: 'a great answer 2',
+        text: 'a great answer 2 with a great passage 2',
       },
       {
         id: '3',
-        answer: 'a great answer 3',
+        text: 'a great answer 3 with a great passage 3',
       }
     ],
     passages: [
@@ -55,43 +41,36 @@ describe('<ResultsContainer />', () => {
     const div = document.createElement('div');
     ReactDOM.render(
       <ResultsContainer
-        results={results}
         enriched_results={enriched_results}
       />, div);
   });
 
   it('has 3 ResultComparison in it', () => {
     const wrapper = shallow(<ResultsContainer
-                              results={results}
                               enriched_results={enriched_results}
                             />);
     expect(wrapper.find(ResultComparison)).toHaveLength(3);
   });
 
-  it('findPassageResult returns the full result given a passage', () => {
+  it('findPassageResult returns the full result given a document_id', () => {
     const wrapper = shallow(<ResultsContainer
-                              results={results}
                               enriched_results={enriched_results}
                             />);
-    expect(wrapper.instance().findPassageResult(enriched_results.passages[0]))
+    const document_id = enriched_results.passages[0].document_id;
+    expect(wrapper.instance().findPassageResult(document_id))
       .toEqual(enriched_results.results[0]);
   });
 
-  describe('when both result sets have 0 results', () => {
+  describe('when enriched_results has 0 results', () => {
     let wrapper;
 
     beforeEach(() => {
-      const no_results = {
-        matching_results: 0,
-        results: []
-      };
       const no_results_passages = {
         matching_results: 0,
         results: [],
         passages: []
       }
       wrapper = shallow(<ResultsContainer
-                          results={no_results}
                           enriched_results={no_results_passages}
                         />);
     });
@@ -106,26 +85,47 @@ describe('<ResultsContainer />', () => {
     let wrapper;
 
     beforeEach(() => {
-      const more_than_one_result = {
+      const more_than_three_results = {
         matching_results: 4,
         results: [
           {
-            answer: 'a good answer'
+            id: '1',
+            text: 'a great answer with a great passage',
           },
           {
-            answer: 'a good answer 2'
+            id: '2',
+            text: 'a great answer 2 with a great passage 2',
           },
           {
-            answer: 'a good answer 3'
+            id: '3',
+            text: 'a great answer 3 with a great passage 3',
           },
           {
-            answer: 'a good answer 4'
+            id: '4',
+            text: 'a great answer 4 with a great passage 4',
+          }
+        ],
+        passages: [
+          {
+            document_id: '1',
+            passage_text: 'a great passage'
+          },
+          {
+            document_id: '2',
+            passage_text: 'a great passage 2'
+          },
+          {
+            document_id: '3',
+            passage_text: 'a great passage 3'
+          },
+          {
+            document_id: '4',
+            passage_text: 'a great passage 4'
           }
         ]
       };
       wrapper = shallow(<ResultsContainer
-                          results={more_than_one_result}
-                          enriched_results={enriched_results}
+                          enriched_results={more_than_three_results}
                         />);
     });
 
@@ -150,54 +150,6 @@ describe('<ResultsContainer />', () => {
       it('does not show the "Show more results" button anymore', () => {
         expect(wrapper.find('.show_results--div button')).toHaveLength(0);
       });
-    });
-  });
-
-  describe('when there are more passages than results', () => {
-    let wrapper;
-
-    beforeEach(() => {
-      const more_than_one_passage = {
-        matching_results: 1,
-        results: [
-          {
-            answer: 'a great answer'
-          }
-        ],
-        passages: [
-          {
-            document_id: '1',
-            passage_text: 'a great passage'
-          },
-          {
-            document_id: '2',
-            passage_text: 'another great passage'
-          },
-          {
-            document_id: '3',
-            passage_text: 'another great passage'
-          },
-          {
-            document_id: '4',
-            passage_text: 'another great passage'
-          }
-        ]
-      };
-
-      wrapper = shallow(<ResultsContainer
-                          results={results}
-                          enriched_results={more_than_one_passage}
-                        />);
-    });
-
-    it('shows the "Show More Results" button', () => {
-      const buttonSelector = '.show_results--div button';
-      const showMoreButton = wrapper.find(buttonSelector);
-      expect(showMoreButton).toHaveLength(1);
-
-      showMoreButton.simulate('click');
-
-      expect(wrapper.find(buttonSelector)).toHaveLength(0);
     });
   });
 });

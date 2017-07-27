@@ -159,8 +159,6 @@ describe('<App />', () => {
       expect(query.default)
         .toBeCalledWith('enriched', {'natural_language_query': 'my query'});
       expect(query.default)
-        .toBeCalledWith('regular', {'natural_language_query': 'my query'});
-      expect(query.default)
         .not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
     });
 
@@ -255,9 +253,6 @@ describe('<App />', () => {
         expect(wrapper.state().search_input).toEqual(questionText);
         expect(wrapper.state().presetQueries).toEqual(originalState.presetQueries);
         expect(wrapper.state().offset).toEqual(originalState.offset);
-        expect(query.default).toBeCalledWith('regular', {
-          natural_language_query: questionText
-        });
         expect(query.default).toBeCalledWith('enriched', {
           natural_language_query: questionText
         });

@@ -4,89 +4,80 @@ import ResultBox from './ResultBox';
 import './styles.css';
 
 class ResultComparison extends Component {
-  componentWillMount() {
-    this.state = {
-      passage_result_text: this.getPassageResult(this.props)
-    }
+  getPassageResult() {
+    const { passages, passageFullResult } = this.props;
+
+    return passages.reduce((highlightedResult, passage) => {
+      return this.recursiveHighlight(highlightedResult, passage);
+    }, passageFullResult.text);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      passage_result_text: this.getPassageResult(nextProps)
-    });
-  }
-
-  toggleFullResult = (index, type) => {
-    this.isFullResultShown(index, type)
-      ? this.props.onSetFullResult(-1, null)
-      : this.props.onSetFullResult(index, type);
-  }
-
-  isFullResultShown(index, type) {
-    const { full_result_type, full_result_index } = this.props;
-
-    return full_result_type === type && full_result_index === index;
-  }
-
-  getPassageResult(nextProps) {
-    const {
-      index,
-      full_result_type,
-      full_result_index,
-      passage,
-      passageFullResult
-    } = nextProps;
-    const passageText = passage ? passage.passage_text : null;
-    const fullResult = passageFullResult ? passageFullResult.answer : null;
-
-    if (index === full_result_index && full_result_type === 'passage') {
-      if (fullResult) {
-        return this.highlightPassage(passageText, fullResult);
+  recursiveHighlight(highlightedResult, passage) {
+    if (typeof highlightedResult === 'object') {
+      // it has already been highlighted at least once, find the strings
+      if (highlightedResult.props) {
+        // it is a react element
+        if (typeof highlightedResult.props.children === 'object') {
+          // it is a <span>string<b>string</b>string</span>
+          return (
+                    <span key={highlightedResult.key}>
+                      {
+                        highlightedResult.props.children.map((child) => {
+                          if (typeof child === 'string') {
+                            // is either before or after the <b> tag
+                            return this.highlightPassage(passage, child);
+                          } else {
+                            // this is the content of the <b> tag
+                            return this.recursiveHighlight(child, passage);
+                          }
+                        })
+                      }
+                    </span>
+                  )
+        } else {
+          // it is a <b> tag
+          return highlightedResult;
+        }
+      } else {
+        // it is an array, highlight the strings
+        return highlightedResult.map((object) => {
+          if (typeof object === 'string') {
+            return this.highlightPassage(passage, object);
+          } else {
+            return object;
+          }
+        });
       }
-    } else if (passageText){
-      if (fullResult) {
-        return this.ellipsizePassage(passageText, fullResult);
-      }
-      return passageText;
+    } else {
+      // base case
+      return this.highlightPassage(passage, highlightedResult);
     }
-
-    return null;
-  }
-
-  ellipsizePassage(passage, fullResult) {
-    const passageIndex = fullResult.indexOf(passage);
-    let shownPassage = passage;
-
-    if (passageIndex !== 0) {
-      shownPassage = '…' + shownPassage;
-    }
-
-    if (passageIndex + passage.length < fullResult.length) {
-      shownPassage += '…';
-    }
-
-    return shownPassage;
   }
 
   highlightPassage(passage, fullResult) {
-    const passageIndex = fullResult.indexOf(passage);
+    const passageIndex = fullResult.indexOf(passage.passage_text);
 
     if (passageIndex === -1) {
       return fullResult;
     }
 
     return (
-      <span>
+      <span key={'text_with_highlights_' + (passage.rank + 1)}>
         { fullResult.substr(0, passageIndex) }
-        <b>{passage}</b>
-        { fullResult.substr(passageIndex + passage.length) }
+        <span key={'passage_' + (passage.rank + 1)}>
+          <span className='passage_rank--span'>
+            { passage.rank + 1}
+          </span>
+          <b>{passage.passage_text}</b>
+        </span>
+        { fullResult.substr(passageIndex + passage.passage_text.length) }
       </span>
     )
   }
 
   render() {
     const {
-      result,
+      passageFullResult,
       index
     } = this.props;
 
@@ -97,28 +88,16 @@ class ResultComparison extends Component {
             { index === 0 && (<h5>Standard search</h5>) }
             <ResultBox
               result_type={'regular'}
-              result_text={result ? result.answer : null}
+              result_text={passageFullResult.text}
               result_rank={index + 1}
-              is_full_result_shown={
-                this.isFullResultShown(index, 'regular')
-              }
-              onToggleFullResult={
-                () => { this.toggleFullResult(index, 'regular') }
-              }
             />
           </div>
           <div className='results_comparison_content_right--div'>
             { index === 0 && (<h5>Passage search</h5>) }
             <ResultBox
               result_type={'passage'}
-              result_text={this.state.passage_result_text}
+              result_text={this.getPassageResult()}
               result_rank={index + 1}
-              is_full_result_shown={
-                this.isFullResultShown(index, 'passage')
-              }
-              onToggleFullResult={
-                () => { this.toggleFullResult(index, 'passage') }
-              }
             />
           </div>
         </div>
@@ -128,13 +107,15 @@ class ResultComparison extends Component {
 }
 
 ResultComparison.PropTypes = {
-  result: PropTypes.object.isRequired,
-  passage: PropTypes.object.isRequired,
-  passageFullResult: PropTypes.object.isRequired,
-  index: PropTypes.number.isRequired,
-  onSetFullResult: PropTypes.func.isRequired,
-  full_result_index: PropTypes.number.isRequired,
-  full_result_type: PropTypes.string.isRequired
+  passages: PropTypes.arrayOf(PropTypes.shape({
+    passage_text: PropTypes.string.isRequired,
+    passage_score: PropTypes.string,
+    rank: PropTypes.number
+  })).isRequired,
+  passageFullResult: PropTypes.shape({
+    text: PropTypes.string.isRequired
+  }).isRequired,
+  index: PropTypes.number.isRequired
 }
 
 export default ResultComparison;

@@ -64,23 +64,19 @@
 .result_box_text--div {
   font-weight: 300;
   font-size: 0.9rem;
+  position: relative;
 }
 
-.result_box_toggle--div {
-  padding-top: 0.25rem;
+.result_box_text--div b {
+  font-weight: 500;
 }
 
-.result_box_toggle--div button{
-  font-size: 0.8rem;
-  padding: 0;
-  color: #00b39f;
-  border-color: #00b39f;
-  border-radius: 0;
-  border-width: 0;
-  font-weight: 300;
-}
-
-.result_box_toggle--div button:hover,
-.result_box_toggle--div button:focus {
-  border-bottom-width: 1px;
+.passage_rank--span {
+  border-radius: 50%;
+  border: 1px solid black;
+  position: absolute;
+  left: -2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
 }

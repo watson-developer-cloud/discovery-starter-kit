@@ -10,9 +10,7 @@ class ResultsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      total_results_shown: 3,
-      full_answer_index: -1,
-      full_answer_type: null
+      total_results_shown: 3
     };
   }
 
@@ -23,41 +21,53 @@ class ResultsContainer extends Component {
     });
   }
 
-  isMoreResults() {
-    const { results, enriched_results } = this.props;
-    const { total_results_shown } = this.state;
+  isMoreResults(passage_ranks_shown) {
+    const { enriched_results } = this.props;
 
-    return results.results.length > total_results_shown ||
-      enriched_results.passages.length > total_results_shown;
+    return enriched_results.passages.length > passage_ranks_shown.length;
   }
 
   handleMoreResults = () => {
     this.setState({total_results_shown: this.state.total_results_shown + 1});
   }
 
-  setFullResult = (index, type) => {
-    this.setState({
-      full_result_index: index,
-      full_result_type: type
+  findPassageResult(document_id) {
+    const { enriched_results } = this.props;
+
+    return enriched_results.results.find((result) => {
+      return result.id === document_id;
     });
   }
 
-  findPassageResult(passage) {
+  getPassagesInSameDocument(rank, passage_ranks_shown) {
     const { enriched_results } = this.props;
-    const targetId = passage ? passage.document_id : "0";
 
-    return enriched_results.results.find((result) => {
-      return result.id === targetId;
-    });
+    let nextDocumentId;
+    return enriched_results.passages.reduce((passages, passage, passageRank) => {
+      if (passage_ranks_shown.indexOf(passageRank) === -1) {
+        if (!nextDocumentId) {
+          // passage not already shown, set it as the next document Id
+          nextDocumentId = passage.document_id;
+        }
+
+        if (nextDocumentId === passage.document_id) {
+          passage_ranks_shown.push(passageRank);
+          passage.rank = passageRank;
+          passages.push(passage);
+        }
+      }
+      return passages;
+    }, []);
   }
 
   render() {
-    const { results, enriched_results } = this.props;
+    const { enriched_results } = this.props;
+    const passage_ranks_shown = [];
 
     return (
       <Element name='scroll_to_results'>
         {
-          results.matching_results > 0 || enriched_results.matching_results > 0
+          enriched_results.matching_results > 0
             ? (
                 <div className='_container _container_large'>
                   <h3>
@@ -71,21 +81,21 @@ class ResultsContainer extends Component {
                         transitionLeave={false}
                       >
                         {
-                          [...Array(this.state.total_results_shown)].map((x, i) => {
+                          [...Array(this.state.total_results_shown)].map((x, rank) => {
+                            const passages = this.getPassagesInSameDocument(
+                                               rank,
+                                               passage_ranks_shown
+                                             )
                             return(
                               <ResultComparison
-                                key={'result_comparison_' + i}
-                                index={i}
-                                passage={enriched_results.passages[i]}
+                                key={'result_comparison_' + rank}
+                                index={rank}
+                                passages={passages}
                                 passageFullResult={
                                   this.findPassageResult(
-                                    enriched_results.passages[i]
+                                    passages[0].document_id
                                   )
                                 }
-                                result={results.results[i]}
-                                full_result_index={this.state.full_result_index}
-                                full_result_type={this.state.full_result_type}
-                                onSetFullResult={this.setFullResult}
                               />
                             );
                           })
@@ -102,7 +112,7 @@ class ResultsContainer extends Component {
               )
         }
         {
-          this.isMoreResults()
+          this.isMoreResults(passage_ranks_shown)
             ? (
                 <div className='_container-center show_results--div'>
                   <button
@@ -122,16 +132,11 @@ class ResultsContainer extends Component {
 }
 
 ResultsContainer.PropTypes = {
-  results: PropTypes.shape({
-    matching_results: PropTypes.number.isRequired,
-    results: PropTypes.arrayOf(PropTypes.object)
-  }).isRequired,
   enriched_results: PropTypes.shape({
     matching_results: PropTypes.number.isRequired,
     results: PropTypes.arrayOf(PropTypes.object),
     passages: PropTypes.arrayOf(PropTypes.object)
   }).isRequired,
-  onSearch: PropTypes.func.isRequired,
   searchContainerHeight: PropTypes.number.isRequired
 }
 
