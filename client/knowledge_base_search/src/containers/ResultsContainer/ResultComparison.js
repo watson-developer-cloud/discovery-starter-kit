@@ -4,75 +4,80 @@ import ResultBox from './ResultBox';
 import './styles.css';
 
 class ResultComparison extends Component {
-  getPassageResult() {
-    const { passages, passageFullResult } = this.props;
+  getSortedPassagesWithIndices() {
+    const { passages, passageFullResult: { text } } = this.props;
 
-    return passages.reduce((highlightedResult, passage) => {
-      return this.recursiveHighlight(highlightedResult, passage);
-    }, passageFullResult.text);
+    return passages.map((passage) => {
+      const start = text.indexOf(passage.passage_text);
+      const end = start + passage.passage_text.length;
+
+      return Object.assign({}, passage, { start, end });
+    }).sort((a, b) => {
+      return a.start - b.start;
+    });
   }
 
-  recursiveHighlight(highlightedResult, passage) {
-    if (typeof highlightedResult === 'object') {
-      // it has already been highlighted at least once, find the strings
-      if (highlightedResult.props) {
-        // it is a react element
-        if (typeof highlightedResult.props.children === 'object') {
-          // it is a <span>string<b>string</b>string</span>
-          return (
-                    <span key={highlightedResult.key}>
-                      {
-                        highlightedResult.props.children.map((child) => {
-                          if (typeof child === 'string') {
-                            // is either before or after the <b> tag
-                            return this.highlightPassage(passage, child);
-                          } else {
-                            // this is the content of the <b> tag
-                            return this.recursiveHighlight(child, passage);
-                          }
-                        })
-                      }
-                    </span>
-                  )
-        } else {
-          // it is a <b> tag
-          return highlightedResult;
-        }
-      } else {
-        // it is an array, highlight the strings
-        return highlightedResult.map((object) => {
-          if (typeof object === 'string') {
-            return this.highlightPassage(passage, object);
-          } else {
-            return object;
-          }
-        });
+  highlightPassages() {
+    const { passageFullResult: { text } } = this.props;
+    const passagesWithIndices = this.getSortedPassagesWithIndices();
+
+    const highlightedPassages = [];
+
+    passagesWithIndices.forEach((currentPassage, i) => {
+      const nextPassage = passagesWithIndices[i + 1];
+      const isLastPassage = typeof nextPassage === 'undefined';
+
+      // if first passage doesn't start at the beginning
+      if (highlightedPassages.length === 0 && currentPassage.start > 0) {
+        highlightedPassages.push(
+          this.replaceNewlines(text.substr(0, currentPassage.start))
+        );
       }
-    } else {
-      // base case
-      return this.highlightPassage(passage, highlightedResult);
-    }
+
+      // highlight the passage
+      highlightedPassages.push(
+        <span key={'passage_' + (currentPassage.rank + 1)}>
+          <span className='passage_rank--span'>
+            { currentPassage.rank + 1}
+          </span>
+          <b>
+            { this.replaceNewlines(currentPassage.passage_text) }
+          </b>
+        </span>
+      );
+
+      // if not last passage and there is text between this passage and the next
+      if (!isLastPassage && nextPassage.start > currentPassage.end) {
+        const textEnd = nextPassage.start - currentPassage.end;
+
+        highlightedPassages.push(
+          this.replaceNewlines(text.substr(currentPassage.end, textEnd))
+        );
+      }
+
+      // if the last passage and we aren't at the end of the result
+      if (isLastPassage && currentPassage.end < text.length) {
+        highlightedPassages.push(
+          this.replaceNewlines(text.substr(currentPassage.end))
+        );
+      }
+    });
+
+    return highlightedPassages;
   }
 
-  highlightPassage(passage, fullResult) {
-    const passageIndex = fullResult.indexOf(passage.passage_text);
-
-    if (passageIndex === -1) {
-      return fullResult;
+  replaceNewlines(text) {
+    if (text.indexOf('\n') > 0){
+      text = text.split('\n').map((item, key, array) => {
+        return (
+                  <span key={'newline_' + key}>
+                    { item }
+                    { key + 1 < array.length && <br /> }
+                  </span>
+               )
+      });
     }
-
-    return (
-      <span key={'text_with_highlights_' + (passage.rank + 1)}>
-        { fullResult.substr(0, passageIndex) }
-        <span key={'passage_' + (passage.rank + 1)}>
-          <span className='passage_rank--span'>
-            { passage.rank + 1}
-          </span>
-          <b>{passage.passage_text}</b>
-        </span>
-        { fullResult.substr(passageIndex + passage.passage_text.length) }
-      </span>
-    )
+    return text;
   }
 
   render() {
@@ -88,7 +93,7 @@ class ResultComparison extends Component {
             { index === 0 && (<h5>Standard search</h5>) }
             <ResultBox
               result_type={'regular'}
-              result_text={passageFullResult.text}
+              result_text={this.replaceNewlines(passageFullResult.text)}
               result_rank={index + 1}
             />
           </div>
@@ -96,7 +101,7 @@ class ResultComparison extends Component {
             { index === 0 && (<h5>Passage search</h5>) }
             <ResultBox
               result_type={'passage'}
-              result_text={this.getPassageResult()}
+              result_text={this.highlightPassages()}
               result_rank={index + 1}
             />
           </div>

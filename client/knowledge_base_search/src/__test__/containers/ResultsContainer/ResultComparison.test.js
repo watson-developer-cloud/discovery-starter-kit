@@ -36,27 +36,30 @@ describe('<ResultComparison />', () => {
 
     const resultBoxes = wrapper.find(ResultBox);
     const expectedAnswer = props.passageFullResult.text;
-    const expectedPassage = (
-                              <span key={'text_with_highlights_1'}>
-                                {'a good answer with '}
-                                <span key={'passage_1'}>
-                                  <span className='passage_rank--span'>
-                                    {1}
-                                  </span>
-                                  <b>a passage</b>
-                                </span>
-                                <span key={'text_with_highlights_2'}>
-                                  {' and '}
-                                  <span key={'passage_2'}>
-                                    <span className='passage_rank--span'>
-                                      {2}
-                                    </span>
-                                    <b>another passage</b>
-                                  </span>
-                                  {''}
-                                </span>
-                              </span>
-                            );
+    const expectedPassage = [
+      'a good answer with ',
+      (
+        <span key={'passage_1'}>
+          <span className='passage_rank--span'>
+            { 1 }
+          </span>
+          <b>
+            { 'a passage' }
+          </b>
+        </span>
+      ),
+      ' and ',
+      (
+        <span key={'passage_2'}>
+          <span className='passage_rank--span'>
+            { 2 }
+          </span>
+          <b>
+            { 'another passage' }
+          </b>
+        </span>
+      )
+    ];
     expect(resultBoxes).toHaveLength(2);
     expect(resultBoxes.at(0).props().result_text).toEqual(expectedAnswer);
     expect(resultBoxes.at(1).props().result_text).toEqual(expectedPassage);
@@ -90,30 +93,97 @@ describe('<ResultComparison />', () => {
     });
   });
 
-  describe('when calling highlightPassage', () => {
-    describe('and there is only one passage', () => {
-      const passage = {
-        passage_text: 'a passage',
-        rank: 0
-      };
-      const fullResult = 'a good answer with a passage and another passage';
+  describe('when calling highlightPassages', () => {
+    describe('and there is only one passage at the beginning', () => {
+      beforeEach(() => {
+        const props_with_begin_passage = Object.assign({}, props, {
+          passages: [
+            {
+              passage_text: 'beginning passage',
+              rank: 0
+            }
+          ],
+          passageFullResult: {
+            text: 'beginning passage with other stuff'
+          }
+        })
+        wrapper = shallow(<ResultComparison {...props_with_begin_passage} />);
+      });
 
       it('returns expected html', () => {
-        const expectedHtml = (
-                                <span key={'text_with_highlights_1'}>
-                                  {'a good answer with '}
-                                  <span key={'passage_1'}>
-                                    <span className='passage_rank--span'>
-                                      {1}
-                                    </span>
-                                    <b>a passage</b>
-                                  </span>
-                                  {' and another passage'}
-                                </span>
-                             );
-        const actual = wrapper.instance().highlightPassage(passage, fullResult);
+        const expectedHtml = [
+          (
+            <span key={'passage_1'}>
+              <span className='passage_rank--span'>
+                { 1 }
+              </span>
+              <b>
+                { 'beginning passage' }
+              </b>
+            </span>
+          ),
+          ' with other stuff'
+        ];
+        const actual = wrapper.instance().highlightPassages();
         expect(actual).toEqual(expectedHtml);
       });
+    });
+
+    describe('and there is only one passage at the end', () => {
+      beforeEach(() => {
+        const props_with_end_passage = Object.assign({}, props, {
+          passages: [
+            {
+              passage_text: 'ending passage',
+              rank: 0
+            }
+          ],
+          passageFullResult: {
+            text: 'some stuff before ending passage'
+          }
+        })
+        wrapper = shallow(<ResultComparison {...props_with_end_passage} />);
+      });
+
+      it('returns expected html', () => {
+        const expectedHtml = [
+          'some stuff before ',
+          (
+            <span key={'passage_1'}>
+              <span className='passage_rank--span'>
+                { 1 }
+              </span>
+              <b>
+                { 'ending passage' }
+              </b>
+            </span>
+          )
+        ];
+        const actual = wrapper.instance().highlightPassages();
+        expect(actual).toEqual(expectedHtml);
+      });
+    });
+  });
+
+  describe('when calling replaceNewlines', () => {
+    it('returns expected html', () => {
+      const expected = [
+        (
+          <span key={'newline_0'}>
+            {'text'}
+            <br />
+          </span>
+        ),
+        (
+          <span key={'newline_1'}>
+            {'newline'}
+            { false }
+          </span>
+        )
+      ];
+      const actual = wrapper.instance().replaceNewlines('text\nnewline');
+
+      expect(actual).toEqual(expected);
     });
   });
 });
