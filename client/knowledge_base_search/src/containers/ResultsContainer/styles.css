@@ -49,22 +49,11 @@
   background-color: #f9f9f9;
 }
 
-.result_box_items--div {
-  display: flex;
-}
-
-.result_box_item_left--div {
-  font-weight: 500;
-}
-
-.result_box_item_right--div {
-  padding-left: 1rem;
-}
-
 .result_box_text--div {
   font-weight: 300;
   font-size: 0.9rem;
   position: relative;
+  padding: 0 1rem;
 }
 
 .result_box_text--div b {
@@ -75,7 +64,7 @@
   border-radius: 50%;
   border: 1px solid black;
   position: absolute;
-  left: -2rem;
+  left: -1rem;
   width: 1.5rem;
   height: 1.5rem;
   text-align: center;

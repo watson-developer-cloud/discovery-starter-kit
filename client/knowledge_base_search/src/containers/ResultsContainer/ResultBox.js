@@ -15,13 +15,8 @@ class ResultBox extends Component {
         { result_text
           ? (
               <div className='result_box_items--div'>
-                <div className='result_box_item_left--div'>
-                  {result_rank}
-                </div>
-                <div className='result_box_item_right--div'>
-                  <div className='result_box_text--div'>
-                    { result_text }
-                  </div>
+                <div className='result_box_text--div'>
+                  { result_text }
                 </div>
               </div>
             )
