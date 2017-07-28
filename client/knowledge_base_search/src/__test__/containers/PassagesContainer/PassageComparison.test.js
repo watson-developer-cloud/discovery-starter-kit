@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ResultComparison from '../../../containers/ResultsContainer/ResultComparison';
-import ResultBox from '../../../containers/ResultsContainer/ResultBox';
+import PassageComparison from '../../../containers/PassagesContainer/PassageComparison';
+import ResultContainer from '../../../containers/ResultContainer/ResultContainer';
 import { shallow } from 'enzyme';
 
-describe('<ResultComparison />', () => {
+describe('<PassageComparison />', () => {
   let wrapper;
   const props = {
     passages: [
@@ -28,13 +28,13 @@ describe('<ResultComparison />', () => {
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<ResultComparison {...props} />, div);
+    ReactDOM.render(<PassageComparison {...props} />, div);
   });
 
-  it('has 2 <ResultBox /> with expected text containing highlighted passages', () => {
-    wrapper = shallow(<ResultComparison {...props} />);
+  it('has 2 <ResultContainer /> with expected text containing highlighted passages', () => {
+    wrapper = shallow(<PassageComparison {...props} />);
 
-    const resultBoxes = wrapper.find(ResultBox);
+    const resultBoxes = wrapper.find(ResultContainer);
     const expectedAnswer = props.passageFullResult.text;
     const expectedPassage = [
       'a good answer with ',
@@ -66,9 +66,9 @@ describe('<ResultComparison />', () => {
   });
 
   it('has 2 titles', () => {
-    wrapper = shallow(<ResultComparison {...props} />);
+    wrapper = shallow(<PassageComparison {...props} />);
 
-    const titles = wrapper.find('.results_comparison_content--div h5');
+    const titles = wrapper.find('.passages_comparison_content--div h5');
 
     expect(titles).toHaveLength(2);
     expect(titles.at(0).text()).toEqual('Standard search');
@@ -81,11 +81,11 @@ describe('<ResultComparison />', () => {
         index: 1
       });
 
-      wrapper = shallow(<ResultComparison {...props_with_nonzero_index} />);
+      wrapper = shallow(<PassageComparison {...props_with_nonzero_index} />);
     });
 
     it('does not show titles', () => {
-      const titles = wrapper.find('.results_comparison_header--div h4');
+      const titles = wrapper.find('.passages_comparison_header--div h4');
 
       expect(titles).toHaveLength(0);
       expect(wrapper.text()).not.toContain('Standard Search');
@@ -107,7 +107,7 @@ describe('<ResultComparison />', () => {
             text: 'beginning passage with other stuff'
           }
         })
-        wrapper = shallow(<ResultComparison {...props_with_begin_passage} />);
+        wrapper = shallow(<PassageComparison {...props_with_begin_passage} />);
       });
 
       it('returns expected html', () => {
@@ -142,7 +142,7 @@ describe('<ResultComparison />', () => {
             text: 'some stuff before ending passage'
           }
         })
-        wrapper = shallow(<ResultComparison {...props_with_end_passage} />);
+        wrapper = shallow(<PassageComparison {...props_with_end_passage} />);
       });
 
       it('returns expected html', () => {

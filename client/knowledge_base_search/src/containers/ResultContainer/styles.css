@@ -1,0 +1,21 @@
+
+.result_container--div {
+  flex-basis: 0;
+  flex-grow: 1;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background-color: #fdfdfd;
+  border: 1px solid #e0e0e0;
+}
+
+.result_container_empty--div {
+  border: none;
+  background-color: #f9f9f9;
+}
+
+.result_container_text--div {
+  font-weight: 300;
+  font-size: 0.9rem;
+  position: relative;
+  padding: 0 1rem;
+}

@@ -4,7 +4,7 @@ import Sticky from 'react-stickynode';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import QuestionBarContainer from './containers/QuestionBarContainer/QuestionBarContainer';
-import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
+import PassagesContainer from './containers/PassagesContainer/PassagesContainer';
 import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
 import links from './utils/links';
@@ -245,7 +245,7 @@ class App extends Component {
                                 />
                               )
                             : (
-                                <ResultsContainer
+                                <PassagesContainer
                                   key='results_container'
                                   enriched_results={this.state.enriched_results}
                                   onSearch={this.handleSearch}

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ResultBox from '../../../containers/ResultsContainer/ResultBox';
+import ResultContainer from '../../../containers/ResultContainer/ResultContainer';
 import { shallow } from 'enzyme';
 
-describe('<ResultBox />', () => {
+describe('<ResultContainer />', () => {
   const props = {
     result_text: 'result',
     result_rank: 1
@@ -11,7 +11,7 @@ describe('<ResultBox />', () => {
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(<ResultBox {...props} />, div);
+    ReactDOM.render(<ResultContainer {...props} />, div);
   });
 
   describe('when there is no result', () => {
@@ -28,7 +28,7 @@ describe('<ResultBox />', () => {
         const props_with_first_rank = Object.assign({}, props_no_result, {
           result_rank: firstRank
         });
-        wrapper = shallow(<ResultBox {...props_with_first_rank} />);
+        wrapper = shallow(<ResultContainer {...props_with_first_rank} />);
       });
 
       it('has "No Results"', () => {
@@ -42,7 +42,7 @@ describe('<ResultBox />', () => {
         const props_with_not_first_rank = Object.assign({}, props_no_result, {
           result_rank: 2
         });
-        wrapper = shallow(<ResultBox {...props_with_not_first_rank} />);
+        wrapper = shallow(<ResultContainer {...props_with_not_first_rank} />);
       });
 
       it('does not have "No Results"', () => {

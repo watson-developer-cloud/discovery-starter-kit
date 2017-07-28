@@ -1,0 +1,61 @@
+
+.passages_container--div {
+  display: flex;
+}
+
+.passages_comparison-enter {
+  opacity: 0.01;
+}
+
+.passages_comparison-enter.passages_comparison-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.passages_comparison--div:first-child {
+  padding-top: 1.5rem;
+}
+
+.passages_comparison_content--div {
+  display: flex;
+}
+
+.passages_comparison_content_left--div {
+  width: 50%;
+  padding-right: 1rem;
+}
+
+.passages_comparison_content_right--div {
+  width: 50%;
+  border-left: 1px solid #e0e0e0;
+  padding-left: 1rem;
+}
+
+.show_results--div {
+  margin-top: 2rem;
+}
+
+.passage--span b,
+.passage--span b > span {
+  font-weight: 500;
+}
+
+.passage_rank--span {
+  border-radius: 50%;
+  border: 1px solid black;
+  position: absolute;
+  left: -1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
+}
+
+.passage--span:hover .passage_rank--span {
+  color: #ffffff;
+  border-color: transparent;
+  background-color: #008571;
+}
+
+.passage--span:hover {
+  color: #008571;
+}

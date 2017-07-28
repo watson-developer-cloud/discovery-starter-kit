@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ResultBox from './ResultBox';
+import ResultContainer from '../ResultContainer/ResultContainer';
 import './styles.css';
 
 class ResultComparison extends Component {
@@ -89,20 +89,18 @@ class ResultComparison extends Component {
     } = this.props;
 
     return (
-      <div className='results_comparison--div'>
-        <div className='results_comparison_content--div'>
-          <div className='results_comparison_content_left--div'>
+      <div className='passages_comparison--div'>
+        <div className='passages_comparison_content--div'>
+          <div className='passages_comparison_content_left--div'>
             { index === 0 && (<h5>Standard search</h5>) }
-            <ResultBox
-              result_type={'regular'}
+            <ResultContainer
               result_text={this.replaceNewlines(passageFullResult.text)}
               result_rank={index + 1}
             />
           </div>
-          <div className='results_comparison_content_right--div'>
+          <div className='passages_comparison_content_right--div'>
             { index === 0 && (<h5>Passage search</h5>) }
-            <ResultBox
-              result_type={'passage'}
+            <ResultContainer
               result_text={this.highlightPassages()}
               result_rank={index + 1}
             />

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App';
 import SearchContainer from '../containers/SearchContainer/SearchContainer';
-import ResultsContainer from '../containers/ResultsContainer/ResultsContainer';
+import PassagesContainer from '../containers/PassagesContainer/PassagesContainer';
 import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from '../containers/ViewAllContainer/ViewAllContainer';
 import { Icon } from 'watson-react-components';
@@ -49,7 +49,7 @@ describe('<App />', () => {
   it('has no loading spinner, no view all, or results on initial load', () => {
     wrapper = shallow(<App />);
     expect(wrapper.find(Icon)).toHaveLength(0);
-    expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+    expect(wrapper.find(PassagesContainer)).toHaveLength(0);
     expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
   });
@@ -151,7 +151,7 @@ describe('<App />', () => {
 
     it('shows a loading spinner', () => {
       expect(wrapper.find(Icon)).toHaveLength(1);
-      expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
       expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     });
 
@@ -175,7 +175,7 @@ describe('<App />', () => {
 
       it('shows the results container', () => {
         expect(wrapper.find(Icon)).toHaveLength(0);
-        expect(wrapper.find(ResultsContainer)).toHaveLength(1);
+        expect(wrapper.find(PassagesContainer)).toHaveLength(1);
         expect(wrapper.find(ErrorContainer)).toHaveLength(0);
       });
     });
@@ -195,7 +195,7 @@ describe('<App />', () => {
 
     it('shows the error container', () => {
       expect(wrapper.find(Icon)).toHaveLength(0);
-      expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
       expect(wrapper.find(ErrorContainer)).toHaveLength(1);
     });
   });

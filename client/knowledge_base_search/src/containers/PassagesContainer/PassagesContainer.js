@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
-import ResultComparison from './ResultComparison';
+import PassageComparison from './PassageComparison';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
-class ResultsContainer extends Component {
+class PassagesContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -73,35 +73,33 @@ class ResultsContainer extends Component {
                   <h3>
                     Compare the Standard search to the Passage search on Stack Exchange Travel data.
                   </h3>
-                  <div className='results_container--div'>
-                    <div className='results_left--div'>
-                      <CSSTransitionGroup
-                        transitionName='results_comparison'
-                        transitionEnterTimeout={500}
-                        transitionLeave={false}
-                      >
-                        {
-                          [...Array(this.state.total_results_shown)].map((x, rank) => {
-                            const passages = this.getPassagesInSameDocument(
-                                               rank,
-                                               passage_ranks_shown
-                                             )
-                            return(
-                              <ResultComparison
-                                key={'result_comparison_' + rank}
-                                index={rank}
-                                passages={passages}
-                                passageFullResult={
-                                  this.findPassageResult(
-                                    passages[0].document_id
-                                  )
-                                }
-                              />
-                            );
-                          })
-                        }
-                      </CSSTransitionGroup>
-                    </div>
+                  <div className='passages_container--div'>
+                    <CSSTransitionGroup
+                      transitionName='passages_comparison'
+                      transitionEnterTimeout={500}
+                      transitionLeave={false}
+                    >
+                      {
+                        [...Array(this.state.total_results_shown)].map((x, rank) => {
+                          const passages = this.getPassagesInSameDocument(
+                                             rank,
+                                             passage_ranks_shown
+                                           )
+                          return(
+                            <PassageComparison
+                              key={'passage_comparison_' + rank}
+                              index={rank}
+                              passages={passages}
+                              passageFullResult={
+                                this.findPassageResult(
+                                  passages[0].document_id
+                                )
+                              }
+                            />
+                          );
+                        })
+                      }
+                    </CSSTransitionGroup>
                   </div>
                 </div>
               )
@@ -131,7 +129,7 @@ class ResultsContainer extends Component {
   }
 }
 
-ResultsContainer.PropTypes = {
+PassagesContainer.PropTypes = {
   enriched_results: PropTypes.shape({
     matching_results: PropTypes.number.isRequired,
     results: PropTypes.arrayOf(PropTypes.object),
@@ -140,4 +138,4 @@ ResultsContainer.PropTypes = {
   searchContainerHeight: PropTypes.number.isRequired
 }
 
-export default ResultsContainer;
+export default PassagesContainer;

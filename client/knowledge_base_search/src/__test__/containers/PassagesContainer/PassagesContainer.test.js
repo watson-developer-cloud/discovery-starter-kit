@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ResultsContainer from '../../../containers/ResultsContainer/ResultsContainer';
-import ResultComparison from '../../../containers/ResultsContainer/ResultComparison';
+import PassagesContainer from '../../../containers/PassagesContainer/PassagesContainer';
+import PassageComparison from '../../../containers/PassagesContainer/PassageComparison';
 import { shallow } from 'enzyme';
 
-describe('<ResultsContainer />', () => {
+describe('<PassagesContainer />', () => {
   const enriched_results = {
     matching_results: 3,
     results: [
@@ -40,20 +40,20 @@ describe('<ResultsContainer />', () => {
   it('renders without crashing', () => {
     const div = document.createElement('div');
     ReactDOM.render(
-      <ResultsContainer
+      <PassagesContainer
         enriched_results={enriched_results}
       />, div);
   });
 
-  it('has 3 ResultComparison in it', () => {
-    const wrapper = shallow(<ResultsContainer
+  it('has 3 <PassageComparison /> in it', () => {
+    const wrapper = shallow(<PassagesContainer
                               enriched_results={enriched_results}
                             />);
-    expect(wrapper.find(ResultComparison)).toHaveLength(3);
+    expect(wrapper.find(PassageComparison)).toHaveLength(3);
   });
 
   it('findPassageResult returns the full result given a document_id', () => {
-    const wrapper = shallow(<ResultsContainer
+    const wrapper = shallow(<PassagesContainer
                               enriched_results={enriched_results}
                             />);
     const document_id = enriched_results.passages[0].document_id;
@@ -70,13 +70,13 @@ describe('<ResultsContainer />', () => {
         results: [],
         passages: []
       }
-      wrapper = shallow(<ResultsContainer
+      wrapper = shallow(<PassagesContainer
                           enriched_results={no_results_passages}
                         />);
     });
 
     it('shows "No Results"', () => {
-      expect(wrapper.find(ResultComparison)).toHaveLength(0);
+      expect(wrapper.find(PassageComparison)).toHaveLength(0);
       expect(wrapper.find('h2').text()).toEqual('No Results');
     });
   });
@@ -124,7 +124,7 @@ describe('<ResultsContainer />', () => {
           }
         ]
       };
-      wrapper = shallow(<ResultsContainer
+      wrapper = shallow(<PassagesContainer
                           enriched_results={more_than_three_results}
                         />);
     });
@@ -144,7 +144,7 @@ describe('<ResultsContainer />', () => {
       });
 
       it('shows more results', () => {
-        expect(wrapper.find(ResultComparison)).toHaveLength(4);
+        expect(wrapper.find(PassageComparison)).toHaveLength(4);
       });
 
       it('does not show the "Show more results" button anymore', () => {
