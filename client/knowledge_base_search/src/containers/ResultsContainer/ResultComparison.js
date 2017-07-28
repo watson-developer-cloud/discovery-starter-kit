@@ -36,7 +36,9 @@ class ResultComparison extends Component {
 
       // highlight the passage
       highlightedPassages.push(
-        <span key={'passage_' + (currentPassage.rank + 1)}>
+        <span
+          className='passage--span'
+          key={'passage_' + (currentPassage.rank + 1)}>
           <span className='passage_rank--span'>
             { currentPassage.rank + 1}
           </span>

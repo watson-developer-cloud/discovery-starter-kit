@@ -71,12 +71,12 @@
   text-align: center;
 }
 
-.passage_rank--span:hover {
+.passage--span:hover .passage_rank--span {
   color: #ffffff;
   border-color: transparent;
   background-color: #008571;
 }
 
-.passage_rank--span:hover + b {
+.passage--span:hover {
   color: #008571;
 }

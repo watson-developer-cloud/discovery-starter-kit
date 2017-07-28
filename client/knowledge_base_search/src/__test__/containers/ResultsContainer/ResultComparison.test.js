@@ -39,7 +39,7 @@ describe('<ResultComparison />', () => {
     const expectedPassage = [
       'a good answer with ',
       (
-        <span key={'passage_1'}>
+        <span className='passage--span' key={'passage_1'}>
           <span className='passage_rank--span'>
             { 1 }
           </span>
@@ -50,7 +50,7 @@ describe('<ResultComparison />', () => {
       ),
       ' and ',
       (
-        <span key={'passage_2'}>
+        <span className='passage--span' key={'passage_2'}>
           <span className='passage_rank--span'>
             { 2 }
           </span>
@@ -113,7 +113,7 @@ describe('<ResultComparison />', () => {
       it('returns expected html', () => {
         const expectedHtml = [
           (
-            <span key={'passage_1'}>
+            <span className='passage--span' key={'passage_1'}>
               <span className='passage_rank--span'>
                 { 1 }
               </span>
@@ -149,7 +149,7 @@ describe('<ResultComparison />', () => {
         const expectedHtml = [
           'some stuff before ',
           (
-            <span key={'passage_1'}>
+            <span className='passage--span' key={'passage_1'}>
               <span className='passage_rank--span'>
                 { 1 }
               </span>
