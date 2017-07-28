@@ -12,13 +12,13 @@ casper.test.begin('Knowledge Base Search', (test) => {
     casper.click('.question_bar_button--button:first-child');
     casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
 
-    casper.waitForSelector('.result_box--div',
+    casper.waitForSelector('.result_container--div',
       () => {
         // wait for transition
         casper.wait(5000, () => {
           casper.capture(`${casper.screenshots_dir}/results_exist.png`);
           test.assertElementCount(
-            '.result_box--div',
+            '.result_container--div',
             6,
             '6 Results exist when a search is clicked');
         });

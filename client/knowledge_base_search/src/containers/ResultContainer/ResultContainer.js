@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
-class ResultBox extends Component {
+class ResultContainer extends Component {
   render() {
     const {
       result_text,
@@ -11,17 +11,17 @@ class ResultBox extends Component {
     } = this.props;
 
     return (
-      <div className={'result_box--div' + (result_text ? '' : ' result_box_empty--div')}>
+      <div className={'result_container--div' + (result_text ? '' : ' result_container_empty--div')}>
         { result_text
           ? (
-              <div className='result_box_items--div'>
-                <div className='result_box_text--div'>
+              <div className='result_container_items--div'>
+                <div className='result_container_text--div'>
                   { result_text }
                 </div>
               </div>
             )
           : result_rank === 1
-            ? (<div className='result_text--div'>No Results</div>)
+            ? (<div className='result_container--div'>No Results</div>)
             : null
         }
       </div>
@@ -29,7 +29,7 @@ class ResultBox extends Component {
   }
 }
 
-ResultBox.PropTypes = {
+ResultContainer.PropTypes = {
   result_text: PropTypes.oneOf([
     PropTypes.string,
     PropTypes.element
@@ -37,4 +37,4 @@ ResultBox.PropTypes = {
   result_rank: PropTypes.number.isRequired
 }
 
-export default ResultBox;
+export default ResultContainer;
