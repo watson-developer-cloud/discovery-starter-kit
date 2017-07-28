@@ -56,7 +56,8 @@
   padding: 0 1rem;
 }
 
-.result_box_text--div b {
+.result_box_text--div b,
+.result_box_text--div b > span {
   font-weight: 500;
 }
 
@@ -68,4 +69,14 @@
   width: 1.5rem;
   height: 1.5rem;
   text-align: center;
+}
+
+.passage_rank--span:hover {
+  color: #ffffff;
+  border-color: transparent;
+  background-color: #008571;
+}
+
+.passage_rank--span:hover + b {
+  color: #008571;
 }
