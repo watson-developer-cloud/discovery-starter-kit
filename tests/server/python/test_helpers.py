@@ -27,10 +27,9 @@ constants = {
 class TestHelpers(unittest.TestCase):
 
     @patch('watson_developer_cloud.DiscoveryV1')
-    @unittest.skip('function NoneType error for get_passage_search_questions')
     def test_questions(self, discovery):
         question_count = 5000
-        agg = 'term(question.title,count:%s).min(answer_metadata.length)'
+        agg = 'term(question.title,count:%s)'
         expected_agg = agg % str(question_count)
         expected_query_opts = {
           'aggregation': expected_agg,
@@ -51,14 +50,7 @@ class TestHelpers(unittest.TestCase):
                   "results": [
                     {
                       "key": "Can you tell a cabbie which route to take?",
-                      "matching_results": 24,
-                      "aggregations": [
-                        {
-                          "type": "min",
-                          "field": "answer_metadata.length",
-                          "value": 501
-                        }
-                      ]
+                      "matching_results": 24
                     }
                   ]
                 }
@@ -71,7 +63,7 @@ class TestHelpers(unittest.TestCase):
         actual_value = get_questions(discovery, constants, question_count)
         discovery.query.assert_called_with(
           environment_id='my_environment_id',
-          collection_id='my_regular_collection_id',
+          collection_id='my_enriched_collection_id',
           query_options=expected_query_opts
         )
         self.assertEqual(actual_value, expected_value)

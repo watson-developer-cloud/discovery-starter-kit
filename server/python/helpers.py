@@ -40,7 +40,7 @@ def find_collection_id(collections_response, collection_name):
 
 def get_questions(discovery, constants, question_count):
     # return the top question_count questions from the dataset
-    aggregation = 'term(question.title,count:%s).min(answer_metadata.length)'
+    aggregation = 'term(question.title,count:%s)'
     query_options = {
      'aggregation': aggregation % str(question_count),
      'count': 0
@@ -48,22 +48,11 @@ def get_questions(discovery, constants, question_count):
 
     response = discovery.query(
                   environment_id=constants['environment_id'],
-                  collection_id=constants['collection_id_regular'],
+                  collection_id=constants['collection_id_enriched'],
                   query_options=query_options
                 )
 
-    questions = reduce(get_passage_search_questions,
-                       response['aggregations'][0]['results'],
-                       [])
+    questions = map(lambda result: result['key'],
+                    response['aggregations'][0]['results'])
 
     return questions
-
-
-def get_passage_search_questions(reduced_results, result):
-    MIN_ANSWER_LEN = 500
-    MIN_ANSWERS = 3
-    sufficent_answer_len = result['aggregations'][0]['value'] > MIN_ANSWER_LEN
-    enough_answers = result['matching_results'] >= MIN_ANSWERS
-    if sufficent_answer_len and enough_answers:
-        reduced_results.append(result['key'])
-    return reduced_results
