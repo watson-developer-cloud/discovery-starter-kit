@@ -1,7 +1,7 @@
 FROM debian
 
 RUN apt-get update && \
-    apt-get install -y git ca-certificates curl build-essential curl \
+    apt-get install -y git ca-certificates curl build-essential \
     python python-dev python-virtualenv && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
