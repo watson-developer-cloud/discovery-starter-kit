@@ -52,13 +52,108 @@ describe('<PassagesContainer />', () => {
     expect(wrapper.find(PassageComparison)).toHaveLength(3);
   });
 
-  it('findPassageResult returns the full result given a document_id', () => {
-    const wrapper = shallow(<PassagesContainer
-                              enriched_results={enriched_results}
-                            />);
-    const document_id = enriched_results.passages[0].document_id;
-    expect(wrapper.instance().findPassageResult(document_id))
-      .toEqual(enriched_results.results[0]);
+  describe('when getNextDocumentWithPassages is called', () => {
+    let wrapper;
+    const documentIdsWithPassages = ['1', '2', '3'];
+
+    beforeEach(() => {
+      wrapper = shallow(<PassagesContainer
+                          enriched_results={enriched_results}
+                        />);
+    });
+
+    describe('and there are no documents shown', () => {
+      const documentIndicesShown = [];
+
+      it('returns the first document with passages', () => {
+        expect(wrapper.instance().getNextDocumentWithPassages(
+                                    documentIndicesShown,
+                                    documentIdsWithPassages))
+          .toEqual(enriched_results.results[0])
+      });
+    });
+
+    describe('and the first document is shown', () => {
+      const documentIndicesShown = [0];
+
+      it('returns the second document with passages', () => {
+        expect(wrapper.instance().getNextDocumentWithPassages(
+                                    documentIndicesShown,
+                                    documentIdsWithPassages))
+          .toEqual(enriched_results.results[1])
+      });
+    });
+  });
+
+  describe('when getPassagesFromDocument is called', () => {
+    let wrapper;
+    let passageIndicesShown;
+    let documentId;
+
+    describe('and there are multiple passages in the same document', () => {
+      const multiple_passages_results = Object.assign({}, enriched_results, {
+        passages: [
+          {
+            document_id: '1',
+            passage_text: 'a great answer'
+          },
+          {
+            document_id: '1',
+            passage_text: 'a great passage'
+          },
+          {
+            document_id: '2',
+            passage_text: 'a great passage 2'
+          }
+        ]
+      });
+
+      beforeEach(() => {
+        wrapper = shallow(<PassagesContainer
+                            enriched_results={multiple_passages_results}
+                          />);
+        passageIndicesShown = [];
+        documentId = '1';
+      });
+
+      it('should return both passages with indices added', () => {
+        const actual = wrapper.instance().getPassagesFromDocument(
+          documentId,
+          passageIndicesShown
+        );
+        expect(actual[0]).toEqual({
+          document_id: '1',
+          passage_text: 'a great answer',
+          index: 0
+        });
+        expect(actual[1]).toEqual({
+          document_id: '1',
+          passage_text: 'a great passage',
+          index: 1
+        });
+        expect(passageIndicesShown).toEqual([0, 1]);
+      });
+
+      describe('and there are already passages shown', () => {
+        beforeEach(() => {
+          passageIndicesShown = [0, 1];
+          documentId = '2';
+        });
+
+        it('should return the next passage with index added', () => {
+          const actual = wrapper.instance().getPassagesFromDocument(
+            documentId,
+            passageIndicesShown
+          );
+          expect(actual[0]).toEqual({
+            document_id: '2',
+            passage_text: 'a great passage 2',
+            index: 2
+          });
+          expect(passageIndicesShown).toEqual([0, 1, 2]);
+        });
+      });
+    });
   });
 
   describe('when enriched_results has 0 results', () => {

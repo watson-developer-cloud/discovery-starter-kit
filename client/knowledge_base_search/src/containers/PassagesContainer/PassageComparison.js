@@ -38,9 +38,9 @@ class ResultComparison extends Component {
       highlightedPassages.push(
         <span
           className='passage--span'
-          key={'passage_' + (currentPassage.rank + 1)}>
+          key={'passage_' + (currentPassage.index + 1)}>
           <span className='passage_rank--span'>
-            { currentPassage.rank + 1}
+            { currentPassage.index + 1 }
           </span>
           <b>
             { this.replaceNewlines(currentPassage.passage_text) }
@@ -115,7 +115,7 @@ ResultComparison.PropTypes = {
   passages: PropTypes.arrayOf(PropTypes.shape({
     passage_text: PropTypes.string.isRequired,
     passage_score: PropTypes.string,
-    rank: PropTypes.number
+    index: PropTypes.number
   })).isRequired,
   passageFullResult: PropTypes.shape({
     text: PropTypes.string.isRequired

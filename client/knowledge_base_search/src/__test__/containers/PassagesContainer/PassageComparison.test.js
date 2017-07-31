@@ -11,12 +11,12 @@ describe('<PassageComparison />', () => {
       {
         document_id: '1',
         passage_text: 'a passage',
-        rank: 0
+        index: 0
       },
       {
         document_id: '1',
         passage_text: 'another passage',
-        rank: 1
+        index: 1
       }
     ],
     passageFullResult: {
@@ -100,7 +100,7 @@ describe('<PassageComparison />', () => {
           passages: [
             {
               passage_text: 'beginning passage',
-              rank: 0
+              index: 0
             }
           ],
           passageFullResult: {
@@ -135,7 +135,7 @@ describe('<PassageComparison />', () => {
           passages: [
             {
               passage_text: 'ending passage',
-              rank: 0
+              index: 0
             }
           ],
           passageFullResult: {

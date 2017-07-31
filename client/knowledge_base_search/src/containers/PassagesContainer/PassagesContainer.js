@@ -21,40 +21,39 @@ class PassagesContainer extends Component {
     });
   }
 
-  isMoreResults(passage_ranks_shown) {
+  isMoreResults(passageIndicesShown) {
     const { enriched_results } = this.props;
 
-    return enriched_results.passages.length > passage_ranks_shown.length;
+    return enriched_results.passages.length > passageIndicesShown.length;
   }
 
   handleMoreResults = () => {
     this.setState({total_results_shown: this.state.total_results_shown + 1});
   }
 
-  findPassageResult(document_id) {
+  getNextDocumentWithPassages(documentIndicesShown, documentIdsWithPassages) {
     const { enriched_results } = this.props;
 
-    return enriched_results.results.find((result) => {
-      return result.id === document_id;
+    return enriched_results.results.find((result, index) => {
+      const documentId = result.id;
+
+      if (documentIdsWithPassages.indexOf(documentId) >= 0 &&
+          documentIndicesShown.indexOf(index) < 0) {
+        documentIndicesShown.push(index);
+        return true;
+      }
+      return false;
     });
   }
 
-  getPassagesInSameDocument(rank, passage_ranks_shown) {
+  getPassagesFromDocument(documentId, passageIndicesShown) {
     const { enriched_results } = this.props;
 
-    let nextDocumentId;
-    return enriched_results.passages.reduce((passages, passage, passageRank) => {
-      if (passage_ranks_shown.indexOf(passageRank) === -1) {
-        if (!nextDocumentId) {
-          // passage not already shown, set it as the next document Id
-          nextDocumentId = passage.document_id;
-        }
-
-        if (nextDocumentId === passage.document_id) {
-          passage_ranks_shown.push(passageRank);
-          passage.rank = passageRank;
-          passages.push(passage);
-        }
+    return enriched_results.passages.reduce((passages, passage, index) => {
+      if (passage.document_id === documentId) {
+        passage.index = index;
+        passages.push(passage);
+        passageIndicesShown.push(index);
       }
       return passages;
     }, []);
@@ -62,7 +61,11 @@ class PassagesContainer extends Component {
 
   render() {
     const { enriched_results } = this.props;
-    const passage_ranks_shown = [];
+    const documentIdsWithPassages = enriched_results.passages.map((passage) => {
+      return passage.document_id;
+    });
+    const passageIndicesShown = [];
+    const documentIdsShown = [];
 
     return (
       <Element name='scroll_to_results'>
@@ -81,22 +84,25 @@ class PassagesContainer extends Component {
                     >
                       {
                         [...Array(this.state.total_results_shown)].map((x, rank) => {
-                          const passages = this.getPassagesInSameDocument(
-                                             rank,
-                                             passage_ranks_shown
-                                           )
-                          return(
-                            <PassageComparison
-                              key={'passage_comparison_' + rank}
-                              index={rank}
-                              passages={passages}
-                              passageFullResult={
-                                this.findPassageResult(
-                                  passages[0].document_id
-                                )
-                              }
-                            />
-                          );
+                          const fullResult = this.getNextDocumentWithPassages(
+                                               documentIdsShown,
+                                               documentIdsWithPassages
+                                             );
+                          if (fullResult) {
+                            const passages = this.getPassagesFromDocument(
+                                               fullResult.id,
+                                               passageIndicesShown
+                                             )
+                            return(
+                              <PassageComparison
+                                key={'passage_comparison_' + rank}
+                                index={rank}
+                                passages={passages}
+                                passageFullResult={fullResult}
+                              />
+                            );
+                          }
+                          return null;
                         })
                       }
                     </CSSTransitionGroup>
@@ -110,7 +116,7 @@ class PassagesContainer extends Component {
               )
         }
         {
-          this.isMoreResults(passage_ranks_shown)
+          this.isMoreResults(passageIndicesShown)
             ? (
                 <div className='_container-center show_results--div'>
                   <button
