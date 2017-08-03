@@ -40,9 +40,7 @@ describe('<PassageComparison />', () => {
       'a good answer with ',
       (
         <span className='passage--span' key={'passage_1'}>
-          <span className='passage_rank--span'>
-            { 1 }
-          </span>
+          <span className='passage_rank--span' />
           <b>
             { 'a passage' }
           </b>
@@ -51,9 +49,7 @@ describe('<PassageComparison />', () => {
       ' and ',
       (
         <span className='passage--span' key={'passage_2'}>
-          <span className='passage_rank--span'>
-            { 2 }
-          </span>
+          <span className='passage_rank--span' />
           <b>
             { 'another passage' }
           </b>
@@ -114,9 +110,7 @@ describe('<PassageComparison />', () => {
         const expectedHtml = [
           (
             <span className='passage--span' key={'passage_1'}>
-              <span className='passage_rank--span'>
-                { 1 }
-              </span>
+              <span className='passage_rank--span' />
               <b>
                 { 'beginning passage' }
               </b>
@@ -150,9 +144,7 @@ describe('<PassageComparison />', () => {
           'some stuff before ',
           (
             <span className='passage--span' key={'passage_1'}>
-              <span className='passage_rank--span'>
-                { 1 }
-              </span>
+              <span className='passage_rank--span' />
               <b>
                 { 'ending passage' }
               </b>
