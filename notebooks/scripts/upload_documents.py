@@ -58,7 +58,10 @@ def upload_document(file_object, environment_id, collection_id, iteration=0):
             logging.warn("Retrying document: %s", file_object.name)
             next_iteration = iteration + 1
             time.sleep(seconds_to_sleep * next_iteration)
-            upload_document(file_object, collection_id, next_iteration)
+            upload_document(file_object,
+                            environment_id,
+                            collection_id,
+                            next_iteration)
         else:
             logging.error(exception)
 
