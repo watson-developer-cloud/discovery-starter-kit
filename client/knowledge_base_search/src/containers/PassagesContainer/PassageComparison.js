@@ -39,9 +39,7 @@ class ResultComparison extends Component {
         <span
           className='passage--span'
           key={'passage_' + (currentPassage.index + 1)}>
-          <span className='passage_rank--span'>
-            { currentPassage.index + 1 }
-          </span>
+          <span className='passage_rank--span' />
           <b>
             { this.replaceNewlines(currentPassage.passage_text) }
           </b>
