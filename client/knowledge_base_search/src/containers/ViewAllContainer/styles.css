@@ -8,7 +8,8 @@
   background-color: #f9f9f9;
   width: 30vw;
   padding: 2rem;
-  box-shadow: -2px 0 1px 0 rgba(0,0,0,0.3);;
+  box-shadow: -2px 0 1px 0 rgba(0,0,0,0.3);
+  z-index: 1;
 }
 
 .view_all_questions_header--div {

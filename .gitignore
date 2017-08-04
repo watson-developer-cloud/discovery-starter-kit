@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+.DS_Store
 
 # C extensions
 *.so
@@ -72,6 +73,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+share
 
 # pyenv
 .python-version

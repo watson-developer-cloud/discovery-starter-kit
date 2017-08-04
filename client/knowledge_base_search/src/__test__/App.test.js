@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from '../App';
 import SearchContainer from '../containers/SearchContainer/SearchContainer';
-import ResultsContainer from '../containers/ResultsContainer/ResultsContainer';
+import PassagesContainer from '../containers/PassagesContainer/PassagesContainer';
 import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from '../containers/ViewAllContainer/ViewAllContainer';
 import { Icon } from 'watson-react-components';
@@ -49,7 +49,7 @@ describe('<App />', () => {
   it('has no loading spinner, no view all, or results on initial load', () => {
     wrapper = shallow(<App />);
     expect(wrapper.find(Icon)).toHaveLength(0);
-    expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+    expect(wrapper.find(PassagesContainer)).toHaveLength(0);
     expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
   });
@@ -151,15 +151,13 @@ describe('<App />', () => {
 
     it('shows a loading spinner', () => {
       expect(wrapper.find(Icon)).toHaveLength(1);
-      expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
       expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     });
 
     it('submits a query to the regular and enriched collections', () => {
       expect(query.default)
         .toBeCalledWith('enriched', {'natural_language_query': 'my query'});
-      expect(query.default)
-        .toBeCalledWith('regular', {'natural_language_query': 'my query'});
       expect(query.default)
         .not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
     });
@@ -177,7 +175,7 @@ describe('<App />', () => {
 
       it('shows the results container', () => {
         expect(wrapper.find(Icon)).toHaveLength(0);
-        expect(wrapper.find(ResultsContainer)).toHaveLength(1);
+        expect(wrapper.find(PassagesContainer)).toHaveLength(1);
         expect(wrapper.find(ErrorContainer)).toHaveLength(0);
       });
     });
@@ -197,7 +195,7 @@ describe('<App />', () => {
 
     it('shows the error container', () => {
       expect(wrapper.find(Icon)).toHaveLength(0);
-      expect(wrapper.find(ResultsContainer)).toHaveLength(0);
+      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
       expect(wrapper.find(ErrorContainer)).toHaveLength(1);
     });
   });
@@ -255,9 +253,6 @@ describe('<App />', () => {
         expect(wrapper.state().search_input).toEqual(questionText);
         expect(wrapper.state().presetQueries).toEqual(originalState.presetQueries);
         expect(wrapper.state().offset).toEqual(originalState.offset);
-        expect(query.default).toBeCalledWith('regular', {
-          natural_language_query: questionText
-        });
         expect(query.default).toBeCalledWith('enriched', {
           natural_language_query: questionText
         });

@@ -3,6 +3,6 @@ flask==0.12
 flask_sslify===0.1.5
 flask-cors===3.0.2
 flask_limiter===0.9.4
-watson_developer_cloud==0.25.2
+https://github.com/maniax89/python-sdk/tarball/train_api
 python-dotenv===0.6.4
 cf-deployment-tracker===1.0.4

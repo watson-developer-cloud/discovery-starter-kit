@@ -2,3 +2,8 @@
 flake8
 mock
 pytest
+
+# jupyter notebooks
+beautifulsoup4
+jupyter
+pylzma

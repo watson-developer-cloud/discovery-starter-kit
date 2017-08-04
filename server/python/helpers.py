@@ -40,14 +40,15 @@ def find_collection_id(collections_response, collection_name):
 
 def get_questions(discovery, constants, question_count):
     # return the top question_count questions from the dataset
+    aggregation = 'term(question.title,count:%s)'
     query_options = {
-     'aggregation': 'term(question.title,count:' + str(question_count) + ')',
+     'aggregation': aggregation % str(question_count),
      'count': 0
     }
 
     response = discovery.query(
                   environment_id=constants['environment_id'],
-                  collection_id=constants['collection_id_regular'],
+                  collection_id=constants['collection_id_enriched'],
                   query_options=query_options
                 )
 

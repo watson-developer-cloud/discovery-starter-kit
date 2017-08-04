@@ -4,7 +4,7 @@ import Sticky from 'react-stickynode';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
 import QuestionBarContainer from './containers/QuestionBarContainer/QuestionBarContainer';
-import ResultsContainer from './containers/ResultsContainer/ResultsContainer';
+import PassagesContainer from './containers/PassagesContainer/PassagesContainer';
 import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
 import links from './utils/links';
@@ -20,7 +20,6 @@ class App extends Component {
       fetchingQuestions: true,
       fetchingResults: false,
       resultsFetched: false,
-      results: [],
       enriched_results: [],
       search_input: '',
       results_error: null,
@@ -63,38 +62,31 @@ class App extends Component {
       results_error: null
     });
 
-    Promise.all([
-      query('enriched', {natural_language_query: input})
-        .then((enriched_response) => {
-          if (enriched_response.passages) {
-            return this.retrieveMissingPassages(enriched_response)
-              .then((response) => {
-                return response;
-              });
-          } else {
-            return Promise.resolve(enriched_response);
-          }
-        }),
-      query('regular', {natural_language_query: input})
-    ]).then((results_array) => {
-      const enriched_results_response = results_array[0];
-      const results_response = results_array[1];
-
-      if (results_response.error || enriched_results_response.error) {
-        this.setState({
-          fetchingResults: false,
-          resultsFetched: true,
-          results_error: results_response.error || enriched_results_response.error
-        });
-      } else {
-        this.setState({
-          fetchingResults: false,
-          resultsFetched: true,
-          results: results_response,
-          enriched_results: enriched_results_response
-        });
-      }
-    });
+    query('enriched', {natural_language_query: input})
+      .then((enriched_response) => {
+        if (enriched_response.passages) {
+          return this.retrieveMissingPassages(enriched_response)
+            .then((response) => {
+              return response;
+            });
+        } else {
+          return Promise.resolve(enriched_response);
+        }
+      }).then((enriched_response_with_passages) => {
+        if (enriched_response_with_passages.error) {
+          this.setState({
+            fetchingResults: false,
+            resultsFetched: true,
+            results_error: enriched_response_with_passages.error
+          });
+        } else {
+          this.setState({
+            fetchingResults: false,
+            resultsFetched: true,
+            enriched_results: enriched_response_with_passages
+          });
+        }
+      });
   }
 
   retrieveMissingPassages(enriched_results) {
@@ -108,14 +100,12 @@ class App extends Component {
 
     let missingDocumentIds = [];
     uniqueDocumentIds.forEach((document_id) => {
-      const targetId = parseInt(document_id, 10);
-
       let enriched_result = enriched_results.results.find((result) => {
-        return result.id === targetId;
+        return result.id === document_id;
       });
 
       if (!enriched_result) {
-        missingDocumentIds.push(targetId);
+        missingDocumentIds.push(document_id);
       }
     });
 
@@ -255,9 +245,8 @@ class App extends Component {
                                 />
                               )
                             : (
-                                <ResultsContainer
+                                <PassagesContainer
                                   key='results_container'
-                                  results={this.state.results}
                                   enriched_results={this.state.enriched_results}
                                   onSearch={this.handleSearch}
                                   searchContainerHeight={this.state.searchContainerHeight}

@@ -33,7 +33,7 @@
 
 .tab-panels--tab-content {
   background: inherit;
-  padding: 2rem 0;
+  padding: 2rem 0 0 0;
 }
 
 .base--radio {
@@ -58,6 +58,7 @@
   display: flex;
   justify-content: space-between;
   position: relative;
+  padding-bottom: 1rem;
 }
 
 .text-input {
@@ -161,4 +162,8 @@ button.view_all--button:focus {
   max-height: 0;
   overflow-y: hidden;
   transition: max-height 300ms ease-in;
+}
+
+.sticky-inner-wrapper {
+  z-index: 1;
 }
