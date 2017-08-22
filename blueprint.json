@@ -12,11 +12,17 @@
   "demoURL": "https://knowledge-base-search.mybluemix.net",
   "generators": {
     "python": [
-      "generator-cloud-enablement"
+      "generator-cloud-enablement",
+      "generator-starterkit-content-downloader"
     ]
   },
   "generatorOptions": {
     "generator-cloud-enablement": {
+      "registry": "https://npm-registry.whitewater.ibm.com",
+      "scope": "@arf",
+      "version": "latest"
+    },
+    "generator-starterkit-content-downloader": {
       "registry": "https://npm-registry.whitewater.ibm.com",
       "scope": "@arf",
       "version": "latest"
