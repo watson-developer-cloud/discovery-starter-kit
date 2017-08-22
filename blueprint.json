@@ -1,5 +1,5 @@
 {
-  "name": "discovery-starter-kit",
+  "name": "Watson Knowledge Base Search",
   "description": "Explore the features of passage search, relevancy training, enrichment filtering, and more Discovery features centered around a knowledge base dataset",
   "thumbnailURL": "blueprint/thumbnail.svg",
   "appIconURL": "blueprint/appicon.svg",
@@ -11,17 +11,11 @@
   ],
   "demoURL": "https://knowledge-base-search.mybluemix.net",
   "generators": {
-    "node": [
-      "generator-starterkit-content-downloader",
+    "python": [
       "generator-cloud-enablement"
     ]
   },
   "generatorOptions": {
-    "generator-starterkit-content-downloader": {
-      "registry": "https://npm-registry.whitewater.ibm.com",
-      "scope": "@arf",
-      "version": "latest"
-    },
     "generator-cloud-enablement": {
       "registry": "https://npm-registry.whitewater.ibm.com",
       "scope": "@arf",
@@ -37,5 +31,5 @@
   "servicePlans": {
     "discovery": "lite"
   },
-  "email": "cloud@us.ibm.com"
+  "email": "apturgeo@us.ibm.com"
 }
