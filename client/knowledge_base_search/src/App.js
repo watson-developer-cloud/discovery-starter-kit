@@ -113,7 +113,6 @@ class App extends Component {
       ? query('enriched', {filter: `id:(${missingDocumentIds.join('|')})`})
           .then((response) => {
             if (response.error) {
-              console.error(response.error);
               this.setState({results_error: response.error});
             }
 

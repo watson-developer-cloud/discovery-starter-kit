@@ -11,7 +11,7 @@ const questions = () => {
   })
   .catch((error) => {
     console.error(error.message);
-    return {error: error.message};
+    return {error: 'We are having trouble retrieving your data due to a network issue. Try checking your custom endpoints or network connections.'};
   })
 };
 
