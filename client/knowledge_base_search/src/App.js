@@ -203,6 +203,21 @@ class App extends Component {
           />
         </Sticky>
         <CSSTransitionGroup
+          transitionName='view_all_overlay'
+          transitionEnterTimeout={230}
+          transitionLeaveTimeout={230}
+        >
+          {
+            this.state.showViewAll &&
+            (
+              <div
+                className='view_all_overlay--div'
+                onClick={this.toggleViewAll}
+              />
+            )
+          }
+        </CSSTransitionGroup>
+        <CSSTransitionGroup
           transitionName='view_all'
           transitionEnterTimeout={230}
           transitionLeaveTimeout={230}

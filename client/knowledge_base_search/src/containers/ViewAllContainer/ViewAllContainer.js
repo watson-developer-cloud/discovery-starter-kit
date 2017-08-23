@@ -69,9 +69,14 @@ class ViewAllContainer extends Component {
     } = this.props;
 
     return (
-      <div className='view_all_container--div'>
+      <div
+        className='view_all_container--div'
+        role='dialog'
+        aria-labelledby='view_all_title'
+        aria-describedby='view_all_description'
+      >
         <div className='view_all_questions_header--div'>
-          <h3>Available questions</h3>
+          <h3 id='view_all_title'>Available questions</h3>
           <button
             type='button'
             className='close_view_all--button'
@@ -81,7 +86,7 @@ class ViewAllContainer extends Component {
             <Icon type='close' />
           </button>
         </div>
-        <h5 className='view_all_questions_description--h5'>
+        <h5 id='view_all_description' className='view_all_questions_description--h5'>
           These are a list of available questions we have prepared
           for you. Click one below to see how Watson delivers
           meaningful results with Passage Search.

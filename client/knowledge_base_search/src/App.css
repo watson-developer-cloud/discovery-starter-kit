@@ -160,6 +160,34 @@ a:visited {
   transform: translateX(30vw);
 }
 
+.view_all_overlay--div.view_all_overlay-enter {
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 230ms;
+}
+
+.view_all_overlay-enter.view_all_overlay-enter-active {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.view_all_overlay-leave {
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 230ms;
+}
+
+.view_all_overlay-leave.view_all_overlay-leave-active {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.view_all_overlay--div {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
 .results_row--section {
   background-color: #f9f9f9;
 }
