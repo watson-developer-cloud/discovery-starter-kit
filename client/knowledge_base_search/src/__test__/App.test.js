@@ -78,6 +78,16 @@ describe('<App />', () => {
       expect(viewAllContainer.props().isFetchingResults).toBe(false);
       expect(viewAllContainer.props().presetQueries).toEqual([]);
     });
+
+    describe('and then the overlay is clicked', () => {
+      beforeEach(() => {
+        wrapper.find('.view_all_overlay--div').simulate('click');
+      });
+
+      it('hides the view all container', () => {
+        expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
+      });
+    });
   });
 
   describe('when question retrieval is successful', () => {

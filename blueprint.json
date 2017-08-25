@@ -1,0 +1,41 @@
+{
+  "name": "discovery-starter-kit",
+  "description": "Explore the features of passage search, relevancy training, enrichment filtering, and more Discovery features centered around a knowledge base dataset",
+  "thumbnailURL": "blueprint/thumbnail.svg",
+  "appIconURL": "blueprint/appicon.svg",
+  "previewURLs": [],
+  "type": "WEB",
+  "tags": [
+    "developer",
+    "watson"
+  ],
+  "demoURL": "https://knowledge-base-search.mybluemix.net",
+  "generators": {
+    "node": [
+      "generator-starterkit-content-downloader",
+      "generator-cloud-enablement"
+    ]
+  },
+  "generatorOptions": {
+    "generator-starterkit-content-downloader": {
+      "registry": "https://npm-registry.whitewater.ibm.com",
+      "scope": "@arf",
+      "version": "latest"
+    },
+    "generator-cloud-enablement": {
+      "registry": "https://npm-registry.whitewater.ibm.com",
+      "scope": "@arf",
+      "version": "latest"
+    }
+  },
+  "requiredCapabilities": [
+    "discovery"
+  ],
+  "requiredCapabilitiesURLs": {
+    "discovery": "https://console.bluemix.net/catalog/services/discovery"
+  },
+  "servicePlans": {
+    "discovery": "lite"
+  },
+  "email": "cloud@us.ibm.com"
+}

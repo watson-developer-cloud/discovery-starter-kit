@@ -113,7 +113,6 @@ class App extends Component {
       ? query('enriched', {filter: `id:(${missingDocumentIds.join('|')})`})
           .then((response) => {
             if (response.error) {
-              console.error(response.error);
               this.setState({results_error: response.error});
             }
 
@@ -203,6 +202,21 @@ class App extends Component {
             searchInput={this.state.search_input}
           />
         </Sticky>
+        <CSSTransitionGroup
+          transitionName='view_all_overlay'
+          transitionEnterTimeout={230}
+          transitionLeaveTimeout={230}
+        >
+          {
+            this.state.showViewAll &&
+            (
+              <div
+                className='view_all_overlay--div'
+                onClick={this.toggleViewAll}
+              />
+            )
+          }
+        </CSSTransitionGroup>
         <CSSTransitionGroup
           transitionName='view_all'
           transitionEnterTimeout={230}
