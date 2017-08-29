@@ -10,7 +10,6 @@ import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
 import links from './utils/links';
 import query from './actions/query';
 import questions from './actions/questions';
-import 'watson-react-components/dist/css/watson-react-components.css';
 import './App.css';
 
 class App extends Component {

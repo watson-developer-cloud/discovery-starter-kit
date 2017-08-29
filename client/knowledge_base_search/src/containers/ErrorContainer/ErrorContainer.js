@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { scroller, Element } from 'react-scroll';
 import { Alert } from 'watson-react-components';
+import './styles.css';
 
 class ErrorContainer extends Component {
   componentDidMount() {

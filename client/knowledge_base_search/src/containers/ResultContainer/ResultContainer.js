@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class ResultContainer extends Component {

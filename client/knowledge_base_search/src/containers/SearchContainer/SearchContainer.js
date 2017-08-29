@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Icon, TextInput, Tabs, Pane } from 'watson-react-components';
 import ErrorContainer from '../ErrorContainer/ErrorContainer';
 import QuestionBarContainer from '../QuestionBarContainer/QuestionBarContainer';
-import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class SearchContainer extends Component {

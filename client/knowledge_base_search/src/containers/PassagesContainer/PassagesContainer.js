@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
 import PassageComparison from './PassageComparison';
-import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class PassagesContainer extends Component {

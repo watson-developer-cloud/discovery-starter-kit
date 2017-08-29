@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Icon, TextInput } from 'watson-react-components';
-import 'watson-react-components/dist/css/watson-react-components.css';
 import './styles.css';
 
 class ViewAllContainer extends Component {
