@@ -194,8 +194,8 @@ class App extends Component {
     let newOffset = offset;
 
     if (questionIndex < beginQuestions || questionIndex > endQuestions) {
-      newPresetQueries.splice(questionIndex, 1);
-      newPresetQueries.unshift({question: query});
+      const moveQuestions = newPresetQueries.splice(questionIndex, 1);
+      newPresetQueries.unshift(moveQuestions[0]);
       newOffset = 0;
     }
 

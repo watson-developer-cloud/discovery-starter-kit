@@ -30,6 +30,27 @@ describe('<ViewAllContainer />', () => {
     });
   });
 
+  describe('when there is a presetQuery with a training query', () => {
+    const propsWithTrainingQuery = Object.assign({}, props, {
+      presetQueries: [
+        {
+          question: 'question',
+          is_training_query: true
+        }
+      ]
+    })
+
+    beforeEach(() => {
+      wrapper = shallow(<ViewAllContainer {...propsWithTrainingQuery} />);
+    });
+
+    it('shows an annotation when it is a training query', () => {
+      const buttons = wrapper.find('.view_all_question--button');
+
+      expect(buttons.at(0).find('.view_all--train')).toHaveLength(1);
+    });
+  });
+
   describe('when there are presetQueries', () => {
     const { questionsPerPage } = ViewAllContainer.defaultProps;
     const questionButtonSelector = '.view_all_question--button';

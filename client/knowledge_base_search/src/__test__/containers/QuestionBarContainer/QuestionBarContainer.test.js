@@ -11,7 +11,8 @@ describe('<QuestionBarContainer />', () => {
   const props = {
     presetQueries: [
       {
-        question: 'one'
+        question: 'one',
+        is_training_query: true
       },
       {
         question: 'two'
@@ -44,16 +45,24 @@ describe('<QuestionBarContainer />', () => {
   it('shows 4 preset queries and a right arrow button', () => {
     wrapper = shallow(<QuestionBarContainer {...props} />);
 
-    const buttons = wrapper.find('.question_bar_button--button');
+    const buttons = wrapper.find('.question_bar--button');
 
     expect(buttons)
       .toHaveLength(QuestionBarContainer.defaultProps.questionsShown);
   });
 
+  it('shows an annotation when it is a training query', () => {
+    wrapper = shallow(<QuestionBarContainer {...props} />);
+
+    const buttons = wrapper.find('.question_bar--button');
+
+    expect(buttons.at(0).find('.question_bar--train')).toHaveLength(1);
+  });
+
   describe('when the first preset query button is clicked', () => {
     beforeEach(() => {
       wrapper = shallow(<QuestionBarContainer {...props} />);
-      wrapper.find('.question_bar_button--button').at(0).simulate('click');
+      wrapper.find('.question_bar--button').at(0).simulate('click');
     });
 
     it('calls onSubmit with the first preset query', () => {
@@ -72,7 +81,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('adds the "active" class to the appropriate question', () => {
-      const buttons = wrapper.find('.question_bar_button--button').nodes;
+      const buttons = wrapper.find('.question_bar--button').nodes;
       expect(buttons[index].props.className).toContain('active');
 
       buttons.filter((button, i) => {
@@ -86,7 +95,7 @@ describe('<QuestionBarContainer />', () => {
   describe('when right arrow is clicked', () => {
     beforeEach(() => {
       wrapper = shallow(<QuestionBarContainer {...props} />);
-      wrapper.find('.question_bar_arrow--button.right').simulate('click');
+      wrapper.find('.question_bar--arrow_button--right').simulate('click');
     });
 
     it('calls onOffsetUpdate', () => {
@@ -104,15 +113,15 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('shows the left arrow button only', () => {
-      const leftArrow = wrapper.find('.question_bar_arrow--button.left');
-      const rightArrow = wrapper.find('.question_bar_arrow--button.right');
+      const leftArrow = wrapper.find('.question_bar--arrow_button--left');
+      const rightArrow = wrapper.find('.question_bar--arrow_button--right');
 
       expect(leftArrow).toHaveLength(1);
       expect(rightArrow).toHaveLength(0);
     });
 
     it('shows the next questions', () => {
-      const questionButtons = wrapper.find('.question_bar_button--button');
+      const questionButtons = wrapper.find('.question_bar--button');
 
       expect(questionButtons).toHaveLength(2);
       expect(questionButtons.at(0).text()).toEqual('five');
@@ -121,7 +130,7 @@ describe('<QuestionBarContainer />', () => {
 
     describe('when left arrow is clicked', () => {
       beforeEach(() => {
-        wrapper.find('.question_bar_arrow--button.left').simulate('click');
+        wrapper.find('.question_bar--arrow_button--left').simulate('click');
       });
 
       it('calls onOffsetUpdate', () => {
@@ -140,7 +149,7 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('disables all the query buttons', () => {
-      wrapper.find('.question_bar_button--button').nodes.forEach((button) => {
+      wrapper.find('.question_bar--button').nodes.forEach((button) => {
         expect(button.props.disabled).toBe(true);
       });
     });
