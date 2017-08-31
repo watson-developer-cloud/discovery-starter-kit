@@ -49,7 +49,8 @@ class TestServer(unittest.TestCase):
         query_opts = {'query': 'my_query'}
         expected_query_opts = {
           'query': 'my_query',
-          'return': 'text'
+          'return': 'text',
+          'count': 100
         }
         mock_response = json.loads(
           """

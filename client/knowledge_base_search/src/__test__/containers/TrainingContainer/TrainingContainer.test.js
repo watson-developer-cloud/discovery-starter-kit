@@ -12,15 +12,19 @@ describe('<TrainingContainer />', () => {
       matching_results: 4,
       results: [
         {
+          id: '1',
           text: 'regular_1'
         },
         {
+          id: '2',
           text: 'regular_2'
         },
         {
+          id: '3',
           text: 'regular_3'
         },
         {
+          id: '4',
           text: 'regular_4'
         },
       ]
@@ -29,15 +33,19 @@ describe('<TrainingContainer />', () => {
       matching_results: 4,
       results: [
         {
+          id: '2',
           text: 'trained_1'
         },
         {
+          id: '1',
           text: 'trained_2'
         },
         {
+          id: '5',
           text: 'trained_3'
         },
         {
+          id: '3',
           text: 'trained_4'
         }
       ]
@@ -54,6 +62,24 @@ describe('<TrainingContainer />', () => {
 
     expect(wrapper.find(TrainingComparison)).toHaveLength(3);
     expect(wrapper.find(ShowMoreResults)).toHaveLength(1);
+  });
+
+  describe('original rank', () => {
+    beforeEach(() => {
+      wrapper = shallow(<TrainingContainer {...props} />);
+    });
+
+    it('passes expected original rank for the first trained result', () => {
+      const firstResult = wrapper.find(TrainingComparison).at(0).props().trainedResult;
+
+      expect(firstResult.originalRank).toEqual(2);
+    });
+
+    it('passes expected original rank for the third trained result', () => {
+      const firstResult = wrapper.find(TrainingComparison).at(2).props().trainedResult;
+
+      expect(firstResult.originalRank).toEqual(0);
+    });
   });
 
   describe('when <ShowMoreResults /> is clicked', () => {

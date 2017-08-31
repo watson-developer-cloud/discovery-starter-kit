@@ -21,11 +21,25 @@ class TrainingContainer extends Component {
     });
   }
 
-  hasMoreResults() {
+  getTrainedResultWithOriginalRank(rank) {
     const { regularResults, trainedResults } = this.props;
-    const totalResultsShown = this.state.totalResultsShown;
+    const trainedResult = trainedResults.results[rank];
+    const trainedResultId = trainedResult.id;
+    const originalIndex = regularResults.results.findIndex((result) => {
+      return result.id === trainedResultId;
+    });
 
-    return regularResults.results.length > totalResultsShown ||
+    return Object.assign({}, trainedResult, {
+      originalRank: originalIndex + 1
+    });
+  }
+
+  hasMoreResults() {
+    const { regularResults, trainedResults, maxRegularResults } = this.props;
+    const totalResultsShown = this.state.totalResultsShown;
+    const totalRegularResults = Math.min(regularResults.results.length, maxRegularResults);
+
+    return totalRegularResults > totalResultsShown ||
            trainedResults.results.length > totalResultsShown;
   }
 
@@ -34,8 +48,8 @@ class TrainingContainer extends Component {
   }
 
   render() {
-    const { regularResults, trainedResults } = this.props;
-    const maxResults = Math.max(regularResults.results.length, trainedResults.results.length);
+    const { regularResults, trainedResults, maxRegularResults } = this.props;
+    const maxResults = Math.max(maxRegularResults, trainedResults.results.length);
 
     return (
       <Element name="scroll_to_results">
@@ -54,7 +68,7 @@ class TrainingContainer extends Component {
                             key={`training_comparison_${rank}`}
                             index={rank}
                             regularResult={regularResults.results[rank]}
-                            trainedResult={trainedResults.results[rank]}
+                            trainedResult={this.getTrainedResultWithOriginalRank(rank)}
                           />
                         );
                       })
@@ -85,7 +99,12 @@ TrainingContainer.PropTypes = {
       text: string.isRequired
     })).isRequired
   }).isRequired,
-  searchContainerHeight: number.isRequired
+  searchContainerHeight: number.isRequired,
+  maxRegularResults: number.isRequired
+}
+
+TrainingContainer.defaultProps = {
+  maxRegularResults: 10
 }
 
 export default TrainingContainer;

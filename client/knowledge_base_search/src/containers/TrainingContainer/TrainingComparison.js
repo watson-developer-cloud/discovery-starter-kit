@@ -5,6 +5,16 @@ import replaceNewlines from '../../utils/replaceNewlines';
 import './styles.css';
 
 class TrainingComparison extends Component {
+  getRankDisplay() {
+    const { trainedResult: { originalRank } } = this.props;
+
+    if (originalRank === 0) {
+      return `Untrained Rank: > 100`;
+    } else {
+      return `Untrained Rank: ${originalRank}`;
+    }
+  }
+
   render() {
     const { regularResult, trainedResult, index } = this.props;
     const isFirst = index === 0;
@@ -28,7 +38,11 @@ class TrainingComparison extends Component {
                 <ResultContainer
                   result_text={replaceNewlines(trainedResult.text)}
                   result_rank={index + 1}
-                />
+                >
+                  <div className="training_comparison--content_rank">
+                    { this.getRankDisplay() }
+                  </div>
+                </ResultContainer>
               )
             }
           </div>
@@ -43,7 +57,8 @@ TrainingComparison.PropTypes = {
     text: string.isRequired
   }),
   trainedResult: shape({
-    text: string.isRequired
+    text: string.isRequired,
+    originalRank: number.isRequired
   }),
   index: number.isRequired
 }

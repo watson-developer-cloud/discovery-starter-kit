@@ -1,3 +1,5 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+
 .training_comparison {
   &:first-child {
     padding-top: 1.5rem;
@@ -14,6 +16,11 @@
       width: 50%;
       border-left: 1px solid #e0e0e0;
       padding-left: 1rem;
+    }
+
+    &_rank {
+      text-align: right;
+      color: color('gray', 40);
     }
   }
 }
