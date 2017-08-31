@@ -84,7 +84,7 @@ stages:
         echo "The service instance created is called ${DISCOVERY_SERVICE_NAME}"
         echo "Then create 2 collections named:"
         echo "1. ${DISCOVERY_REGULAR_COLLECTION_NAME}"
-        echo "2. ${DISCOVERY_ENRICHED_COLLECTION_NAME}"
+        echo "2. ${DISCOVERY_TRAINED_COLLECTION_NAME}"
         echo "Then enqueue documents using the script provided in the github repo"
         exit 1
       fi
