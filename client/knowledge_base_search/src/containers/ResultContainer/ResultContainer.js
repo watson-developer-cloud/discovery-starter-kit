@@ -6,11 +6,13 @@ class ResultContainer extends Component {
   render() {
     const {
       result_text,
-      result_rank
+      result_rank,
+      children
     } = this.props;
 
     return (
       <div className={'result_container--div' + (result_text ? '' : ' result_container_empty--div')}>
+        { children }
         { result_text
           ? (
               <div className='result_container_items--div'>

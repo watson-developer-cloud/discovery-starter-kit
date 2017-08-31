@@ -114,6 +114,10 @@ def query(collection_type):
     if collection_type == 'passages':
         query_options['passages'] = True
 
+    # retrieve more results for regular so that we can compare original rank
+    if collection_type == 'regular':
+        query_options['count'] = 100
+
     return jsonify(
               discovery.query(
                 environment_id=constants['environment_id'],
