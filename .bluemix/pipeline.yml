@@ -44,11 +44,14 @@ stages:
   - name: NLU_SERVICE_NAME
     value: Discovery-Demo-NLU
     type: text
+  - name: DISCOVERY_PASSAGES_COLLECTION_NAME
+    value: knowledge_base_regular
+    type: text
   - name: DISCOVERY_REGULAR_COLLECTION_NAME
     value: knowledge_base_regular
     type: text
-  - name: DISCOVERY_ENRICHED_COLLECTION_NAME
-    value: knowledge_base_enriched
+  - name: DISCOVERY_TRAINED_COLLECTION_NAME
+    value: knowledge_base_trained
     type: text
   - name: TEMP_APP_NAME
     value: ''
@@ -108,8 +111,9 @@ stages:
        - ${DISCOVERY_SERVICE_NAME}
        - ${NLU_SERVICE_NAME}
       env:
+        DISCOVERY_PASSAGES_COLLECTION_NAME: ${DISCOVERY_PASSAGES_COLLECTION_NAME}
         DISCOVERY_REGULAR_COLLECTION_NAME: ${DISCOVERY_REGULAR_COLLECTION_NAME}
-        DISCOVERY_ENRICHED_COLLECTION_NAME: ${DISCOVERY_ENRICHED_COLLECTION_NAME}
+        DISCOVERY_TRAINED_COLLECTION_NAME: ${DISCOVERY_TRAINED_COLLECTION_NAME}
 
       EOL
 
@@ -136,7 +140,7 @@ stages:
 
       echo "Testing endpoint: ${ENDPOINT} with POST"
 
-      HTTP_RESPONSE=$(curl -H "Content-Type:application/json" -X POST -k -sL -d '{"query": ""}' -D- -o/dev/null "${ENDPOINT}")
+      HTTP_RESPONSE=$(curl -H "Content-Type:application/json" -X POST -k -sL -d '{"natural_language_query": ""}' -D- -o/dev/null "${ENDPOINT}")
 
       echo "$HTTP_RESPONSE"
 
