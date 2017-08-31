@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { string, number, bool, func, arrayOf, shape } from 'prop-types';
+import classNames from 'classnames';
 import Isvg from 'react-inlinesvg';
 import arrow_back from '../../images/arrow_back_24.svg';
 import arrow_forward from '../../images/arrow_forward_24.svg';
@@ -56,16 +57,15 @@ class QuestionBarContainer extends Component {
             return (
               <button
                 key={`question_button_${i}`}
-                className={'question_bar_button--button' +
-                  ( query === currentQuery
-                      ? ' active'
-                      : ''
-                  )
+                className={
+                  classNames('question_bar_button--button', {
+                    active: query.question === currentQuery
+                  })
                 }
                 type='button'
                 disabled={isFetchingResults}
-                onClick={() => { onQuestionClick(query) }}>
-                  {query}
+                onClick={() => { onQuestionClick(query.question) }}>
+                  { query.question }
               </button>
             )
           })
@@ -87,13 +87,15 @@ class QuestionBarContainer extends Component {
 }
 
 QuestionBarContainer.PropTypes = {
-  presetQueries: PropTypes.arrayOf(PropTypes.string).isRequired,
-  currentQuery: PropTypes.string.isRequired,
-  isFetchingResults: PropTypes.bool.isRequired,
-  questionsShown: PropTypes.number.isRequired,
-  onQuestionClick: PropTypes.func.isRequired,
-  onOffsetUpdate: PropTypes.func.isRequired,
-  offset: PropTypes.number.isRequired
+  presetQueries: arrayOf(shape({
+    question: string.isRequired
+  })).isRequired,
+  currentQuery: string.isRequired,
+  isFetchingResults: bool.isRequired,
+  questionsShown: number.isRequired,
+  onQuestionClick: func.isRequired,
+  onOffsetUpdate: func.isRequired,
+  offset: number.isRequired
 }
 
 QuestionBarContainer.defaultProps = {

@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import SearchContainer from '../../../containers/SearchContainer/SearchContainer';
+import FeatureSelect from '../../../containers/SearchContainer/FeatureSelect';
+import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 import ErrorContainer from '../../../containers/ErrorContainer/ErrorContainer';
-import { TextInput, Icon } from 'watson-react-components';
+import { TextInput } from 'watson-react-components';
 import { shallow } from 'enzyme';
 
 describe('<SearchContainer />', () => {
@@ -12,17 +14,20 @@ describe('<SearchContainer />', () => {
   const onOffsetUpdateMock = jest.fn();
   const onQuestionClickMock = jest.fn();
   const onViewAllClickMock = jest.fn();
+  const onFeatureSelectMock = jest.fn();
   const props = {
     errorMessage: null,
     isFetchingQuestions: true,
     isFetchingResults: false,
     offset: 0,
+    onFeatureSelect: onFeatureSelectMock,
     onOffsetUpdate: onOffsetUpdateMock,
     onQuestionClick: onQuestionClickMock,
     onSubmit: onSubmitMock,
     onViewAllClick: onViewAllClickMock,
     presetQueries: [],
-    searchInput: ''
+    searchInput: '',
+    selectedFeature: FeatureSelect.featureTypes.PASSAGES.value
   };
 
   it('renders without crashing', () => {
@@ -109,9 +114,9 @@ describe('<SearchContainer />', () => {
         expect(wrapper.find('.view_all--button').props().disabled).toBe(true);
       });
 
-      describe('and the Custom Query tab is selected', () => {
+      describe('and "Custom questions" type is selected', () => {
         beforeEach(() => {
-          wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
+          selectQuestionType(wrapper, QuestionTypeSelect.questionTypes.CUSTOM);
         });
 
         it('disables all the inputs', () => {
@@ -122,10 +127,10 @@ describe('<SearchContainer />', () => {
     });
   });
 
-  describe('when the Custom Query tab is pressed', () => {
+  describe('when "Custom questions" type is selected', () => {
     beforeEach(() => {
       wrapper = shallow(<SearchContainer {...props} />);
-      wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
+      selectQuestionType(wrapper, QuestionTypeSelect.questionTypes.CUSTOM);
     });
 
     it('has the text search, icon, and submit button displayed', () => {
@@ -148,4 +153,12 @@ describe('<SearchContainer />', () => {
       expect(onSubmitMock).toBeCalledWith(text);
     });
   });
+
+  function selectQuestionType(wrapper, type) {
+    wrapper.instance().handleOnQuestionTypeSelect({
+      target: {
+        value: type.value
+      }
+    });
+  }
 });

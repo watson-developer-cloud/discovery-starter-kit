@@ -34,7 +34,7 @@ describe('<ViewAllContainer />', () => {
     const { questionsPerPage } = ViewAllContainer.defaultProps;
     const questionButtonSelector = '.view_all_question--button';
     const queries = [...Array(questionsPerPage + 1)].map((el, i) => {
-      return `query_${i}`;
+      return {question: `query_${i}`};
     });
 
     const props_with_queries = Object.assign({}, props, {
@@ -79,7 +79,7 @@ describe('<ViewAllContainer />', () => {
       });
 
       it('calls onQuestionClick with the first query', () => {
-        expect(onQuestionClickMock).toBeCalledWith(queries[0]);
+        expect(onQuestionClickMock).toBeCalledWith(queries[0].question);
       });
     });
 

@@ -1,4 +1,6 @@
 @import 'watson-ui-components/dist/lib/core/_index';
+@import 'watson-ui-components/dist/lib/base/input/_input';
+@import 'watson-ui-components/dist/lib/base/select/_select';
 @import 'watson-ui-components/dist/lib/components/tab-panels/_tab-panels';
 @import 'watson-react-components/dist/scss/components/text-input/_text-input';
 
@@ -13,40 +15,6 @@
     background-color: color('teal', 40);
     padding: 0;
     box-shadow: 0 7px 9px -6px rgba(0,0,0,0.7);
-  }
-
-  .tab-panels {
-    background-color: transparent;
-    border: none;
-
-    &--tab-content {
-      background: inherit;
-      padding: get('rhythm') 0 0 0;
-    }
-
-    &--tab {
-      &.base--a {
-        color: color('teal', 10);
-        font-weight: get('weight light');
-        margin-right: get('rhythm');
-        border-bottom-width: 0.2rem;
-        padding: 0.5rem 0rem;
-
-        &:hover {
-          border-bottom-color: transparent;
-        }
-
-        &:focus {
-          color: color('white', 10);
-          border-bottom-color: color('white', 10);
-        }
-      }
-
-      &.active {
-        color: color('white', 10);
-        border-bottom-color: color('white', 10);
-      }
-    }
   }
 
   .view_all_button--div {
@@ -136,10 +104,6 @@
   text-align: right;
 }
 
-.container-large {
-  padding-top: 1.7rem;
-}
-
 .search_header-enter,
 .search_button-enter {
   max-height: 0;
@@ -166,4 +130,57 @@
 
 .sticky-inner-wrapper {
   z-index: 1;
+}
+
+.question_type {
+  &--select {
+    border-color: color('white', 10);
+    background-color: color('teal', 40);
+    color: color('white', 10);
+    background-image: url(triangle(color('white', 10), $size: 1.5));
+    padding-right: 1.7rem;
+
+    &:focus {
+      outline-color: color('white', 10);
+    }
+  }
+}
+
+.feature_select {
+  &--list {
+    display: flex;
+    margin-bottom: get('rhythm');
+    border-bottom: 1px solid color('white', 10);
+  }
+
+  &--list_item {
+    margin-right: 1rem;
+
+    &::before {
+      content: '';
+      padding: 0;
+    }
+  }
+
+  &--list_button {
+    border: none;
+    border-radius: 0;
+    border-color: color('white', 10);
+    color: color('teal', 10);
+    font-weight: get('weight light');
+    padding: 0 0 0.2rem 0;
+    margin-right: get('rhythm');
+    line-height: 2.5rem;
+    transition: none;
+
+    &--active {
+      border-bottom: 0.2rem solid color('white', 10);
+      color: color('white', 10);
+    }
+
+    &:active, &:focus, &:hover {
+      color: color('white', 10);
+      border-bottom-color: currentColor;
+    }
+  }
 }

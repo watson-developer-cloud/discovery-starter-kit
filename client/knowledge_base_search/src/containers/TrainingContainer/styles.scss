@@ -1,0 +1,19 @@
+.training_comparison {
+  &:first-child {
+    padding-top: 1.5rem;
+  }
+  &--content {
+    display: flex;
+
+    &_left {
+      width: 50%;
+      padding-right: 1rem;
+    }
+
+    &_right {
+      width: 50%;
+      border-left: 1px solid #e0e0e0;
+      padding-left: 1rem;
+    }
+  }
+}

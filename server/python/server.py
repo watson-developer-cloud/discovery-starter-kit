@@ -57,21 +57,30 @@ nlu = NaturalLanguageUnderstandingV1(
         version="2017-02-27"
       )
 
-# retrieve the following:
-# {
-#   environment_id,
-#   collection_id_regular,
-#   collection_id_enriched
-# }
+"""
+retrieve the following:
+{
+  environment_id: env_id,
+  collection_id: {
+    passages: passages_id,
+    regular: regular_id,
+    trained: trained_id
+  }
+}
+"""
 constants = get_constants(
               discovery,
+              passages_name=os.getenv(
+                            'DISCOVERY_PASSAGES_COLLECTION_NAME',
+                            'knowledge_base_regular'
+                          ),
               regular_name=os.getenv(
                             'DISCOVERY_REGULAR_COLLECTION_NAME',
                             'knowledge_base_regular'
                           ),
-              enriched_name=os.getenv(
-                            'DISCOVERY_ENRICHED_COLLECTION_NAME',
-                            'knowledge_base_enriched'
+              trained_name=os.getenv(
+                            'DISCOVERY_TRAINED_COLLECTION_NAME',
+                            'knowledge_base_trained'
                           )
             )
 try:
@@ -79,7 +88,16 @@ try:
 except ValueError:
     sys.exit('DISCOVERY_QUESTION_COUNT not an integer, terminating...')
 
-question_cache = get_questions(discovery, constants, total_questions)
+passages_question_cache = get_questions(
+                            discovery=discovery,
+                            constants=constants,
+                            question_count=total_questions,
+                            feature_type='passages')
+trained_question_cache = get_questions(
+                            discovery=discovery,
+                            constants=constants,
+                            question_count=total_questions,
+                            feature_type='trained')
 
 
 @app.route('/')
@@ -90,26 +108,27 @@ def index():
 
 @app.route('/api/query/<collection_type>', methods=['POST'])
 def query(collection_type):
-    collection_id_key = 'collection_id_regular'
     query_options = json.loads(request.data)
     query_options['return'] = 'text'
 
-    if collection_type == 'enriched':
-        collection_id_key = 'collection_id_enriched'
+    if collection_type == 'passages':
         query_options['passages'] = True
 
     return jsonify(
               discovery.query(
                 environment_id=constants['environment_id'],
-                collection_id=constants[collection_id_key],
+                collection_id=constants['collection_id'][collection_type],
                 query_options=query_options
               )
             )
 
 
-@app.route('/api/questions', methods=['GET'])
-def questions():
-    return jsonify(question_cache)
+@app.route('/api/questions/<feature_type>', methods=['GET'])
+def questions(feature_type):
+    if feature_type == 'passages':
+        return jsonify(passages_question_cache)
+    else:
+        return jsonify(trained_question_cache)
 
 
 @app.errorhandler(429)

@@ -3,8 +3,10 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import Sticky from 'react-stickynode';
 import { Header, Jumbotron, Footer, Icon } from 'watson-react-components';
 import SearchContainer from './containers/SearchContainer/SearchContainer';
+import FeatureSelect from './containers/SearchContainer/FeatureSelect';
 import QuestionBarContainer from './containers/QuestionBarContainer/QuestionBarContainer';
 import PassagesContainer from './containers/PassagesContainer/PassagesContainer';
+import TrainingContainer from './containers/TrainingContainer/TrainingContainer';
 import ErrorContainer from './containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from './containers/ViewAllContainer/ViewAllContainer';
 import links from './utils/links';
@@ -19,19 +21,71 @@ class App extends Component {
       fetchingQuestions: true,
       fetchingResults: false,
       resultsFetched: false,
-      enriched_results: [],
+      results: [],
+      trainedResults: [],
       search_input: '',
-      results_error: null,
+      resultsError: null,
       questionsError: null,
       searchContainerHeight: 0,
       showViewAll: false,
       presetQueries: [],
-      offset: 0
+      offset: 0,
+      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value
     }
   }
 
   componentDidMount() {
-    questions().then((response) => {
+    this.retrieveQuestions(this.state.selectedFeature);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const searchContainer = this.searchContainer;
+    if (searchContainer) {
+      nextState.searchContainerHeight = searchContainer
+        .searchSection.getBoundingClientRect().height
+    }
+  }
+
+  retrieveMissingDocuments(results) {
+    const uniqueDocumentIds = results.passages.reduce(
+      (uniqueVals, passage) => {
+        if (uniqueVals.indexOf(passage.document_id) === -1) {
+          uniqueVals.push(passage.document_id);
+        }
+        return uniqueVals;
+      }, []);
+
+    let missingDocumentIds = [];
+    uniqueDocumentIds.forEach((document_id) => {
+      let resultDocument = results.results.find((result) => {
+        return result.id === document_id;
+      });
+
+      if (!resultDocument) {
+        missingDocumentIds.push(document_id);
+      }
+    });
+
+    return missingDocumentIds.length > 0
+      ? query(FeatureSelect.featureTypes.PASSAGES.value, {filter: `id:(${missingDocumentIds.join('|')})`})
+          .then((response) => {
+            if (response.error) {
+              this.setState({resultsError: response.error});
+            }
+
+            if (response.results) {
+              let newResults = results.results.concat(response.results);
+              results.results = newResults;
+            }
+
+            return results;
+          })
+      : Promise.resolve(results);
+  }
+
+  retrieveQuestions(selectedFeature) {
+    this.setState({ fetchingQuestions: true });
+    questions(selectedFeature).then((response) => {
       if (response.error) {
         this.setState({
           questionsError: response.error,
@@ -46,85 +100,6 @@ class App extends Component {
     });
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    const searchContainer = this.searchContainer;
-    if (searchContainer) {
-      nextState.searchContainerHeight = searchContainer
-        .searchSection.getBoundingClientRect().height
-    }
-  }
-
-  handleSearch = (input) => {
-    this.setState({
-      fetchingResults: true,
-      search_input: input,
-      results_error: null
-    });
-
-    query('enriched', {natural_language_query: input})
-      .then((enriched_response) => {
-        if (enriched_response.passages) {
-          return this.retrieveMissingPassages(enriched_response)
-            .then((response) => {
-              return response;
-            });
-        } else {
-          return Promise.resolve(enriched_response);
-        }
-      }).then((enriched_response_with_passages) => {
-        if (enriched_response_with_passages.error) {
-          this.setState({
-            fetchingResults: false,
-            resultsFetched: true,
-            results_error: enriched_response_with_passages.error
-          });
-        } else {
-          this.setState({
-            fetchingResults: false,
-            resultsFetched: true,
-            enriched_results: enriched_response_with_passages
-          });
-        }
-      });
-  }
-
-  retrieveMissingPassages(enriched_results) {
-    const uniqueDocumentIds = enriched_results.passages.reduce(
-      (uniqueVals, passage) => {
-        if (uniqueVals.indexOf(passage.document_id) === -1) {
-          uniqueVals.push(passage.document_id);
-        }
-        return uniqueVals;
-      }, []);
-
-    let missingDocumentIds = [];
-    uniqueDocumentIds.forEach((document_id) => {
-      let enriched_result = enriched_results.results.find((result) => {
-        return result.id === document_id;
-      });
-
-      if (!enriched_result) {
-        missingDocumentIds.push(document_id);
-      }
-    });
-
-    return missingDocumentIds.length > 0
-      ? query('enriched', {filter: `id:(${missingDocumentIds.join('|')})`})
-          .then((response) => {
-            if (response.error) {
-              this.setState({results_error: response.error});
-            }
-
-            if (response.results) {
-              let newResults = enriched_results.results.concat(response.results);
-              enriched_results.results = newResults;
-            }
-
-            return enriched_results;
-          })
-      : Promise.resolve(enriched_results);
-  }
-
   shuffleQuestions(questions) {
     const allQuestions = questions.slice(0);
     let shuffledQueries = [];
@@ -137,9 +112,82 @@ class App extends Component {
     return shuffledQueries;
   }
 
+  handleSearch = (input) => {
+    const selectedFeature = this.state.selectedFeature;
+    this.setState({
+      fetchingResults: true,
+      search_input: input,
+      resultsError: null,
+      results: [],
+      trainedResults: []
+    });
+
+    if (selectedFeature === FeatureSelect.featureTypes.PASSAGES.value) {
+      this.handlePassageSearch(input);
+    } else {
+      this.handleTrainedSearch(input);
+    }
+  }
+
+  handlePassageSearch = (input) => {
+    query(FeatureSelect.featureTypes.PASSAGES.value, { natural_language_query: input })
+      .then((response) => {
+        if (response.passages) {
+          return this.retrieveMissingDocuments(response)
+            .then((response) => {
+              return response;
+            });
+        } else {
+          return Promise.resolve(response);
+        }
+      }).then((responseWithPassages) => {
+        if (responseWithPassages.error) {
+          this.setState({
+            fetchingResults: false,
+            resultsFetched: true,
+            resultsError: responseWithPassages.error
+          });
+        } else {
+          this.setState({
+            fetchingResults: false,
+            resultsFetched: true,
+            results: responseWithPassages
+          });
+        }
+      });
+  }
+
+  handleTrainedSearch = (input) => {
+    Promise.all([
+      query(FeatureSelect.featureTypes.TRAINED.value, { natural_language_query: input }),
+      query('regular', { natural_language_query: input })
+    ]).then((responses) => {
+      const trainedResponse = responses[0];
+      const regularResponse = responses[1];
+      const resultsError = trainedResponse.error || regularResponse.error;
+
+      if (resultsError) {
+        this.setState({
+          fetchingResults: false,
+          resultsFetched: true,
+          resultsError
+        });
+      } else {
+        this.setState({
+          fetchingResults: false,
+          resultsFetched: true,
+          results: regularResponse,
+          trainedResults: trainedResponse
+        });
+      }
+    });
+  }
+
   handleQuestionClick = (query) => {
     const { presetQueries, offset } = this.state;
-    const questionIndex = presetQueries.indexOf(query);
+    const questionIndex = presetQueries.findIndex((presetQuery) => {
+      return presetQuery.question === query;
+    });
     const beginQuestions = offset;
     const endQuestions = offset + QuestionBarContainer.defaultProps.questionsShown - 1;
     let newPresetQueries = presetQueries.slice(0);
@@ -147,7 +195,7 @@ class App extends Component {
 
     if (questionIndex < beginQuestions || questionIndex > endQuestions) {
       newPresetQueries.splice(questionIndex, 1);
-      newPresetQueries.unshift(query);
+      newPresetQueries.unshift({question: query});
       newOffset = 0;
     }
 
@@ -158,6 +206,17 @@ class App extends Component {
       offset: newOffset
     })
     this.handleSearch(query);
+  }
+
+  handleFeatureSelect = (e) => {
+    const selectedFeature = e.target.value;
+    this.setState({
+      results: [],
+      trainedResults: [],
+      resultsFetched: false,
+      selectedFeature
+    });
+    this.retrieveQuestions(selectedFeature);
   }
 
   handleOffsetUpdate = (offset) => {
@@ -193,12 +252,14 @@ class App extends Component {
             isFetchingQuestions={this.state.fetchingQuestions}
             isFetchingResults={this.state.fetchingResults}
             offset={this.state.offset}
+            onFeatureSelect={this.handleFeatureSelect}
             onOffsetUpdate={this.handleOffsetUpdate}
             onQuestionClick={this.handleQuestionClick}
             onSubmit={this.handleSearch}
             onViewAllClick={this.toggleViewAll}
             presetQueries={this.state.presetQueries}
             searchInput={this.state.search_input}
+            selectedFeature={this.state.selectedFeature}
           />
         </Sticky>
         <CSSTransitionGroup
@@ -250,21 +311,29 @@ class App extends Component {
                             </div>
                           )
                         : this.state.resultsFetched
-                          ? this.state.results_error
+                          ? this.state.resultsError
                             ? (
                                 <ErrorContainer
                                   key='error_container'
-                                  errorMessage={this.state.results_error}
+                                  errorMessage={this.state.resultsError}
                                 />
                               )
-                            : (
-                                <PassagesContainer
-                                  key='results_container'
-                                  enriched_results={this.state.enriched_results}
-                                  onSearch={this.handleSearch}
-                                  searchContainerHeight={this.state.searchContainerHeight}
-                                />
-                              )
+                            : this.state.selectedFeature === FeatureSelect.featureTypes.PASSAGES.value
+                              ? (
+                                  <PassagesContainer
+                                    key="passages_container"
+                                    results={this.state.results}
+                                    searchContainerHeight={this.state.searchContainerHeight}
+                                  />
+                                )
+                              : (
+                                  <TrainingContainer
+                                    key="training_container"
+                                    regularResults={this.state.results}
+                                    trainedResults={this.state.trainedResults}
+                                    searchContainerHeight={this.state.searchContainerHeight}
+                                  />
+                                )
                           : null
                     }
                   </section>

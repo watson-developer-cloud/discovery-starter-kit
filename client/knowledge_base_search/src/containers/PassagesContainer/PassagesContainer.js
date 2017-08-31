@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { scroller, Element } from 'react-scroll';
 import PassageComparison from './PassageComparison';
+import NoResults from '../../views/NoResults/NoResults';
+import ShowMoreResults from '../../views/ShowMoreResults/ShowMoreResults';
 import './styles.css';
 
 class PassagesContainer extends Component {
@@ -21,9 +23,9 @@ class PassagesContainer extends Component {
   }
 
   isMoreResults(passageIndicesShown) {
-    const { enriched_results } = this.props;
+    const { results } = this.props;
 
-    return enriched_results.passages.length > passageIndicesShown.length;
+    return results.passages.length > passageIndicesShown.length;
   }
 
   handleMoreResults = () => {
@@ -31,9 +33,9 @@ class PassagesContainer extends Component {
   }
 
   getNextDocumentWithPassages(documentIndicesShown, documentIdsWithPassages) {
-    const { enriched_results } = this.props;
+    const { results } = this.props;
 
-    return enriched_results.results.find((result, index) => {
+    return results.results.find((result, index) => {
       const documentId = result.id;
 
       if (documentIdsWithPassages.indexOf(documentId) >= 0 &&
@@ -46,9 +48,9 @@ class PassagesContainer extends Component {
   }
 
   getPassagesFromDocument(documentId, passageIndicesShown) {
-    const { enriched_results } = this.props;
+    const { results } = this.props;
 
-    return enriched_results.passages.reduce((passages, passage, index) => {
+    return results.passages.reduce((passages, passage, index) => {
       if (passage.document_id === documentId) {
         passage.index = index;
         passages.push(passage);
@@ -59,8 +61,8 @@ class PassagesContainer extends Component {
   }
 
   render() {
-    const { enriched_results } = this.props;
-    const documentIdsWithPassages = enriched_results.passages.map((passage) => {
+    const { results } = this.props;
+    const documentIdsWithPassages = results.passages.map((passage) => {
       return passage.document_id;
     });
     const passageIndicesShown = [];
@@ -69,7 +71,7 @@ class PassagesContainer extends Component {
     return (
       <Element name='scroll_to_results'>
         {
-          enriched_results.matching_results > 0
+          results.matching_results > 0
             ? (
                 <div className='_container _container_large'>
                   <h3>
@@ -108,26 +110,10 @@ class PassagesContainer extends Component {
                   </div>
                 </div>
               )
-            : (
-                <div className='_container-center'>
-                  <h2>No Results</h2>
-                </div>
-              )
+            : <NoResults />
         }
         {
-          this.isMoreResults(passageIndicesShown)
-            ? (
-                <div className='_container-center show_results--div'>
-                  <button
-                    className='base--button base--button_teal'
-                    type='button'
-                    onClick={this.handleMoreResults}
-                  >
-                    Show more results
-                  </button>
-                </div>
-              )
-            : null
+          this.isMoreResults(passageIndicesShown) && <ShowMoreResults onClick={this.handleMoreResults} />
         }
       </Element>
     );
@@ -135,7 +121,7 @@ class PassagesContainer extends Component {
 }
 
 PassagesContainer.PropTypes = {
-  enriched_results: PropTypes.shape({
+  results: PropTypes.shape({
     matching_results: PropTypes.number.isRequired,
     results: PropTypes.arrayOf(PropTypes.object),
     passages: PropTypes.arrayOf(PropTypes.object)

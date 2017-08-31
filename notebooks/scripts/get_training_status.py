@@ -11,25 +11,29 @@ else:
 from discovery_setup_utils import discovery, curdir, get_constants # noqa
 
 print('Retrieving environment and collection constants...')
-# retrieve the following:
-# {
-#   environment_id,
-#   collection_id_regular,
-#   collection_id_enriched
-# }
+"""
+retrieve the following:
+{
+  environment_id: env_id,
+  collection_id: {
+    regular: regular_id,
+    trained: trained_id
+  }
+}
+"""
 discovery_constants = get_constants(
                         discovery,
                         regular_name=os.getenv(
                                       'DISCOVERY_REGULAR_COLLECTION_NAME',
                                       'knowledge_base_regular'
                                     ),
-                        enriched_name=os.getenv(
-                                      'DISCOVERY_ENRICHED_COLLECTION_NAME',
-                                      'knowledge_base_enriched'
+                        trained_name=os.getenv(
+                                      'DISCOVERY_TRAINED_COLLECTION_NAME',
+                                      'knowledge_base_trained'
                                     )
                       )
 ENVIRONMENT_ID = discovery_constants['environment_id']
-COLLECTION_ID = discovery_constants['collection_id_enriched']
+COLLECTION_ID = discovery_constants['collection_id']['trained']
 
 try:
     collection_response = discovery.get_collection(

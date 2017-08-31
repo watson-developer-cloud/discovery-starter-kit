@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { string, number, bool, func, arrayOf, shape } from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Icon, TextInput } from 'watson-react-components';
 import './styles.css';
@@ -46,7 +46,7 @@ class ViewAllContainer extends Component {
     const filterRexExp = new RegExp(this.escapeRegExp(questionFilter), 'i');
 
     return presetQueries.filter((question) => {
-      return filterRexExp.test(question);
+      return filterRexExp.test(question.question);
     });
   }
 
@@ -121,9 +121,9 @@ class ViewAllContainer extends Component {
                         className='view_all_question--button'
                         disabled={isFetchingResults}
                         type='button'
-                        onClick={() => { onQuestionClick(query) }}
+                        onClick={() => { onQuestionClick(query.question) }}
                       >
-                        {query}
+                        { query.question }
                       </button>
                     )
                   })
@@ -140,11 +140,13 @@ class ViewAllContainer extends Component {
 }
 
 ViewAllContainer.PropTypes = {
-  onQuestionClick: PropTypes.func.isRequired,
-  onCloseClick: PropTypes.func.isRequired,
-  isFetchingResults: PropTypes.bool.isRequired,
-  presetQueries: PropTypes.arrayOf(PropTypes.string).isRequired,
-  questionsPerPage: PropTypes.number.isRequired
+  onQuestionClick: func.isRequired,
+  onCloseClick: func.isRequired,
+  isFetchingResults: bool.isRequired,
+  presetQueries: arrayOf(shape({
+    question: string.isRequired
+  })).isRequired,
+  questionsPerPage: number.isRequired
 }
 
 ViewAllContainer.defaultProps = {

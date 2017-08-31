@@ -2,10 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PassagesContainer from '../../../containers/PassagesContainer/PassagesContainer';
 import PassageComparison from '../../../containers/PassagesContainer/PassageComparison';
+import NoResults from '../../../views/NoResults/NoResults';
+import ShowMoreResults from '../../../views/ShowMoreResults/ShowMoreResults';
 import { shallow } from 'enzyme';
 
 describe('<PassagesContainer />', () => {
-  const enriched_results = {
+  const results = {
     matching_results: 3,
     results: [
       {
@@ -41,13 +43,13 @@ describe('<PassagesContainer />', () => {
     const div = document.createElement('div');
     ReactDOM.render(
       <PassagesContainer
-        enriched_results={enriched_results}
+        results={results}
       />, div);
   });
 
   it('has 3 <PassageComparison /> in it', () => {
     const wrapper = shallow(<PassagesContainer
-                              enriched_results={enriched_results}
+                              results={results}
                             />);
     expect(wrapper.find(PassageComparison)).toHaveLength(3);
   });
@@ -58,7 +60,7 @@ describe('<PassagesContainer />', () => {
 
     beforeEach(() => {
       wrapper = shallow(<PassagesContainer
-                          enriched_results={enriched_results}
+                          results={results}
                         />);
     });
 
@@ -69,7 +71,7 @@ describe('<PassagesContainer />', () => {
         expect(wrapper.instance().getNextDocumentWithPassages(
                                     documentIndicesShown,
                                     documentIdsWithPassages))
-          .toEqual(enriched_results.results[0])
+          .toEqual(results.results[0])
       });
     });
 
@@ -80,7 +82,7 @@ describe('<PassagesContainer />', () => {
         expect(wrapper.instance().getNextDocumentWithPassages(
                                     documentIndicesShown,
                                     documentIdsWithPassages))
-          .toEqual(enriched_results.results[1])
+          .toEqual(results.results[1])
       });
     });
   });
@@ -91,7 +93,7 @@ describe('<PassagesContainer />', () => {
     let documentId;
 
     describe('and there are multiple passages in the same document', () => {
-      const multiple_passages_results = Object.assign({}, enriched_results, {
+      const multiple_passages_results = Object.assign({}, results, {
         passages: [
           {
             document_id: '1',
@@ -110,7 +112,7 @@ describe('<PassagesContainer />', () => {
 
       beforeEach(() => {
         wrapper = shallow(<PassagesContainer
-                            enriched_results={multiple_passages_results}
+                            results={multiple_passages_results}
                           />);
         passageIndicesShown = [];
         documentId = '1';
@@ -156,7 +158,7 @@ describe('<PassagesContainer />', () => {
     });
   });
 
-  describe('when enriched_results has 0 results', () => {
+  describe('when results has 0 results', () => {
     let wrapper;
 
     beforeEach(() => {
@@ -166,13 +168,13 @@ describe('<PassagesContainer />', () => {
         passages: []
       }
       wrapper = shallow(<PassagesContainer
-                          enriched_results={no_results_passages}
+                          results={no_results_passages}
                         />);
     });
 
-    it('shows "No Results"', () => {
+    it('shows <NoResults />', () => {
       expect(wrapper.find(PassageComparison)).toHaveLength(0);
-      expect(wrapper.find('h2').text()).toEqual('No Results');
+      expect(wrapper.find(NoResults)).toHaveLength(1);
     });
   });
 
@@ -220,18 +222,17 @@ describe('<PassagesContainer />', () => {
         ]
       };
       wrapper = shallow(<PassagesContainer
-                          enriched_results={more_than_three_results}
+                          results={more_than_three_results}
                         />);
     });
 
-    it('shows a "Show more results" button', () => {
-      expect(wrapper.find('.show_results--div button').text())
-        .toEqual('Show more results');
+    it('shows <ShowMoreResults />', () => {
+      expect(wrapper.find(ShowMoreResults)).toHaveLength(1);
     });
 
-    describe('when the "Show more results" button is clicked', () => {
+    describe('when <ShowMoreResults /> is clicked', () => {
       beforeEach(() => {
-        wrapper.find('.show_results--div button').simulate('click');
+        wrapper.find(ShowMoreResults).simulate('click');
       });
 
       it('increments the total_results_shown', () => {
@@ -243,7 +244,7 @@ describe('<PassagesContainer />', () => {
       });
 
       it('does not show the "Show more results" button anymore', () => {
-        expect(wrapper.find('.show_results--div button')).toHaveLength(0);
+        expect(wrapper.find(ShowMoreResults)).toHaveLength(0);
       });
     });
   });

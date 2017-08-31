@@ -52,7 +52,7 @@ div::before, div::after {
   color: color('teal', 40);
   border-bottom-color: color('teal', 40);
 
-  &:visited {
+  &:visited, &:hover {
     color: color('teal', 40);
     border-bottom-color: color('teal', 40);
   }

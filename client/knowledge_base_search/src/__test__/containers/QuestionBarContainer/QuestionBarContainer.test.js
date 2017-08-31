@@ -9,7 +9,26 @@ describe('<QuestionBarContainer />', () => {
   const onQuestionClickMock = jest.fn();
   const onOffsetUpdateMock = jest.fn();
   const props = {
-    presetQueries: [ 'one', 'two', 'three', 'four', 'five', 'six' ],
+    presetQueries: [
+      {
+        question: 'one'
+      },
+      {
+        question: 'two'
+      },
+      {
+        question: 'three'
+      },
+      {
+        question: 'four'
+      },
+      {
+        question: 'five'
+      },
+      {
+        question: 'six'
+      }
+    ],
     currentQuery: '',
     isFetchingResults: false,
     offset: 0,
@@ -38,14 +57,14 @@ describe('<QuestionBarContainer />', () => {
     });
 
     it('calls onSubmit with the first preset query', () => {
-      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0]);
+      expect(onQuestionClickMock).toBeCalledWith(props.presetQueries[0].question);
     });
   });
 
   describe('when the currentQuery is equal to one of the queries shown', () => {
     const index = 2;
     const props_with_matching_currentQuery = Object.assign({}, props, {
-      currentQuery: props.presetQueries[index]
+      currentQuery: props.presetQueries[index].question
     });
 
     beforeEach(() => {
