@@ -40,15 +40,15 @@ class QuestionBarContainer extends Component {
     } = this.props;
 
     return (
-      <div className='question_bar_container--div'>
+      <div className="question_bar--container">
         { offset > 0 &&
           (
             <button
-              type='button'
-              className='question_bar_arrow--button left'
+              type="button"
+              className="question_bar--arrow_button--left"
               onClick={this.handlePaginateLeft}
             >
-              <Isvg src={arrow_back} className='arrow--span' />
+              <Isvg src={arrow_back} className="arrow--span" />
             </button>
           )
         }
@@ -58,14 +58,18 @@ class QuestionBarContainer extends Component {
               <button
                 key={`question_button_${i}`}
                 className={
-                  classNames('question_bar_button--button', {
-                    active: query.question === currentQuery
+                  classNames('question_bar--button', {
+                    'question_bar--button--active': query.question === currentQuery
                   })
                 }
-                type='button'
+                type="button"
                 disabled={isFetchingResults}
                 onClick={() => { onQuestionClick(query.question) }}>
                   { query.question }
+                  { query.is_training_query && (
+                      <span title="training question" className="question_bar--train" />
+                    )
+                  }
               </button>
             )
           })
@@ -73,11 +77,11 @@ class QuestionBarContainer extends Component {
         { presetQueries.length > offset + questionsShown &&
           (
             <button
-              type='button'
-              className='question_bar_arrow--button right'
+              type="button"
+              className="question_bar--arrow_button--right"
               onClick={this.handlePaginateRight}
             >
-              <Isvg src={arrow_forward} className='arrow--span' />
+              <Isvg src={arrow_forward} className="arrow--span" />
             </button>
           )
         }
@@ -88,7 +92,8 @@ class QuestionBarContainer extends Component {
 
 QuestionBarContainer.PropTypes = {
   presetQueries: arrayOf(shape({
-    question: string.isRequired
+    question: string.isRequired,
+    is_training_query: bool
   })).isRequired,
   currentQuery: string.isRequired,
   isFetchingResults: bool.isRequired,

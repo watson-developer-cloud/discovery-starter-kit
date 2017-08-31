@@ -25,6 +25,7 @@
     }
 
     &.view_all_question--button {
+      position: relative;
       margin: 0.5rem 0;
       width: 100%;
       font-weight: get('weight normal');
@@ -100,4 +101,16 @@
 .view_all_questions_no_results--span {
   color: color('gray', 50);
   font-size: 0.8rem;
+}
+
+.view_all {
+  &--train {
+    position: absolute;
+    top: 0.3rem;
+    left: -1rem;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 50%;
+    background-color: color('teal', 80);
+  }
 }

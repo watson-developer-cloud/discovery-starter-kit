@@ -86,4 +86,21 @@ def get_questions(discovery, constants, question_count, feature_type):
     questions = map(lambda result: {'question': result['key']},
                     response['aggregations'][0]['results'])
 
+    """
+    if we are getting questions for the trained collection,
+    annotate ones part of the training data with 'is_training_query'
+    """
+    if feature_type == 'trained':
+        training_data = discovery.list_training_data(
+          environment_id=constants['environment_id'],
+          collection_id=constants['collection_id'][feature_type])
+
+        for training_query in training_data['queries']:
+            try:
+                query_index = questions.index(
+                  {'question': training_query['natural_language_query']})
+                questions[query_index]['is_training_query'] = True
+            except ValueError:
+                continue
+
     return questions

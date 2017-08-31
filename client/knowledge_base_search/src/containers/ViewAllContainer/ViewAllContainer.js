@@ -124,6 +124,10 @@ class ViewAllContainer extends Component {
                         onClick={() => { onQuestionClick(query.question) }}
                       >
                         { query.question }
+                        { query.is_training_query && (
+                            <span title="training question" className="view_all--train" />
+                          )
+                        }
                       </button>
                     )
                   })
@@ -144,7 +148,8 @@ ViewAllContainer.PropTypes = {
   onCloseClick: func.isRequired,
   isFetchingResults: bool.isRequired,
   presetQueries: arrayOf(shape({
-    question: string.isRequired
+    question: string.isRequired,
+    is_training_query: bool
   })).isRequired,
   questionsPerPage: number.isRequired
 }

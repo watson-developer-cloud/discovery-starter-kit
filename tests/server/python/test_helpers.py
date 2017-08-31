@@ -84,7 +84,8 @@ class TestHelpers(unittest.TestCase):
           'count': 0
         }
         expected_value = [
-          {'question': 'Can you tell a cabbie which route to take?'}
+          {'question': 'Can you tell a cabbie which route to take?',
+           'is_training_query': True}
         ]
         mock_response = json.loads(
           """
@@ -106,7 +107,31 @@ class TestHelpers(unittest.TestCase):
             }
           """ # noqa
         )
+        mock_training_data_response = json.loads(
+          """
+            {
+              "environment_id": "env_id",
+              "collection_id": "coll_id",
+              "queries": [
+                {
+                  "query_id": "q_id",
+                  "natural_language_query": "Can you tell a cabbie which route to take?",
+                  "filter": "",
+                  "examples": [
+                    {
+                      "document_id": "doc_id",
+                      "cross_reference": "cross_id",
+                      "relevance": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          """ # noqa
+        )
         discovery.query = MagicMock(return_value=mock_response)
+        discovery.list_training_data = MagicMock(
+          return_value=mock_training_data_response)
 
         actual_value = get_questions(
                         discovery=discovery,
@@ -117,6 +142,10 @@ class TestHelpers(unittest.TestCase):
           environment_id='my_environment_id',
           collection_id='my_trained_collection_id',
           query_options=expected_query_opts
+        )
+        discovery.list_training_data.assert_called_with(
+          environment_id='my_environment_id',
+          collection_id='my_trained_collection_id',
         )
         self.assertEqual(actual_value, expected_value)
 

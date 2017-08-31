@@ -4,15 +4,15 @@ casper.test.begin('Knowledge Base Search', (test) => {
   });
 
   casper.then(() => {
-    casper.waitForSelector('.question_bar_button--button',
+    casper.waitForSelector('.question_bar--button',
       () => {
         casper.capture(`${casper.screenshots_dir}/questions_exist.png`);
         test.assertElementCount(
-          '.question_bar_button--button',
+          '.question_bar--button',
           4,
           '4 Preset Questions shown on initial load'
         );
-        casper.click('.question_bar_button--button:first-child');
+        casper.click('.question_bar--button:first-child');
         casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
 
         casper.waitForSelector('.result_container--div',
