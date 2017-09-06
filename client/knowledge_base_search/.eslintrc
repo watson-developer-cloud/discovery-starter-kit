@@ -1,6 +1,11 @@
 {
-  "extends": "react-app",
-  "globals": {
-    "casper": true
-  }
+    "extends": ["react-app", "airbnb"],
+    "globals": {
+      "casper": true
+    },
+    "plugins": [
+        "react",
+        "jsx-a11y",
+        "import"
+    ]
 }

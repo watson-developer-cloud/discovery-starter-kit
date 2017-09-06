@@ -5,17 +5,17 @@ describe('replaceNewlines', () => {
   it('returns expected html', () => {
     const expected = [
       (
-        <span key={'newline_0'}>
+        <span key={0}>
           {'text'}
           <br />
         </span>
       ),
       (
-        <span key={'newline_1'}>
+        <span key={1}>
           {'newline'}
           { false }
         </span>
-      )
+      ),
     ];
     const actual = replaceNewlines('text\nnewline');
 

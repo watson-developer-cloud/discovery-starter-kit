@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import TrainingComparison from '../../../containers/TrainingContainer/TrainingComparison';
 import ResultContainer from '../../../containers/ResultContainer/ResultContainer';
-import { shallow } from 'enzyme';
 
 describe('<TrainingComparison />', () => {
   let wrapper;
   const props = {
     regularResult: {
-      text: 'regular'
+      text: 'regular',
     },
     trainedResult: {
       text: 'trained',
-      originalRank: 2
+      originalRank: 2,
     },
-    index: 0
+    index: 0,
   };
 
   it('renders without crashing', () => {
@@ -41,7 +41,7 @@ describe('<TrainingComparison />', () => {
 
   describe('when index is > 0', () => {
     const propsWithGreaterIndex = Object.assign({}, props, {
-      index: 1
+      index: 1,
     });
 
     beforeEach(() => {
@@ -57,8 +57,8 @@ describe('<TrainingComparison />', () => {
   describe('when originalRank is 0', () => {
     const propsWithOriginalRankZero = Object.assign({}, props, {
       trainedResult: Object.assign({}, props.trainedResult, {
-        originalRank: 0
-      })
+        originalRank: 0,
+      }),
     });
     beforeEach(() => {
       wrapper = shallow(<TrainingComparison {...propsWithOriginalRankZero} />);

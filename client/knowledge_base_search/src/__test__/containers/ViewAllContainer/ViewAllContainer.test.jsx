@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ViewAllContainer from '../../../containers/ViewAllContainer/ViewAllContainer';
 import { shallow } from 'enzyme';
+import ViewAllContainer from '../../../containers/ViewAllContainer/ViewAllContainer';
 
 describe('<ViewAllContainer />', () => {
   let wrapper;
@@ -11,7 +11,7 @@ describe('<ViewAllContainer />', () => {
     isFetchingResults: false,
     onQuestionClick: onQuestionClickMock,
     onCloseClick: onCloseClickMock,
-    presetQueries: []
+    presetQueries: [],
   };
 
   it('renders without crashing', () => {
@@ -35,10 +35,10 @@ describe('<ViewAllContainer />', () => {
       presetQueries: [
         {
           question: 'question',
-          is_training_query: true
-        }
-      ]
-    })
+          is_training_query: true,
+        },
+      ],
+    });
 
     beforeEach(() => {
       wrapper = shallow(<ViewAllContainer {...propsWithTrainingQuery} />);
@@ -54,16 +54,14 @@ describe('<ViewAllContainer />', () => {
   describe('when there are presetQueries', () => {
     const { questionsPerPage } = ViewAllContainer.defaultProps;
     const questionButtonSelector = '.view_all_question--button';
-    const queries = [...Array(questionsPerPage + 1)].map((el, i) => {
-      return {question: `query_${i}`};
-    });
+    const queries = [...Array(questionsPerPage + 1)].map((el, i) => ({ question: `query_${i}` }));
 
-    const props_with_queries = Object.assign({}, props, {
-      presetQueries: queries
+    const propsWithQueries = Object.assign({}, props, {
+      presetQueries: queries,
     });
 
     beforeEach(() => {
-      wrapper = shallow(<ViewAllContainer {...props_with_queries} />);
+      wrapper = shallow(<ViewAllContainer {...propsWithQueries} />);
     });
 
     it('renders only first set of questions as enabled buttons', () => {
@@ -76,12 +74,12 @@ describe('<ViewAllContainer />', () => {
     });
 
     describe('and isFetchingResults is true', () => {
-      const props_fetching_results = Object.assign({}, props_with_queries, {
-        isFetchingResults: true
+      const propsFetchingResults = Object.assign({}, propsWithQueries, {
+        isFetchingResults: true,
       });
 
       beforeEach(() => {
-        wrapper = shallow(<ViewAllContainer {...props_fetching_results} />);
+        wrapper = shallow(<ViewAllContainer {...propsFetchingResults} />);
       });
 
       it('renders only first set of questions as disabled buttons', () => {
@@ -118,7 +116,7 @@ describe('<ViewAllContainer />', () => {
 
     describe('and handleOnInput is triggered with a filter matching nothing', () => {
       beforeEach(() => {
-        wrapper.instance().handleOnInput({target: {value: 'foo'}});
+        wrapper.instance().handleOnInput({ target: { value: 'foo' } });
       });
 
       it('shows something indicating no results matched', () => {
@@ -129,7 +127,7 @@ describe('<ViewAllContainer />', () => {
 
     describe('and handleOnInput is triggered with a filter matching less', () => {
       beforeEach(() => {
-        wrapper.instance().handleOnInput({target: {value: '50'}});
+        wrapper.instance().handleOnInput({ target: { value: '50' } });
       });
 
       it('filters the question set and does not show a no results message', () => {
@@ -158,7 +156,7 @@ describe('<ViewAllContainer />', () => {
 
     describe('and loadMore is triggered with a filter matching more', () => {
       beforeEach(() => {
-        wrapper.instance().handleOnInput({target: {value: 'QUERY'}});
+        wrapper.instance().handleOnInput({ target: { value: 'QUERY' } });
         wrapper.instance().loadMore();
       });
 

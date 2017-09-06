@@ -3,17 +3,17 @@ import { spawn } from 'child_process';
 // child_process.kill() doesn't kill children processes
 // so let's monkey patch a method to kill our server
 casper.kill_server = (callback) => {
-  let ppid = casper.server.pid;
-  let killer = spawn('pkill', ['-9', '-P', ppid]);
+  const ppid = casper.server.pid;
+  const killer = spawn('pkill', ['-9', '-P', ppid]);
 
-  killer.on('exit', (code, signal) => {
+  killer.on('exit', () => {
     casper.log(`PPID ${ppid} killed`, 'debug');
 
     if (callback) {
       callback();
     }
   });
-}
+};
 
 // monkey patch a screenshots directory
 casper.screenshots_dir = 'tmp/screenshots';
@@ -29,7 +29,7 @@ casper.options.clientScripts.push('./node_modules/phantomjs-polyfill-find/find-p
 casper.options.clientScripts.push('./node_modules/phantomjs-polyfill-find-index/findIndex-polyfill.js');
 
 casper.test.setUp((done) => {
-  let server = spawn('python', [ '../../server/python/server.py' ]);
+  const server = spawn('python', ['../../server/python/server.py']);
   casper.log(`spawning server with ppid [${server.pid}]`, 'debug');
   casper.server = server;
   // make sure the server exits when this process exits

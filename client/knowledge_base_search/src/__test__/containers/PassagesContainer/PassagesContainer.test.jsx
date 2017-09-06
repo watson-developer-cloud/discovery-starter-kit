@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import PassagesContainer from '../../../containers/PassagesContainer/PassagesContainer';
 import PassageComparison from '../../../containers/PassagesContainer/PassageComparison';
 import NoResults from '../../../views/NoResults/NoResults';
 import ShowMoreResults from '../../../views/ShowMoreResults/ShowMoreResults';
-import { shallow } from 'enzyme';
 
 describe('<PassagesContainer />', () => {
   const results = {
@@ -21,36 +21,35 @@ describe('<PassagesContainer />', () => {
       {
         id: '3',
         text: 'a great answer 3 with a great passage 3',
-      }
+      },
     ],
     passages: [
       {
         document_id: '1',
-        passage_text: 'a great passage'
+        passage_text: 'a great passage',
       },
       {
         document_id: '2',
-        passage_text: 'a great passage 2'
+        passage_text: 'a great passage 2',
       },
       {
         document_id: '3',
-        passage_text: 'a great passage 3'
-      }
-    ]
+        passage_text: 'a great passage 3',
+      },
+    ],
+  };
+  const props = {
+    results,
+    searchContainerHeight: 0,
   };
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
-    ReactDOM.render(
-      <PassagesContainer
-        results={results}
-      />, div);
+    ReactDOM.render(<PassagesContainer {...props} />, div);
   });
 
   it('has 3 <PassageComparison /> in it', () => {
-    const wrapper = shallow(<PassagesContainer
-                              results={results}
-                            />);
+    const wrapper = shallow(<PassagesContainer {...props} />);
     expect(wrapper.find(PassageComparison)).toHaveLength(3);
   });
 
@@ -59,9 +58,7 @@ describe('<PassagesContainer />', () => {
     const documentIdsWithPassages = ['1', '2', '3'];
 
     beforeEach(() => {
-      wrapper = shallow(<PassagesContainer
-                          results={results}
-                        />);
+      wrapper = shallow(<PassagesContainer {...props} />);
     });
 
     describe('and there are no documents shown', () => {
@@ -69,9 +66,9 @@ describe('<PassagesContainer />', () => {
 
       it('returns the first document with passages', () => {
         expect(wrapper.instance().getNextDocumentWithPassages(
-                                    documentIndicesShown,
-                                    documentIdsWithPassages))
-          .toEqual(results.results[0])
+          documentIndicesShown,
+          documentIdsWithPassages))
+          .toEqual(results.results[0]);
       });
     });
 
@@ -80,9 +77,9 @@ describe('<PassagesContainer />', () => {
 
       it('returns the second document with passages', () => {
         expect(wrapper.instance().getNextDocumentWithPassages(
-                                    documentIndicesShown,
-                                    documentIdsWithPassages))
-          .toEqual(results.results[1])
+          documentIndicesShown,
+          documentIdsWithPassages))
+          .toEqual(results.results[1]);
       });
     });
   });
@@ -93,27 +90,27 @@ describe('<PassagesContainer />', () => {
     let documentId;
 
     describe('and there are multiple passages in the same document', () => {
-      const multiple_passages_results = Object.assign({}, results, {
-        passages: [
-          {
-            document_id: '1',
-            passage_text: 'a great answer'
-          },
-          {
-            document_id: '1',
-            passage_text: 'a great passage'
-          },
-          {
-            document_id: '2',
-            passage_text: 'a great passage 2'
-          }
-        ]
+      const propsMultiplePassagesResults = Object.assign({}, props, {
+        results: Object.assign({}, props.results, {
+          passages: [
+            {
+              document_id: '1',
+              passage_text: 'a great answer',
+            },
+            {
+              document_id: '1',
+              passage_text: 'a great passage',
+            },
+            {
+              document_id: '2',
+              passage_text: 'a great passage 2',
+            },
+          ],
+        }),
       });
 
       beforeEach(() => {
-        wrapper = shallow(<PassagesContainer
-                            results={multiple_passages_results}
-                          />);
+        wrapper = shallow(<PassagesContainer {...propsMultiplePassagesResults} />);
         passageIndicesShown = [];
         documentId = '1';
       });
@@ -121,17 +118,17 @@ describe('<PassagesContainer />', () => {
       it('should return both passages with indices added', () => {
         const actual = wrapper.instance().getPassagesFromDocument(
           documentId,
-          passageIndicesShown
+          passageIndicesShown,
         );
         expect(actual[0]).toEqual({
           document_id: '1',
           passage_text: 'a great answer',
-          index: 0
+          index: 0,
         });
         expect(actual[1]).toEqual({
           document_id: '1',
           passage_text: 'a great passage',
-          index: 1
+          index: 1,
         });
         expect(passageIndicesShown).toEqual([0, 1]);
       });
@@ -145,12 +142,12 @@ describe('<PassagesContainer />', () => {
         it('should return the next passage with index added', () => {
           const actual = wrapper.instance().getPassagesFromDocument(
             documentId,
-            passageIndicesShown
+            passageIndicesShown,
           );
           expect(actual[0]).toEqual({
             document_id: '2',
             passage_text: 'a great passage 2',
-            index: 2
+            index: 2,
           });
           expect(passageIndicesShown).toEqual([0, 1, 2]);
         });
@@ -162,14 +159,14 @@ describe('<PassagesContainer />', () => {
     let wrapper;
 
     beforeEach(() => {
-      const no_results_passages = {
-        matching_results: 0,
-        results: [],
-        passages: []
-      }
-      wrapper = shallow(<PassagesContainer
-                          results={no_results_passages}
-                        />);
+      const propsNoResultsPassages = Object.assign({}, props, {
+        results: Object.assign({}, props.results, {
+          matching_results: 0,
+          results: [],
+          passages: [],
+        }),
+      });
+      wrapper = shallow(<PassagesContainer {...propsNoResultsPassages} />);
     });
 
     it('shows <NoResults />', () => {
@@ -182,48 +179,48 @@ describe('<PassagesContainer />', () => {
     let wrapper;
 
     beforeEach(() => {
-      const more_than_three_results = {
-        matching_results: 4,
-        results: [
-          {
-            id: '1',
-            text: 'a great answer with a great passage',
-          },
-          {
-            id: '2',
-            text: 'a great answer 2 with a great passage 2',
-          },
-          {
-            id: '3',
-            text: 'a great answer 3 with a great passage 3',
-          },
-          {
-            id: '4',
-            text: 'a great answer 4 with a great passage 4',
-          }
-        ],
-        passages: [
-          {
-            document_id: '1',
-            passage_text: 'a great passage'
-          },
-          {
-            document_id: '2',
-            passage_text: 'a great passage 2'
-          },
-          {
-            document_id: '3',
-            passage_text: 'a great passage 3'
-          },
-          {
-            document_id: '4',
-            passage_text: 'a great passage 4'
-          }
-        ]
-      };
-      wrapper = shallow(<PassagesContainer
-                          results={more_than_three_results}
-                        />);
+      const propsMoreThanThreeResults = Object.assign({}, props, {
+        results: Object.assign({}, props.results, {
+          matching_results: 4,
+          results: [
+            {
+              id: '1',
+              text: 'a great answer with a great passage',
+            },
+            {
+              id: '2',
+              text: 'a great answer 2 with a great passage 2',
+            },
+            {
+              id: '3',
+              text: 'a great answer 3 with a great passage 3',
+            },
+            {
+              id: '4',
+              text: 'a great answer 4 with a great passage 4',
+            },
+          ],
+          passages: [
+            {
+              document_id: '1',
+              passage_text: 'a great passage',
+            },
+            {
+              document_id: '2',
+              passage_text: 'a great passage 2',
+            },
+            {
+              document_id: '3',
+              passage_text: 'a great passage 3',
+            },
+            {
+              document_id: '4',
+              passage_text: 'a great passage 4',
+            },
+          ],
+        }),
+      });
+      wrapper = shallow(<PassagesContainer {...propsMoreThanThreeResults} />);
     });
 
     it('shows <ShowMoreResults />', () => {

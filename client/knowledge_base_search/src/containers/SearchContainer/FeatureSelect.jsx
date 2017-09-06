@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func, element } from 'prop-types'
+import { string, func, element } from 'prop-types';
 import classNames from 'classnames';
 import './styles.css';
 
@@ -9,13 +9,13 @@ class FeatureSelect extends Component {
     // Passage search - finds relevant passages across all documents
     PASSAGES: {
       value: 'passages',
-      text: 'Passage Search'
+      text: 'Passage Search',
     },
     // Relevancy training - uses user-input training data to improve relevancy
     TRAINED: {
       value: 'trained',
-      text: 'Relevancy'
-    }
+      text: 'Relevancy',
+    },
   }
 
   isSelected(value) {
@@ -25,7 +25,7 @@ class FeatureSelect extends Component {
   render() {
     const {
       onFeatureSelect,
-      questionTypeSelector
+      questionTypeSelector,
     } = this.props;
 
     return (
@@ -47,7 +47,7 @@ class FeatureSelect extends Component {
                   value={value}
                   className={
                     classNames('feature_select--list_button', {
-                      'feature_select--list_button--active': this.isSelected(value)
+                      'feature_select--list_button--active': this.isSelected(value),
                     })
                   }
                   onClick={onFeatureSelect}
@@ -55,7 +55,7 @@ class FeatureSelect extends Component {
                   { text }
                 </button>
               </li>
-            )
+            );
           })
         }
       </ul>

@@ -12,7 +12,7 @@ class SearchContainer extends Component {
     super(props);
     this.state = {
       searchInput: '',
-      selectedQuestionType: QuestionTypeSelect.questionTypes.PRESET.value
+      selectedQuestionType: QuestionTypeSelect.questionTypes.PRESET.value,
     };
   }
 
@@ -20,6 +20,16 @@ class SearchContainer extends Component {
     if (nextProps.searchInput !== this.state.searchInput) {
       this.setState({ searchInput: nextProps.searchInput });
     }
+  }
+
+  getViewAllButtonText() {
+    const { presetQueries } = this.props;
+    const numQuestions = presetQueries.length;
+    const numZeroes = numQuestions.toString().length;
+    const scale = 10 ** (numZeroes - 1);
+    const numPresetQueries = Math.floor(numQuestions / scale) * scale;
+
+    return `View all ${numPresetQueries.toLocaleString()}+ questions`;
   }
 
   handleOnInput = (e) => {
@@ -35,88 +45,85 @@ class SearchContainer extends Component {
     }
   }
 
-  getViewAllButtonText() {
-    const { presetQueries } = this.props;
-    const numQuestions = presetQueries.length;
-    const numZeroes = numQuestions.toString().length;
-    const scale = Math.pow(10, numZeroes - 1);
-    const numPresetQueries = Math.floor(numQuestions / scale) * scale;
-
-    return `View all ${numPresetQueries.toLocaleString()}+ questions`;
-  }
-
   handleOnQuestionTypeSelect = (e) => {
     this.setState({ selectedQuestionType: e.target.value });
   }
 
-  renderQuestionType() {
+  renderPresetQuestions() {
     const {
-      isFetchingQuestions,
       errorMessage,
       offset,
       onOffsetUpdate,
       onQuestionClick,
       presetQueries,
       isFetchingResults,
-      onViewAllClick
+      onViewAllClick,
     } = this.props;
 
-    switch (this.state.selectedQuestionType) {
-      case QuestionTypeSelect.questionTypes.PRESET.value:
+    if (errorMessage) {
+      return (<ErrorContainer errorMessage={errorMessage} />);
+    }
+
+    return (
+      <div>
+        <QuestionBarContainer
+          currentQuery={this.state.searchInput}
+          offset={offset}
+          onOffsetUpdate={onOffsetUpdate}
+          onQuestionClick={onQuestionClick}
+          presetQueries={presetQueries}
+          isFetchingResults={isFetchingResults}
+        />
+        <div className="view_all_button--div">
+          <button
+            type="button"
+            className="view_all--button"
+            disabled={isFetchingResults}
+            onClick={onViewAllClick}
+          >
+            { this.getViewAllButtonText() }
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  renderQuestionType() {
+    const { PRESET, CUSTOM } = QuestionTypeSelect.questionTypes;
+    const { isFetchingQuestions, isFetchingResults } = this.props;
+    const { selectedQuestionType, searchInput } = this.state;
+
+    switch (selectedQuestionType) {
+      case PRESET.value:
         return (
           <div>
-          {
-            isFetchingQuestions
-              ? (
-                  <div key='loader' className='_container _container_large _container-center'>
-                    <Icon type='loader' size='large' />
+            {
+              isFetchingQuestions
+                ? (
+                  <div key="loader" className="_container _container_large _container-center">
+                    <Icon type="loader" size="large" />
                   </div>
                 )
-              : errorMessage
-                ? (
-                    <ErrorContainer errorMessage={errorMessage} />
-                  )
-                : (
-                    <div>
-                      <QuestionBarContainer
-                        currentQuery={this.state.searchInput}
-                        offset={offset}
-                        onOffsetUpdate={onOffsetUpdate}
-                        onQuestionClick={onQuestionClick}
-                        presetQueries={presetQueries}
-                        isFetchingResults={isFetchingResults}
-                      />
-                      <div className='view_all_button--div'>
-                        <button
-                          type='button'
-                          className='view_all--button'
-                          disabled={isFetchingResults}
-                          onClick={onViewAllClick}
-                        >
-                          {this.getViewAllButtonText()}
-                        </button>
-                      </div>
-                    </div>
-                  )
-          }
+                : this.renderPresetQuestions()
+            }
           </div>
         );
-      case QuestionTypeSelect.questionTypes.CUSTOM.value:
+      case CUSTOM.value:
         return (
-          <div className='custom_question--div'>
-            <span className='positioned--icon'>
-              <Icon type='search' />
+          <div className="custom_question--div">
+            <span className="positioned--icon">
+              <Icon type="search" />
             </span>
             <TextInput
-              id='searchInput'
-              placeholder='Enter words, phrase, or a question about travel'
-              value={this.state.searchInput}
+              id="searchInput"
+              placeholder="Enter words, phrase, or a question about travel"
+              value={searchInput}
               onInput={this.handleOnInput}
-              style={{width: 'calc(100% - 3rem)'}}
+              style={{ width: 'calc(100% - 3rem)' }}
               disabled={isFetchingResults}
             />
             <button
-              className='white--button'
+              className="white--button"
               disabled={isFetchingResults}
             >
               Find answers
@@ -131,10 +138,10 @@ class SearchContainer extends Component {
   render() {
     return (
       <section
-        className='_full-width-row search_container--section'
-        ref={(section) => { this.searchSection = section }}
+        className="_full-width-row search_container--section"
+        ref={(section) => { this.searchSection = section; }}
       >
-        <div className='_container _container_large'>
+        <div className="_container _container_large">
           <form onSubmit={this.handleOnSubmit}>
             <FeatureSelect
               onFeatureSelect={this.props.onFeatureSelect}
@@ -154,7 +161,7 @@ class SearchContainer extends Component {
   }
 }
 
-SearchContainer.PropTypes = {
+SearchContainer.propTypes = {
   errorMessage: string,
   isFetchingQuestions: bool.isRequired,
   isFetchingResults: bool.isRequired,
@@ -165,10 +172,14 @@ SearchContainer.PropTypes = {
   onSubmit: func.isRequired,
   onViewAllClick: func.isRequired,
   presetQueries: arrayOf(shape({
-    question: string.isRequired
+    question: string.isRequired,
   })).isRequired,
   searchInput: string.isRequired,
-  selectedFeature: string.isRequired
-}
+  selectedFeature: string.isRequired,
+};
+
+SearchContainer.defaultProps = {
+  errorMessage: null,
+};
 
 export default SearchContainer;

@@ -15,6 +15,18 @@ import questions from './actions/questions';
 import './App.css';
 
 class App extends Component {
+  static shuffleQuestions(questionsResponse) {
+    const allQuestions = questionsResponse.slice(0);
+    const shuffledQueries = [];
+
+    questionsResponse.forEach(() => {
+      const questionIndex = Math.floor(Math.random() * allQuestions.length);
+      shuffledQueries.push(allQuestions.splice(questionIndex, 1)[0]);
+    });
+
+    return shuffledQueries;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -30,8 +42,8 @@ class App extends Component {
       showViewAll: false,
       presetQueries: [],
       offset: 0,
-      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value
-    }
+      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
+    };
   }
 
   componentDidMount() {
@@ -41,8 +53,9 @@ class App extends Component {
   componentWillUpdate(nextProps, nextState) {
     const searchContainer = this.searchContainer;
     if (searchContainer) {
+      // eslint-disable-next-line no-param-reassign
       nextState.searchContainerHeight = searchContainer
-        .searchSection.getBoundingClientRect().height
+        .searchSection.getBoundingClientRect().height;
     }
   }
 
@@ -55,31 +68,31 @@ class App extends Component {
         return uniqueVals;
       }, []);
 
-    let missingDocumentIds = [];
-    uniqueDocumentIds.forEach((document_id) => {
-      let resultDocument = results.results.find((result) => {
-        return result.id === document_id;
-      });
+    const missingDocumentIds = [];
+    uniqueDocumentIds.forEach((documentId) => {
+      const resultDocument = results.results.find(result => result.id === documentId);
 
       if (!resultDocument) {
-        missingDocumentIds.push(document_id);
+        missingDocumentIds.push(documentId);
       }
     });
 
     return missingDocumentIds.length > 0
-      ? query(FeatureSelect.featureTypes.PASSAGES.value, {filter: `id:(${missingDocumentIds.join('|')})`})
-          .then((response) => {
-            if (response.error) {
-              this.setState({resultsError: response.error});
-            }
+      ? query(FeatureSelect.featureTypes.PASSAGES.value, { filter: `id:(${missingDocumentIds.join('|')})` })
+        .then((response) => {
+          if (response.error) {
+            this.setState({ resultsError: response.error });
+          }
 
-            if (response.results) {
-              let newResults = results.results.concat(response.results);
-              results.results = newResults;
-            }
+          if (response.results) {
+            const newResults = results.results.concat(response.results);
+            return Object.assign({}, results, {
+              results: newResults,
+            });
+          }
 
-            return results;
-          })
+          return results;
+        })
       : Promise.resolve(results);
   }
 
@@ -89,27 +102,15 @@ class App extends Component {
       if (response.error) {
         this.setState({
           questionsError: response.error,
-          fetchingQuestions: false
+          fetchingQuestions: false,
         });
       } else {
         this.setState({
-          presetQueries: this.shuffleQuestions(response),
-          fetchingQuestions: false
+          presetQueries: App.shuffleQuestions(response),
+          fetchingQuestions: false,
         });
       }
     });
-  }
-
-  shuffleQuestions(questions) {
-    const allQuestions = questions.slice(0);
-    let shuffledQueries = [];
-
-    for (let i = 0; i < questions.length; i++) {
-      let questionIndex = Math.floor(Math.random() * allQuestions.length);
-      shuffledQueries.push(allQuestions.splice(questionIndex, 1)[0]);
-    }
-
-    return shuffledQueries;
   }
 
   handleSearch = (input) => {
@@ -119,7 +120,7 @@ class App extends Component {
       search_input: input,
       resultsError: null,
       results: [],
-      trainedResults: []
+      trainedResults: [],
     });
 
     if (selectedFeature === FeatureSelect.featureTypes.PASSAGES.value) {
@@ -134,24 +135,21 @@ class App extends Component {
       .then((response) => {
         if (response.passages) {
           return this.retrieveMissingDocuments(response)
-            .then((response) => {
-              return response;
-            });
-        } else {
-          return Promise.resolve(response);
+            .then(responseWithMissingDocuments => responseWithMissingDocuments);
         }
+        return Promise.resolve(response);
       }).then((responseWithPassages) => {
         if (responseWithPassages.error) {
           this.setState({
             fetchingResults: false,
             resultsFetched: true,
-            resultsError: responseWithPassages.error
+            resultsError: responseWithPassages.error,
           });
         } else {
           this.setState({
             fetchingResults: false,
             resultsFetched: true,
-            results: responseWithPassages
+            results: responseWithPassages,
           });
         }
       });
@@ -160,7 +158,7 @@ class App extends Component {
   handleTrainedSearch = (input) => {
     Promise.all([
       query(FeatureSelect.featureTypes.TRAINED.value, { natural_language_query: input }),
-      query('regular', { natural_language_query: input })
+      query('regular', { natural_language_query: input }),
     ]).then((responses) => {
       const trainedResponse = responses[0];
       const regularResponse = responses[1];
@@ -170,27 +168,26 @@ class App extends Component {
         this.setState({
           fetchingResults: false,
           resultsFetched: true,
-          resultsError
+          resultsError,
         });
       } else {
         this.setState({
           fetchingResults: false,
           resultsFetched: true,
           results: regularResponse,
-          trainedResults: trainedResponse
+          trainedResults: trainedResponse,
         });
       }
     });
   }
 
-  handleQuestionClick = (query) => {
+  handleQuestionClick = (queryString) => {
     const { presetQueries, offset } = this.state;
-    const questionIndex = presetQueries.findIndex((presetQuery) => {
-      return presetQuery.question === query;
-    });
+    const questionIndex = presetQueries.findIndex(presetQuery =>
+      presetQuery.question === queryString);
     const beginQuestions = offset;
-    const endQuestions = offset + QuestionBarContainer.defaultProps.questionsShown - 1;
-    let newPresetQueries = presetQueries.slice(0);
+    const endQuestions = offset + (QuestionBarContainer.defaultProps.questionsShown - 1);
+    const newPresetQueries = presetQueries.slice(0);
     let newOffset = offset;
 
     if (questionIndex < beginQuestions || questionIndex > endQuestions) {
@@ -201,11 +198,11 @@ class App extends Component {
 
     this.setState({
       showViewAll: false,
-      search_input: query,
+      search_input: queryString,
       presetQueries: newPresetQueries,
-      offset: newOffset
-    })
-    this.handleSearch(query);
+      offset: newOffset,
+    });
+    this.handleSearch(queryString);
   }
 
   handleFeatureSelect = (e) => {
@@ -214,40 +211,109 @@ class App extends Component {
       results: [],
       trainedResults: [],
       resultsFetched: false,
-      selectedFeature
+      selectedFeature,
     });
     this.retrieveQuestions(selectedFeature);
   }
 
   handleOffsetUpdate = (offset) => {
-    this.setState({ offset: offset });
+    this.setState({ offset });
   }
 
   toggleViewAll = () => {
     this.setState({ showViewAll: !this.state.showViewAll });
   }
 
+  renderFeature() {
+    const { PASSAGES, TRAINED } = FeatureSelect.featureTypes;
+    const {
+      selectedFeature,
+      results,
+      trainedResults,
+      searchContainerHeight,
+    } = this.state;
+
+    switch (selectedFeature) {
+      case PASSAGES.value:
+        return (
+          <PassagesContainer
+            key="passages_container"
+            results={results}
+            searchContainerHeight={searchContainerHeight}
+          />
+        );
+      case TRAINED.value:
+        return (
+          <TrainingContainer
+            key="training_container"
+            regularResults={results}
+            trainedResults={trainedResults}
+            searchContainerHeight={searchContainerHeight}
+          />
+        );
+      default:
+        return null;
+    }
+  }
+
+  renderFetchedResults() {
+    const { resultsError } = this.state;
+
+    if (resultsError) {
+      return (
+        <ErrorContainer
+          key="error_container"
+          errorMessage={resultsError}
+        />
+      );
+    }
+
+    return this.renderFeature();
+  }
+
+  renderResults() {
+    const { fetchingResults, resultsFetched } = this.state;
+
+    if (fetchingResults || resultsFetched) {
+      return (
+        <section key="results" className="_full-width-row results_row--section">
+          {
+            fetchingResults
+              ? (
+                <div key="loader" className="_container _container_large _container-center">
+                  <Icon type="loader" size="large" />
+                </div>
+              )
+              : this.renderFetchedResults()
+          }
+        </section>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     return (
-      <div className='App'>
+      <div className="App">
         <Header
-          mainBreadcrumbs='Starter Kits'
+          mainBreadcrumbs="Starter Kits"
           mainBreadcrumbsUrl={links.starter_kits}
-          subBreadcrumbs='Knowledge Base Search'
-          subBreadcrumbsUrl='/'
+          subBreadcrumbs="Knowledge Base Search"
+          subBreadcrumbsUrl="/"
         />
         <Jumbotron
-          serviceName='Discovery - Knowledge Base Search'
+          serviceName="Discovery - Knowledge Base Search"
           repository={links.repository}
           documentation={links.doc_homepage}
           apiReference={links.doc_api}
           startInBluemix={links.bluemix}
-          version='GA'
-          description='This starter kit demonstrates how Watson Discovery&#39;s Passage Search quickly finds the most relevant information in your documents to answer your natural language questions. Try out the preset questions or enter a custom question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search on the Stack Exchange Travel data set.'
+          version="GA"
+          description="This starter kit demonstrates how Watson Discovery&#39;s Passage Search quickly finds the most relevant information in your documents to answer your natural language questions. Try out the preset questions or enter a custom question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search on the Stack Exchange Travel data set."
         />
         <Sticky>
           <SearchContainer
-            ref={(container) => { this.searchContainer = container }}
+            ref={(container) => { this.searchContainer = container; }}
             errorMessage={this.state.questionsError}
             isFetchingQuestions={this.state.fetchingQuestions}
             isFetchingResults={this.state.fetchingResults}
@@ -263,7 +329,7 @@ class App extends Component {
           />
         </Sticky>
         <CSSTransitionGroup
-          transitionName='view_all_overlay'
+          transitionName="view_all_overlay"
           transitionEnterTimeout={230}
           transitionLeaveTimeout={230}
         >
@@ -271,14 +337,15 @@ class App extends Component {
             this.state.showViewAll &&
             (
               <div
-                className='view_all_overlay--div'
+                role="presentation"
+                className="view_all_overlay--div"
                 onClick={this.toggleViewAll}
               />
             )
           }
         </CSSTransitionGroup>
         <CSSTransitionGroup
-          transitionName='view_all'
+          transitionName="view_all"
           transitionEnterTimeout={230}
           transitionLeaveTimeout={230}
         >
@@ -286,7 +353,7 @@ class App extends Component {
             this.state.showViewAll &&
             (
               <ViewAllContainer
-                key='view_all'
+                key="view_all"
                 onQuestionClick={this.handleQuestionClick}
                 onCloseClick={this.toggleViewAll}
                 isFetchingResults={this.state.fetchingResults}
@@ -296,52 +363,13 @@ class App extends Component {
           }
         </CSSTransitionGroup>
         <CSSTransitionGroup
-          transitionName='results'
+          transitionName="results"
           transitionEnterTimeout={500}
           transitionLeave={false}
         >
-          { this.state.fetchingResults || this.state.resultsFetched
-              ? (
-                  <section key='results' className='_full-width-row results_row--section'>
-                    {
-                      this.state.fetchingResults
-                        ? (
-                            <div key='loader' className='_container _container_large _container-center'>
-                              <Icon type='loader' size='large' />
-                            </div>
-                          )
-                        : this.state.resultsFetched
-                          ? this.state.resultsError
-                            ? (
-                                <ErrorContainer
-                                  key='error_container'
-                                  errorMessage={this.state.resultsError}
-                                />
-                              )
-                            : this.state.selectedFeature === FeatureSelect.featureTypes.PASSAGES.value
-                              ? (
-                                  <PassagesContainer
-                                    key="passages_container"
-                                    results={this.state.results}
-                                    searchContainerHeight={this.state.searchContainerHeight}
-                                  />
-                                )
-                              : (
-                                  <TrainingContainer
-                                    key="training_container"
-                                    regularResults={this.state.results}
-                                    trainedResults={this.state.trainedResults}
-                                    searchContainerHeight={this.state.searchContainerHeight}
-                                  />
-                                )
-                          : null
-                    }
-                  </section>
-                )
-              : null
-          }
+          { this.renderResults() }
         </CSSTransitionGroup>
-        <section className='_full-width-row license--section'>
+        <section className="_full-width-row license--section">
           <a
             href={links.stack_exchange}
             className={'base--a'}

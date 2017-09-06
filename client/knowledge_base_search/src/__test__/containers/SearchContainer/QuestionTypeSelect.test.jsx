@@ -1,14 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 import { shallow } from 'enzyme';
+import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 
 describe('<QuestionTypeSelect />', () => {
   let wrapper;
   const onSelectMock = jest.fn();
   const props = {
     onSelect: onSelectMock,
-    selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value
+    selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value,
   };
 
   it('renders without crashing', () => {
@@ -29,7 +29,7 @@ describe('<QuestionTypeSelect />', () => {
 
   describe('when the selectedQuestion is "Preset questions"', () => {
     const propsWithPreset = Object.assign({}, props, {
-      selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value
+      selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value,
     });
 
     beforeEach(() => {
@@ -45,7 +45,7 @@ describe('<QuestionTypeSelect />', () => {
 
   describe('when the selectedQuestion is "Custom question"', () => {
     const propsWithCustom = Object.assign({}, props, {
-      selectedQuestion: QuestionTypeSelect.questionTypes.CUSTOM.value
+      selectedQuestion: QuestionTypeSelect.questionTypes.CUSTOM.value,
     });
 
     beforeEach(() => {

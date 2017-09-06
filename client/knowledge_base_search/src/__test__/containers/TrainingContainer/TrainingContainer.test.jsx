@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import TrainingContainer from '../../../containers/TrainingContainer/TrainingContainer';
 import TrainingComparison from '../../../containers/TrainingContainer/TrainingComparison';
 import ShowMoreResults from '../../../views/ShowMoreResults/ShowMoreResults';
-import { shallow } from 'enzyme';
 
 describe('<TrainingContainer />', () => {
   let wrapper;
@@ -13,43 +13,44 @@ describe('<TrainingContainer />', () => {
       results: [
         {
           id: '1',
-          text: 'regular_1'
+          text: 'regular_1',
         },
         {
           id: '2',
-          text: 'regular_2'
+          text: 'regular_2',
         },
         {
           id: '3',
-          text: 'regular_3'
+          text: 'regular_3',
         },
         {
           id: '4',
-          text: 'regular_4'
+          text: 'regular_4',
         },
-      ]
+      ],
     },
     trainedResults: {
       matching_results: 4,
       results: [
         {
           id: '2',
-          text: 'trained_1'
+          text: 'trained_1',
         },
         {
           id: '1',
-          text: 'trained_2'
+          text: 'trained_2',
         },
         {
           id: '5',
-          text: 'trained_3'
+          text: 'trained_3',
         },
         {
           id: '3',
-          text: 'trained_4'
-        }
-      ]
-    }
+          text: 'trained_4',
+        },
+      ],
+    },
+    searchContainerHeight: 0,
   };
 
   it('renders without crashing', () => {
@@ -98,8 +99,8 @@ describe('<TrainingContainer />', () => {
     const propsMoreRegular = Object.assign({}, props, {
       regularResults: {
         matching_results: 5,
-        results: props.regularResults.results.concat({ text: 'regular_5' })
-      }
+        results: props.regularResults.results.concat({ text: 'regular_5' }),
+      },
     });
 
     beforeEach(() => {
@@ -122,8 +123,8 @@ describe('<TrainingContainer />', () => {
     const propsMoreRegular = Object.assign({}, props, {
       trainedResults: {
         matching_results: 5,
-        results: props.trainedResults.results.concat({ text: 'trained_5' })
-      }
+        results: props.trainedResults.results.concat({ text: 'trained_5' }),
+      },
     });
 
     beforeEach(() => {

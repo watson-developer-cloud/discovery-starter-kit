@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ResultContainer from '../../../containers/ResultContainer/ResultContainer';
 import { shallow } from 'enzyme';
+import ResultContainer from '../../../containers/ResultContainer/ResultContainer';
 
 describe('<ResultContainer />', () => {
   const props = {
-    result_text: 'result',
-    result_rank: 1
+    resultText: 'result',
+    resultRank: 1,
   };
 
   it('renders without crashing', () => {
@@ -17,18 +17,18 @@ describe('<ResultContainer />', () => {
   describe('when there is no result', () => {
     let wrapper;
 
-    const props_no_result = Object.assign({}, props, {
-      result_text: null
+    const propsNoResult = Object.assign({}, props, {
+      resultText: null,
     });
 
     describe('and it is the first rank', () => {
       const firstRank = 1;
 
       beforeEach(() => {
-        const props_with_first_rank = Object.assign({}, props_no_result, {
-          result_rank: firstRank
+        const propsWithFirstRank = Object.assign({}, propsNoResult, {
+          resultRank: firstRank,
         });
-        wrapper = shallow(<ResultContainer {...props_with_first_rank} />);
+        wrapper = shallow(<ResultContainer {...propsWithFirstRank} />);
       });
 
       it('has "No Results"', () => {
@@ -39,10 +39,10 @@ describe('<ResultContainer />', () => {
 
     describe('and it is not the first rank', () => {
       beforeEach(() => {
-        const props_with_not_first_rank = Object.assign({}, props_no_result, {
-          result_rank: 2
+        const propsWithNotFirstRank = Object.assign({}, propsNoResult, {
+          resultRank: 2,
         });
-        wrapper = shallow(<ResultContainer {...props_with_not_first_rank} />);
+        wrapper = shallow(<ResultContainer {...propsWithNotFirstRank} />);
       });
 
       it('does not have "No Results"', () => {

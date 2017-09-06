@@ -6,26 +6,32 @@
     "classnames": "^2.2.5",
     "node-sass-chokidar": "0.0.3",
     "prop-types": "^15.5.10",
-    "react": "15.6.0",
-    "react-dom": "^15.5.4",
-    "react-infinite-scroller": "^1.0.13",
-    "react-inlinesvg": "^0.6.0",
-    "react-scroll": "^1.5.2",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-infinite-scroller": "^1.0.15",
+    "react-inlinesvg": "^0.6.2",
+    "react-scroll": "^1.5.4",
     "react-stickynode": "^1.3.1",
     "react-transition-group": "^1.1.3",
-    "watson-react-components": "^0.6.8"
+    "watson-react-components": "^0.6.10",
+    "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "babel-core": "^6.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "casperjs": "^1.1.4",
-    "enzyme": "^2.8.2",
+    "enzyme": "^2.9.1",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.3.0",
     "npm-run-all": "^4.1.1",
     "phantomjs-polyfill-find": "0.0.1",
     "phantomjs-polyfill-find-index": "^1.0.1",
-    "react-scripts": "0.9.5",
-    "react-test-renderer": "^15.5.4"
+    "react-scripts": "^1.0.13",
+    "react-test-renderer": "^15.6.1"
   },
   "scripts": {
     "start": "npm-run-all -p watch-css start-js",
@@ -38,6 +44,6 @@
     "build-test-integration": "rm -rf spec_dest && ./node_modules/babel-cli/bin/babel.js spec --out-dir spec_dest --presets=es2015",
     "test-integration": "npm run build-test-integration && ./node_modules/casperjs/bin/casperjs test --includes=spec_dest/support/setup_server.js spec_dest/scenarios",
     "eject": "react-scripts eject",
-    "lint": "./node_modules/eslint/bin/eslint.js src spec"
+    "lint": "./node_modules/eslint/bin/eslint.js --ext .jsx --ext .js src spec"
   }
 }
