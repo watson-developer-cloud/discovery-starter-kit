@@ -60,9 +60,9 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 1. Install [python](https://www.python.org/) version 2.7
 1. Install [virtual_env](https://virtualenv.pypa.io/en/stable/)
-1. Activate `virtualenv`
-  1. `virtualenv .` in project root directory
-  1. `source bin/activate` in project root directory
+1. Activate `virtualenv` for this project by running the following commands from the project root directory:
+    1. `virtualenv .`
+    1. `source bin/activate`
 1. Install dependencies `pip install -r server/python/requirements/dev.txt`
 1. Start server `python server/python/server.py`
 1. Visit http://localhost:5000/
