@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { string } from 'prop-types';
 import { scroller, Element } from 'react-scroll';
 import { Alert } from 'watson-react-components';
 import './styles.css';
@@ -7,7 +7,7 @@ import './styles.css';
 class ErrorContainer extends Component {
   componentDidMount() {
     scroller.scrollTo('scroll_to_error', {
-      smooth: true
+      smooth: true,
     });
   }
 
@@ -15,9 +15,9 @@ class ErrorContainer extends Component {
     const { errorMessage } = this.props;
 
     return (
-      <Element name='scroll_to_error' className='_container'>
-        <Alert type='error' color='red'>
-          <p className='base--p'>
+      <Element name="scroll_to_error" className="_container">
+        <Alert type="error" color="red">
+          <p className="base--p">
             { errorMessage }
           </p>
         </Alert>
@@ -26,8 +26,8 @@ class ErrorContainer extends Component {
   }
 }
 
-ErrorContainer.PropTypes = {
-  errorMessage: PropTypes.string.isRequired
-}
+ErrorContainer.propTypes = {
+  errorMessage: string.isRequired,
+};
 
 export default ErrorContainer;

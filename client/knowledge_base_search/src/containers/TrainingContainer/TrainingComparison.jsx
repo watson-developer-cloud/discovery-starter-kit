@@ -9,10 +9,9 @@ class TrainingComparison extends Component {
     const { trainedResult: { originalRank } } = this.props;
 
     if (originalRank === 0) {
-      return `Untrained Rank: > 100`;
-    } else {
-      return `Untrained Rank: ${originalRank}`;
+      return 'Untrained Rank: > 100';
     }
+    return `Untrained Rank: ${originalRank}`;
   }
 
   render() {
@@ -25,25 +24,25 @@ class TrainingComparison extends Component {
           <div className="training_comparison--content_left">
             { isFirst && (<h5>Standard search</h5>) }
             { regularResult && (
-                <ResultContainer
-                  result_text={replaceNewlines(regularResult.text)}
-                  result_rank={index + 1}
-                />
-              )
+              <ResultContainer
+                resultText={replaceNewlines(regularResult.text)}
+                resultRank={index + 1}
+              />
+            )
             }
           </div>
           <div className="training_comparison--content_right">
             { isFirst && (<h5>Trained search</h5>) }
             { trainedResult && (
-                <ResultContainer
-                  result_text={replaceNewlines(trainedResult.text)}
-                  result_rank={index + 1}
-                >
-                  <div className="training_comparison--content_rank">
-                    { this.getRankDisplay() }
-                  </div>
-                </ResultContainer>
-              )
+              <ResultContainer
+                resultText={replaceNewlines(trainedResult.text)}
+                resultRank={index + 1}
+              >
+                <div className="training_comparison--content_rank">
+                  { this.getRankDisplay() }
+                </div>
+              </ResultContainer>
+            )
             }
           </div>
         </div>
@@ -52,15 +51,20 @@ class TrainingComparison extends Component {
   }
 }
 
-TrainingComparison.PropTypes = {
+TrainingComparison.propTypes = {
   regularResult: shape({
-    text: string.isRequired
+    text: string.isRequired,
   }),
   trainedResult: shape({
     text: string.isRequired,
-    originalRank: number.isRequired
+    originalRank: number.isRequired,
   }),
-  index: number.isRequired
-}
+  index: number.isRequired,
+};
+
+TrainingComparison.defaultProps = {
+  regularResult: null,
+  trainedResult: null,
+};
 
 export default TrainingComparison;

@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
+import { Icon } from 'watson-react-components';
 import App from '../App';
 import SearchContainer from '../containers/SearchContainer/SearchContainer';
 import PassagesContainer from '../containers/PassagesContainer/PassagesContainer';
@@ -7,51 +9,55 @@ import TrainingContainer from '../containers/TrainingContainer/TrainingContainer
 import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from '../containers/ViewAllContainer/ViewAllContainer';
 import FeatureSelect from '../containers/SearchContainer/FeatureSelect';
-import { Icon } from 'watson-react-components';
 import * as query from '../actions/query';
 import * as questions from '../actions/questions';
-import { shallow } from 'enzyme';
+
 
 describe('<App />', () => {
   let wrapper;
   const questionsResponse = [
     {
-      question: 'a question?'
+      question: 'a question?',
     },
     {
-      question: 'another question?'
+      question: 'another question?',
     },
     {
-      question: 'a third question?'
+      question: 'a third question?',
     },
     {
-      question: 'a fourth question?'
+      question: 'a fourth question?',
     },
     {
-      question: 'a fifth question?'
-    }
+      question: 'a fifth question?',
+    },
   ];
   const passagesResponse = {
     matching_results: 10,
     results: [
       {
-        id: 1,
-        answer: 'one'
-      }
+        id: '1',
+        text: 'one',
+      },
     ],
     passages: [
       {
-        document_id: 1
-      }
-    ]
+        document_id: '1',
+        passage_text: 'passage',
+      },
+    ],
   };
 
-  questions.default = jest.fn(() => {
-    return Promise.resolve(questionsResponse);
-  });
-  query.default = jest.fn(() => {
-    return Promise.resolve(passagesResponse);
-  });
+  questions.default = jest.fn(() => Promise.resolve(questionsResponse));
+  query.default = jest.fn(() => Promise.resolve(passagesResponse));
+
+  function selectFeature(type) {
+    wrapper.instance().handleFeatureSelect({
+      target: {
+        value: type.value,
+      },
+    });
+  }
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -127,7 +133,7 @@ describe('<App />', () => {
 
     describe('and showViewAll is true', () => {
       beforeEach(() => {
-        wrapper.setState({showViewAll: true});
+        wrapper.setState({ showViewAll: true });
       });
 
       it('passes expected props to the ViewAllContainer', () => {
@@ -144,16 +150,14 @@ describe('<App />', () => {
   describe('when retrieveQuestions has an error', () => {
     beforeEach((done) => {
       // mock the fetch request to return an error
-      questions.default = jest.fn(() => {
-        return Promise.resolve({error: 'my bad'});
-      });
+      questions.default = jest.fn(() => Promise.resolve({ error: 'my bad' }));
 
       wrapper = shallow(<App />);
       wrapper.instance().retrieveQuestions(wrapper.state().selectedFeature);
       // "wait" for response
       setTimeout(() => {
         done();
-      }, 1)
+      }, 1);
     });
 
     it('passes expected props to the SearchContainer', () => {
@@ -172,10 +176,9 @@ describe('<App />', () => {
       wrapper.instance().handleSearch('my query');
     });
 
-    it('shows a loading spinner', () => {
-      expect(wrapper.find(Icon)).toHaveLength(1);
-      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
-      expect(wrapper.find(ErrorContainer)).toHaveLength(0);
+    it('calls the query action', () => {
+      expect(query.default)
+        .toBeCalledWith('passages', { natural_language_query: 'my query' });
     });
 
     it('sets the search_input state to the input value', () => {
@@ -187,7 +190,7 @@ describe('<App />', () => {
         // "wait" for response
         setTimeout(() => {
           done();
-        }, 1)
+        }, 1);
       });
 
       it('shows the results container', () => {
@@ -200,9 +203,7 @@ describe('<App />', () => {
 
   describe('when handleSearch produces an error', () => {
     beforeEach((done) => {
-      query.default = jest.fn(() => {
-        return Promise.resolve({error: 'ouch'});
-      });
+      query.default = jest.fn(() => Promise.resolve({ error: 'ouch' }));
       wrapper = shallow(<App />);
       wrapper.instance().handleSearch('my query');
       setTimeout(() => {
@@ -219,39 +220,35 @@ describe('<App />', () => {
   });
 
   describe('when the passage search contains only some of the source documents', () => {
-    let wrapper;
     const responseWithExtra = {
       matching_results: 10,
       results: [],
       passages: [
         {
-          document_id: 1
-        }
-      ]
+          document_id: '1',
+          passage_text: 'passage',
+        },
+      ],
     };
 
     beforeEach((done) => {
-      query.default = jest.fn((fetch) => {
-        return Promise.resolve(responseWithExtra);
-      });
+      query.default = jest.fn(() => Promise.resolve(responseWithExtra));
       wrapper = shallow(<App />);
       wrapper.instance().handleSearch('foo');
       // "wait" for response
       setTimeout(() => {
         done();
-      }, 1)
+      }, 1);
     });
 
     it('submits another query to the passages collection to retrieve missing documents', () => {
-      expect(query.default).toBeCalledWith('passages', {'filter': 'id:(1)'});
+      expect(query.default).toBeCalledWith('passages', { filter: 'id:(1)' });
     });
   });
 
   describe('onQuestionClick', () => {
     beforeEach((done) => {
-      questions.default = jest.fn(() => {
-        return Promise.resolve(questionsResponse);
-      });
+      questions.default = jest.fn(() => Promise.resolve(questionsResponse));
       wrapper = shallow(<App />);
       wrapper.instance().componentDidMount();
       // "wait" for response
@@ -276,7 +273,7 @@ describe('<App />', () => {
         expect(wrapper.state().presetQueries).toEqual(originalState.presetQueries);
         expect(wrapper.state().offset).toEqual(originalState.offset);
         expect(query.default).toBeCalledWith('passages', {
-          natural_language_query: questionText
+          natural_language_query: questionText,
         });
       });
     });
@@ -286,7 +283,7 @@ describe('<App />', () => {
 
       beforeEach(() => {
         questionText = wrapper.state().presetQueries[1].question;
-        wrapper.setState({offset: 4});
+        wrapper.setState({ offset: 4 });
         wrapper.instance().handleQuestionClick(questionText);
       });
 
@@ -314,7 +311,7 @@ describe('<App />', () => {
   describe('when "Passages" feature is selected', () => {
     beforeEach(() => {
       wrapper = shallow(<App />);
-      selectFeature(wrapper, FeatureSelect.featureTypes.PASSAGES);
+      selectFeature(FeatureSelect.featureTypes.PASSAGES);
     });
 
     it('sets the selectedFeature to "passages"', () => {
@@ -345,11 +342,11 @@ describe('<App />', () => {
 
       it('submits a query to the passages collection', () => {
         expect(query.default)
-          .toBeCalledWith('passages', {'natural_language_query': 'my query'});
+          .toBeCalledWith('passages', { natural_language_query: 'my query' });
         expect(query.default)
-          .not.toBeCalledWith('trained', {'natural_language_query': 'my query'});
+          .not.toBeCalledWith('trained', { natural_language_query: 'my query' });
         expect(query.default)
-          .not.toBeCalledWith('regular', {'natural_language_query': 'my query'});
+          .not.toBeCalledWith('regular', { natural_language_query: 'my query' });
       });
 
       describe('and the query is successful', () => {
@@ -357,7 +354,7 @@ describe('<App />', () => {
           // "wait" for response
           setTimeout(() => {
             done();
-          }, 1)
+          }, 1);
         });
 
         it('shows the passages container', () => {
@@ -373,7 +370,7 @@ describe('<App />', () => {
   describe('when "Relevancy" feature is selected', () => {
     beforeEach(() => {
       wrapper = shallow(<App />);
-      selectFeature(wrapper, FeatureSelect.featureTypes.TRAINED);
+      selectFeature(FeatureSelect.featureTypes.TRAINED);
     });
 
     it('sets the selectedFeature to "trained"', () => {
@@ -404,9 +401,9 @@ describe('<App />', () => {
 
       it('submits a query to the trained collection', () => {
         expect(query.default)
-          .toBeCalledWith('trained', {'natural_language_query': 'my query'});
+          .toBeCalledWith('trained', { natural_language_query: 'my query' });
         expect(query.default)
-          .not.toBeCalledWith('passages', {'natural_language_query': 'my query'});
+          .not.toBeCalledWith('passages', { natural_language_query: 'my query' });
       });
 
       describe('and the query is successful', () => {
@@ -414,7 +411,7 @@ describe('<App />', () => {
           // "wait" for response
           setTimeout(() => {
             done();
-          }, 1)
+          }, 1);
         });
 
         it('shows the training container', () => {
@@ -426,12 +423,4 @@ describe('<App />', () => {
       });
     });
   });
-
-  function selectFeature(wrapper, type) {
-    wrapper.instance().handleFeatureSelect({
-      target: {
-        value: type.value
-      }
-    });
-  }
 });

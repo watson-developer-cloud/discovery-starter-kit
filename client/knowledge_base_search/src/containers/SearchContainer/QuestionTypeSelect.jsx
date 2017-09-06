@@ -9,13 +9,13 @@ class QuestionTypeSelect extends Component {
     // this uses the /api/questions endpoint on the server
     PRESET: {
       value: 'preset',
-      text: 'Preset questions'
+      text: 'Preset questions',
     },
     // select "CUSTOM" when you wish to type in your own question
     CUSTOM: {
       value: 'custom',
-      text: 'Custom questions'
-    }
+      text: 'Custom questions',
+    },
   }
 
   render() {
@@ -33,7 +33,7 @@ class QuestionTypeSelect extends Component {
               <option key={value} value={value}>
                 { text }
               </option>
-            )
+            );
           })
         }
       </select>

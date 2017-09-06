@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 import { shallow } from 'enzyme';
+import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 
 describe('<QuestionBarContainer />', () => {
   let wrapper;
@@ -12,29 +12,29 @@ describe('<QuestionBarContainer />', () => {
     presetQueries: [
       {
         question: 'one',
-        is_training_query: true
+        is_training_query: true,
       },
       {
-        question: 'two'
+        question: 'two',
       },
       {
-        question: 'three'
+        question: 'three',
       },
       {
-        question: 'four'
+        question: 'four',
       },
       {
-        question: 'five'
+        question: 'five',
       },
       {
-        question: 'six'
-      }
+        question: 'six',
+      },
     ],
     currentQuery: '',
     isFetchingResults: false,
     offset: 0,
     onOffsetUpdate: onOffsetUpdateMock,
-    onQuestionClick: onQuestionClickMock
+    onQuestionClick: onQuestionClickMock,
   };
 
   it('renders without crashing', () => {
@@ -72,21 +72,19 @@ describe('<QuestionBarContainer />', () => {
 
   describe('when the currentQuery is equal to one of the queries shown', () => {
     const index = 2;
-    const props_with_matching_currentQuery = Object.assign({}, props, {
-      currentQuery: props.presetQueries[index].question
+    const propsWithMatchingCurrentQuery = Object.assign({}, props, {
+      currentQuery: props.presetQueries[index].question,
     });
 
     beforeEach(() => {
-      wrapper = shallow(<QuestionBarContainer {...props_with_matching_currentQuery} />);
+      wrapper = shallow(<QuestionBarContainer {...propsWithMatchingCurrentQuery} />);
     });
 
     it('adds the "active" class to the appropriate question', () => {
       const buttons = wrapper.find('.question_bar--button').nodes;
       expect(buttons[index].props.className).toContain('active');
 
-      buttons.filter((button, i) => {
-        return i !== index;
-      }).forEach((button) => {
+      buttons.filter((button, i) => i !== index).forEach((button) => {
         expect(button.props.className).not.toContain('active');
       });
     });
@@ -104,12 +102,12 @@ describe('<QuestionBarContainer />', () => {
   });
 
   describe('when offset is greater than questionsShown', () => {
-    const props_greater_offset = Object.assign({}, props, {
-      offset: QuestionBarContainer.defaultProps.questionsShown
+    const propsGreaterOffset = Object.assign({}, props, {
+      offset: QuestionBarContainer.defaultProps.questionsShown,
     });
 
     beforeEach(() => {
-      wrapper = shallow(<QuestionBarContainer {...props_greater_offset} />);
+      wrapper = shallow(<QuestionBarContainer {...propsGreaterOffset} />);
     });
 
     it('shows the left arrow button only', () => {
@@ -140,12 +138,12 @@ describe('<QuestionBarContainer />', () => {
   });
 
   describe('when isFetching is true', () => {
-    const props_is_fetching = Object.assign({}, props, {
-      isFetchingResults: true
+    const propsIsFetching = Object.assign({}, props, {
+      isFetchingResults: true,
     });
 
     beforeEach(() => {
-      wrapper = shallow(<QuestionBarContainer {...props_is_fetching} />);
+      wrapper = shallow(<QuestionBarContainer {...propsIsFetching} />);
     });
 
     it('disables all the query buttons', () => {

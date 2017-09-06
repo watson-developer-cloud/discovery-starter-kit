@@ -10,7 +10,7 @@ casper.test.begin('Knowledge Base Search', (test) => {
         test.assertElementCount(
           '.question_bar--button',
           4,
-          '4 Preset Questions shown on initial load'
+          '4 Preset Questions shown on initial load',
         );
         casper.click('.question_bar--button:first-child');
         casper.capture(`${casper.screenshots_dir}/search_clicked.png`);
@@ -29,15 +29,14 @@ casper.test.begin('Knowledge Base Search', (test) => {
           () => {
             casper.capture(`${casper.screenshots_dir}/results_failure.png`);
             test.fail();
-          }
+          },
         );
       },
       () => {
         casper.capture(`${casper.screenshots_dir}/questions_failure.png`);
         test.fail();
-      }
+      },
     );
-
   });
 
   casper.run(() => {

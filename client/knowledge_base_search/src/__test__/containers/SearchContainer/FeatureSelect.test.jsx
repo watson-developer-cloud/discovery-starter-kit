@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
 import FeatureSelect from '../../../containers/SearchContainer/FeatureSelect';
 import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
-import { shallow } from 'enzyme';
 
 describe('<FeatureSelect />', () => {
   let wrapper;
@@ -10,14 +10,18 @@ describe('<FeatureSelect />', () => {
   const onSelectMock = jest.fn();
   const questionTypeSelectProps = {
     onSelect: onSelectMock,
-    selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value
+    selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value,
   };
   const questionTypeSelector = (<QuestionTypeSelect {...questionTypeSelectProps} />);
   const props = {
     onFeatureSelect: onFeatureSelectMock,
     selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
-    questionTypeSelector: questionTypeSelector,
+    questionTypeSelector,
   };
+
+  function getButtonClickEvent(button) {
+    return { target: { value: button.props().value } };
+  }
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -33,7 +37,7 @@ describe('<FeatureSelect />', () => {
 
   describe('when the selectedFeature is "Passage Search"', () => {
     const propsWithPassage = Object.assign({}, props, {
-      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value
+      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
     });
 
     beforeEach(() => {
@@ -49,7 +53,7 @@ describe('<FeatureSelect />', () => {
 
   describe('when the selectedFeature is "Relevancy"', () => {
     const propsWithRelevancy = Object.assign({}, props, {
-      selectedFeature: FeatureSelect.featureTypes.TRAINED.value
+      selectedFeature: FeatureSelect.featureTypes.TRAINED.value,
     });
 
     beforeEach(() => {
@@ -73,8 +77,8 @@ describe('<FeatureSelect />', () => {
     it('calls onSelect with "passages"', () => {
       expect(onFeatureSelectMock).toBeCalledWith({
         target: {
-          value: FeatureSelect.featureTypes.PASSAGES.value
-        }
+          value: FeatureSelect.featureTypes.PASSAGES.value,
+        },
       });
     });
   });
@@ -89,13 +93,9 @@ describe('<FeatureSelect />', () => {
     it('calls onSelect with "relevancy"', () => {
       expect(onFeatureSelectMock).toBeCalledWith({
         target: {
-          value: FeatureSelect.featureTypes.TRAINED.value
-        }
+          value: FeatureSelect.featureTypes.TRAINED.value,
+        },
       });
     });
   });
-
-  function getButtonClickEvent(button) {
-    return { target: { value: button.props().value }};
-  }
 });

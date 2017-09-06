@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
+import { TextInput } from 'watson-react-components';
 import SearchContainer from '../../../containers/SearchContainer/SearchContainer';
 import FeatureSelect from '../../../containers/SearchContainer/FeatureSelect';
 import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 import ErrorContainer from '../../../containers/ErrorContainer/ErrorContainer';
-import { TextInput } from 'watson-react-components';
-import { shallow } from 'enzyme';
+
 
 describe('<SearchContainer />', () => {
   let wrapper;
@@ -27,8 +28,16 @@ describe('<SearchContainer />', () => {
     onViewAllClick: onViewAllClickMock,
     presetQueries: [],
     searchInput: '',
-    selectedFeature: FeatureSelect.featureTypes.PASSAGES.value
+    selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
   };
+
+  function selectQuestionType(type) {
+    wrapper.instance().handleOnQuestionTypeSelect({
+      target: {
+        value: type.value,
+      },
+    });
+  }
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -36,17 +45,17 @@ describe('<SearchContainer />', () => {
   });
 
   describe('when it has fetched questions', () => {
-    const props_questions_fetched = Object.assign({}, props, {
-      isFetchingQuestions: false
+    const propsQuestionsFetched = Object.assign({}, props, {
+      isFetchingQuestions: false,
     });
 
     describe('and questions are present', () => {
-      const questions = [ 'one', 'two' ];
-      const props_questions_present = Object.assign({}, props_questions_fetched, {
-        presetQueries: questions
+      const questions = [{ question: 'one' }, { question: 'two' }];
+      const propsQuestionsPresent = Object.assign({}, propsQuestionsFetched, {
+        presetQueries: questions,
       });
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_questions_present} />);
+        wrapper = shallow(<SearchContainer {...propsQuestionsPresent} />);
       });
 
       it('shows the QuestionBarContainer with expected props', () => {
@@ -78,12 +87,12 @@ describe('<SearchContainer />', () => {
     });
 
     describe('and an error is present', () => {
-      const props_with_error = Object.assign({}, props_questions_fetched, {
-        errorMessage: 'whoops'
+      const propsWithError = Object.assign({}, propsQuestionsFetched, {
+        errorMessage: 'whoops',
       });
 
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_with_error} />);
+        wrapper = shallow(<SearchContainer {...propsWithError} />);
       });
 
       it('shows an ErrorContainer', () => {
@@ -97,12 +106,12 @@ describe('<SearchContainer />', () => {
     });
 
     describe('and isFetchingResults is true', () => {
-      const props_results_fetching = Object.assign({}, props_questions_fetched, {
-        isFetchingResults: true
+      const propsResultsFetching = Object.assign({}, propsQuestionsFetched, {
+        isFetchingResults: true,
       });
 
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_results_fetching} />);
+        wrapper = shallow(<SearchContainer {...propsResultsFetching} />);
       });
 
       it('passes "true" to the QuestionBarContainer', () => {
@@ -116,7 +125,7 @@ describe('<SearchContainer />', () => {
 
       describe('and "Custom questions" type is selected', () => {
         beforeEach(() => {
-          selectQuestionType(wrapper, QuestionTypeSelect.questionTypes.CUSTOM);
+          selectQuestionType(QuestionTypeSelect.questionTypes.CUSTOM);
         });
 
         it('disables all the inputs', () => {
@@ -130,7 +139,7 @@ describe('<SearchContainer />', () => {
   describe('when "Custom questions" type is selected', () => {
     beforeEach(() => {
       wrapper = shallow(<SearchContainer {...props} />);
-      selectQuestionType(wrapper, QuestionTypeSelect.questionTypes.CUSTOM);
+      selectQuestionType(QuestionTypeSelect.questionTypes.CUSTOM);
     });
 
     it('has the text search, icon, and submit button displayed', () => {
@@ -145,20 +154,12 @@ describe('<SearchContainer />', () => {
 
     beforeEach(() => {
       wrapper = shallow(<SearchContainer {...props} />);
-      wrapper.setState({searchInput: text});
-      wrapper.find('form').simulate('submit', { preventDefault: () => {}});
+      wrapper.setState({ searchInput: text });
+      wrapper.find('form').simulate('submit', { preventDefault: () => {} });
     });
 
     it('calls onSubmit with the text', () => {
       expect(onSubmitMock).toBeCalledWith(text);
     });
   });
-
-  function selectQuestionType(wrapper, type) {
-    wrapper.instance().handleOnQuestionTypeSelect({
-      target: {
-        value: type.value
-      }
-    });
-  }
 });
