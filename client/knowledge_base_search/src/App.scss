@@ -86,7 +86,7 @@ a {
 }
 
 .base--button.base--button_fill {
-  &:visited, &:hover, &:active, &:focus {
+  &, &:visited, &:hover, &:active, &:focus {
     background-color: color('teal', 80);
     border-color: color('teal', 80);
   }
