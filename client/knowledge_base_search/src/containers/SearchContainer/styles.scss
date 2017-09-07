@@ -141,7 +141,8 @@
     padding-right: 1.7rem;
 
     &:focus {
-      outline-color: color('white', 10);
+      border-color: color('white', 10);
+      outline: none;
     }
   }
 }
