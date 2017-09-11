@@ -17,10 +17,21 @@
       border-left: 1px solid #e0e0e0;
       padding-left: 1rem;
     }
+  }
+  &--rank {
+    font-size: 0.8rem;
+    margin-top: 0.8rem;
+    margin-left: 0.5rem;
+    color: color('gray', 40);
 
-    &_rank {
-      text-align: right;
-      color: color('gray', 40);
+    &-down svg {
+      transform: scale(0.7, -0.7);
+      fill: color('purple', 50);
+    }
+
+    &-up svg {
+      transform: scale(0.7, 0.7);
+      fill: color('purple', 50);
     }
   }
 }
