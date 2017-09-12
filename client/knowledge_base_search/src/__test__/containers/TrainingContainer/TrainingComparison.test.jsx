@@ -32,13 +32,6 @@ describe('<TrainingComparison />', () => {
     expect(wrapper.find(ResultContainer)).toHaveLength(2);
   });
 
-  it('has expected originalRank displayed', () => {
-    wrapper = shallow(<TrainingComparison {...props} />);
-    const originalRankDisplay = wrapper.find('.training_comparison--content_rank');
-
-    expect(originalRankDisplay.text()).toEqual('Untrained Rank: 2');
-  });
-
   describe('when index is > 0', () => {
     const propsWithGreaterIndex = Object.assign({}, props, {
       index: 1,
@@ -54,20 +47,36 @@ describe('<TrainingComparison />', () => {
     });
   });
 
-  describe('when originalRank is 0', () => {
-    const propsWithOriginalRankZero = Object.assign({}, props, {
-      trainedResult: Object.assign({}, props.trainedResult, {
-        originalRank: 0,
-      }),
+  describe('when the trainingRank is better than the originalRank', () => {
+    const propsWithGreaterTrainingRank = Object.assign({}, props, {
+      index: 0,
+      originalRank: 2,
     });
+
     beforeEach(() => {
-      wrapper = shallow(<TrainingComparison {...propsWithOriginalRankZero} />);
+      wrapper = shallow(<TrainingComparison {...propsWithGreaterTrainingRank} />);
     });
 
-    it('has expected originalRank displayed', () => {
-      const originalRankDisplay = wrapper.find('.training_comparison--content_rank');
+    it('says that Watson moved the rank up', () => {
+      const rankDisplay = wrapper.find('.training_comparison--rank-up');
+      expect(rankDisplay).toHaveLength(1);
+    });
+  });
 
-      expect(originalRankDisplay.text()).toEqual('Untrained Rank: > 100');
+
+  describe('when the originalRank is better than the trainingRank', () => {
+    const propsWithGreaterOriginalRank = Object.assign({}, props, {
+      index: 2,
+      originalRank: 1,
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<TrainingComparison {...propsWithGreaterOriginalRank} />);
+    });
+
+    it('says that Watson moved the rank down', () => {
+      const rankDisplay = wrapper.find('.training_comparison--rank-down');
+      expect(rankDisplay).toHaveLength(1);
     });
   });
 });

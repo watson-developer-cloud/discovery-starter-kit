@@ -12,7 +12,6 @@ function ResultContainer({ resultText, resultRank, children }) {
         })
       }
     >
-      { children }
       { resultText && (
         <div className="result_container_items--div">
           <div className="result_container_text--div">
@@ -25,6 +24,7 @@ function ResultContainer({ resultText, resultRank, children }) {
         resultRank === 1 && !resultText &&
           <div className="result_container--div">No Results</div>
       }
+      { children }
     </div>
   );
 }
