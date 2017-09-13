@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { string, number, shape } from 'prop-types';
-import ResultContainer from '../ResultContainer/ResultContainer';
-import replaceNewlines from '../../utils/replaceNewlines';
 import { Icon } from 'watson-react-components';
 import classNames from 'classnames';
+import ResultContainer from '../ResultContainer/ResultContainer';
+import replaceNewlines from '../../utils/replaceNewlines';
 import './styles.css';
 
 class TrainingComparison extends Component {
-
-  getRankDisplay(trainingRank, originalRank) {
+  getRankDisplay = () => {
+    const { trainedResult: { originalRank }, index } = this.props;
+    const trainingRank = index + 1;
     if (originalRank && trainingRank !== originalRank) {
       const relativeRank = trainingRank < originalRank ? 'up' : 'down';
       return (
-        <div className={classNames('training_comparison--rank-'+relativeRank)}>
-          <Icon type="up"/>
+        <div className={classNames(`training_comparison--rank-${relativeRank}`)}>
+          <Icon type="up" />
           <span>Watson moved this answer {relativeRank} based on relevancy training</span>
         </div>
       );
@@ -23,7 +24,6 @@ class TrainingComparison extends Component {
 
   render() {
     const { regularResult, trainedResult, index } = this.props;
-    const originalRank = trainedResult.originalRank;
     const isFirst = index === 0;
 
     return (
@@ -46,9 +46,7 @@ class TrainingComparison extends Component {
                 resultText={replaceNewlines(trainedResult.text)}
                 resultRank={index + 1}
               >
-                <div className="training_comparison--rank">
-                  { this.getRankDisplay(index+1, originalRank) }
-                </div>
+                { this.getRankDisplay() }
               </ResultContainer>
             )
             }

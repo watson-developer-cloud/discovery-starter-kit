@@ -19,19 +19,20 @@
     }
   }
   &--rank {
-    font-size: 0.8rem;
-    margin-top: 0.8rem;
-    margin-left: 0.5rem;
-    color: color('gray', 40);
-
+    &-down, &-up {
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      margin-left: 0.5rem;
+      color: color('gray', 40);
+      svg {
+        fill: color('purple', 50);
+      }
+    }
     &-down svg {
       transform: scale(0.7, -0.7);
-      fill: color('purple', 50);
     }
-
     &-up svg {
       transform: scale(0.7, 0.7);
-      fill: color('purple', 50);
     }
   }
 }

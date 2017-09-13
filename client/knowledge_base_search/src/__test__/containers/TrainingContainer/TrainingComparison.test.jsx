@@ -50,7 +50,10 @@ describe('<TrainingComparison />', () => {
   describe('when the trainingRank is better than the originalRank', () => {
     const propsWithGreaterTrainingRank = Object.assign({}, props, {
       index: 0,
-      originalRank: 2,
+      trainedResult: {
+        text: '',
+        originalRank: 2,
+      },
     });
 
     beforeEach(() => {
@@ -67,7 +70,10 @@ describe('<TrainingComparison />', () => {
   describe('when the originalRank is better than the trainingRank', () => {
     const propsWithGreaterOriginalRank = Object.assign({}, props, {
       index: 2,
-      originalRank: 1,
+      trainedResult: {
+        text: '',
+        originalRank: 1,
+      },
     });
 
     beforeEach(() => {
@@ -77,6 +83,27 @@ describe('<TrainingComparison />', () => {
     it('says that Watson moved the rank down', () => {
       const rankDisplay = wrapper.find('.training_comparison--rank-down');
       expect(rankDisplay).toHaveLength(1);
+    });
+  });
+
+  describe('when the originalRank is equal to the trainingRank', () => {
+    const propsWithEqualRanks = Object.assign({}, props, {
+      index: 1,
+      trainedResult: {
+        text: '',
+        originalRank: 2,
+      },
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<TrainingComparison {...propsWithEqualRanks} />);
+    });
+
+    it('does not have a rerank message', () => {
+      const rankUpDisplay = wrapper.find('.training_comparison--rank-up');
+      const rankDownDisplay = wrapper.find('.training_comparison--rank-down');
+      expect(rankUpDisplay).toHaveLength(0);
+      expect(rankDownDisplay).toHaveLength(0);
     });
   });
 });
