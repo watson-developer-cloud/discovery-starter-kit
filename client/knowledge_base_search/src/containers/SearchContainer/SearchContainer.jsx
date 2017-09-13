@@ -146,12 +146,10 @@ class SearchContainer extends Component {
             <FeatureSelect
               onFeatureSelect={this.props.onFeatureSelect}
               selectedFeature={this.props.selectedFeature}
-              questionTypeSelector={
-                <QuestionTypeSelect
-                  onSelect={this.handleOnQuestionTypeSelect}
-                  selectedQuestion={this.state.selectedQuestionType}
-                />
-              }
+            />
+            <QuestionTypeSelect
+              onSelect={this.handleOnQuestionTypeSelect}
+              selectedQuestion={this.state.selectedQuestionType}
             />
             { this.renderQuestionType() }
           </form>
