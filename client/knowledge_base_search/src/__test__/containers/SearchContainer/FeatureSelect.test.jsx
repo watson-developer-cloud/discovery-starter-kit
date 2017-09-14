@@ -2,21 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow } from 'enzyme';
 import FeatureSelect from '../../../containers/SearchContainer/FeatureSelect';
-import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 
 describe('<FeatureSelect />', () => {
   let wrapper;
   const onFeatureSelectMock = jest.fn();
-  const onSelectMock = jest.fn();
-  const questionTypeSelectProps = {
-    onSelect: onSelectMock,
-    selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value,
-  };
-  const questionTypeSelector = (<QuestionTypeSelect {...questionTypeSelectProps} />);
   const props = {
     onFeatureSelect: onFeatureSelectMock,
     selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
-    questionTypeSelector,
   };
 
   function getButtonClickEvent(button) {
@@ -28,11 +20,10 @@ describe('<FeatureSelect />', () => {
     ReactDOM.render(<FeatureSelect {...props} />, div);
   });
 
-  it('has a <QuestionTypeSelect /> and expected features', () => {
+  it('has the expected features', () => {
     wrapper = shallow(<FeatureSelect {...props} />);
 
-    expect(wrapper.find(QuestionTypeSelect)).toHaveLength(1);
-    expect(wrapper.find('.feature_select--list_item')).toHaveLength(3);
+    expect(wrapper.find('.feature_select--list_item')).toHaveLength(2);
   });
 
   describe('when the selectedFeature is "Passage Search"', () => {

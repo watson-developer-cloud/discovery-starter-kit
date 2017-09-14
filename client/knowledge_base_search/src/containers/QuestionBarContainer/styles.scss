@@ -21,6 +21,9 @@
   }
 
   &--button {
+    &:first-child {
+      margin-left: 0rem;
+    }
     position: relative;
     flex: 1 0 0;
     color: color('white', 10);

@@ -139,6 +139,8 @@
     color: color('white', 10);
     background-image: url(triangle(color('white', 10), $size: 1.5));
     padding-right: 1.7rem;
+    width: auto;
+    margin-bottom: 1rem;
 
     &:focus {
       border-color: color('white', 10);
@@ -150,7 +152,7 @@
 .feature_select {
   &--list {
     display: flex;
-    margin-bottom: get('rhythm');
+    margin-bottom: 1rem;
     border-bottom: 1px solid color('white', 10);
   }
 

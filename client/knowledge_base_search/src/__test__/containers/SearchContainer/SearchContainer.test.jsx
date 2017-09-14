@@ -58,6 +58,10 @@ describe('<SearchContainer />', () => {
         wrapper = shallow(<SearchContainer {...propsQuestionsPresent} />);
       });
 
+      it('shows the QuestionTypeSelect with expected props', () => {
+        expect(wrapper.find(QuestionTypeSelect)).toHaveLength(1);
+      });
+
       it('shows the QuestionBarContainer with expected props', () => {
         const questionBarProps = wrapper.find(QuestionBarContainer).props();
 

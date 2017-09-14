@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func, element } from 'prop-types';
+import { string, func } from 'prop-types';
 import classNames from 'classnames';
 import './styles.css';
 
@@ -25,14 +25,10 @@ class FeatureSelect extends Component {
   render() {
     const {
       onFeatureSelect,
-      questionTypeSelector,
     } = this.props;
 
     return (
       <ul className="feature_select--list">
-        <li className="feature_select--list_item">
-          { questionTypeSelector }
-        </li>
         {
           Object.keys(FeatureSelect.featureTypes).map((featureKey) => {
             const { value, text } = FeatureSelect.featureTypes[featureKey];
@@ -66,7 +62,6 @@ class FeatureSelect extends Component {
 FeatureSelect.propTypes = {
   onFeatureSelect: func.isRequired,
   selectedFeature: string.isRequired,
-  questionTypeSelector: element.isRequired,
 };
 
 export default FeatureSelect;
