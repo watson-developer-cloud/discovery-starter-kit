@@ -166,4 +166,19 @@ describe('<SearchContainer />', () => {
       expect(onSubmitMock).toBeCalledWith(text);
     });
   });
+
+  describe('when the relevancy tab is selected', () => {
+    const propsWithRelevancySelected = Object.assign({}, props, {
+      isFetchingQuestions: false,
+      selectedFeature: FeatureSelect.featureTypes.TRAINED.value,
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<SearchContainer {...propsWithRelevancySelected} />);
+    });
+
+    it('shows the Trained Question key', () => {
+      expect(wrapper.find('.training-key')).toHaveLength(1);
+    });
+  });
 });

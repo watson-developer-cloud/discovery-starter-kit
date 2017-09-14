@@ -58,6 +58,7 @@ class SearchContainer extends Component {
       presetQueries,
       isFetchingResults,
       onViewAllClick,
+      selectedFeature,
     } = this.props;
 
     if (errorMessage) {
@@ -74,15 +75,25 @@ class SearchContainer extends Component {
           presetQueries={presetQueries}
           isFetchingResults={isFetchingResults}
         />
-        <div className="view_all_button--div">
-          <button
-            type="button"
-            className="view_all--button"
-            disabled={isFetchingResults}
-            onClick={onViewAllClick}
-          >
-            { this.getViewAllButtonText() }
-          </button>
+        <div className="question_bar--bottom">
+          { selectedFeature === 'trained' ?
+            <div className="training-key">
+              <span title="training key--icon" className="training-key--icon" />
+              <span className="training-key--text">
+                Trained question
+              </span>
+            </div> : null
+          }
+          <span className="view_all_button--span">
+            <button
+              type="button"
+              className="view_all--button"
+              disabled={isFetchingResults}
+              onClick={onViewAllClick}
+            >
+              { this.getViewAllButtonText() }
+            </button>
+          </span>
         </div>
       </div>
     );

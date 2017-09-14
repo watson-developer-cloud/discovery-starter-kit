@@ -10,14 +10,22 @@
     display: flex;
   }
 
+  &--bottom {
+    margin-top: 0.5rem;
+    height: 2rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
   &--train {
     position: absolute;
-    bottom: 0.2rem;
-    right: 0.2rem;
-    height: 1rem;
-    width: 1rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    height: 0.7rem;
+    width: 0.7rem;
+    border: 1px solid color('white', 10);
     border-radius: 50%;
-    background-color: color('teal', 80);
+    background-color: color('purple', 50);
   }
 
   &--button {
