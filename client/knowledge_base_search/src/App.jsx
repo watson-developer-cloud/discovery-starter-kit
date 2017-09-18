@@ -294,6 +294,7 @@ class App extends Component {
   }
 
   render() {
+    const isTrained = this.state.selectedFeature === FeatureSelect.featureTypes.TRAINED.value;
     return (
       <div className="App">
         <Header
@@ -358,6 +359,7 @@ class App extends Component {
                 onCloseClick={this.toggleViewAll}
                 isFetchingResults={this.state.fetchingResults}
                 presetQueries={this.state.presetQueries}
+                isTrained={isTrained}
               />
             )
           }

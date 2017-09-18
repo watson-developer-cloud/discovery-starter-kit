@@ -12,6 +12,7 @@ describe('<ViewAllContainer />', () => {
     onQuestionClick: onQuestionClickMock,
     onCloseClick: onCloseClickMock,
     presetQueries: [],
+    isTrained: true,
   };
 
   it('renders without crashing', () => {
