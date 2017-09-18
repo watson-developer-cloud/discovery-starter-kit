@@ -6,6 +6,8 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "node-sass-chokidar": "0.0.3",
+    "phantomjs-polyfill-find": "0.0.1",
+    "phantomjs-polyfill-find-index": "^1.0.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -29,8 +31,6 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.3.0",
     "npm-run-all": "^4.1.1",
-    "phantomjs-polyfill-find": "0.0.1",
-    "phantomjs-polyfill-find-index": "^1.0.1",
     "react-scripts": "^1.0.13",
     "react-test-renderer": "^15.6.1"
   },
