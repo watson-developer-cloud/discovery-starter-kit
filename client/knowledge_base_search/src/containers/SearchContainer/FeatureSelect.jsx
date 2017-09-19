@@ -14,7 +14,7 @@ class FeatureSelect extends Component {
     // Relevancy training - uses user-input training data to improve relevancy
     TRAINED: {
       value: 'trained',
-      text: 'Relevancy',
+      text: 'Relevancy Training',
     },
   }
 

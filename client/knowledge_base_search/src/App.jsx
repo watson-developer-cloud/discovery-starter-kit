@@ -310,7 +310,7 @@ class App extends Component {
           apiReference={links.doc_api}
           startInBluemix={links.bluemix}
           version="GA"
-          description="This starter kit demonstrates how Watson Discovery&#39;s Passage Search quickly finds the most relevant information in your documents to answer your natural language questions. Try out the preset questions or enter a custom question and compare the answers returned by a Standard (non-Passage) Search vs. a Passage Search on the Stack Exchange Travel data set."
+          description="This starter kit demonstrates how Watson Discovery&#39;s cognitive search capabilities quickly find the most relevant information in your documents to answer your natural language questions. Try out the preset questions or enter a custom question and compare the answers returned by a Standard Search vs. a Passage or Relevancy-Trained Search on the Stack Exchange Travel data set."
         />
         <Sticky>
           <SearchContainer
