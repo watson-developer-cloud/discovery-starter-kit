@@ -84,9 +84,9 @@ class ViewAllContainer extends Component {
           </button>
         </div>
         <h5 id="view_all_description" className="view_all_questions_description--h5">
-          These are a list of available questions we have prepared
+          This is the list of questions we have prepared
           for you. Click one below to see how Watson delivers
-          meaningful results with Passage Search.
+          meaningful results with Passage or Relevancy-Trained Search.
         </h5>
         <div className="view_all_questions_filter--div">
           <span className="view_all_questions_filter--icon">
