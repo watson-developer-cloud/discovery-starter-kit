@@ -72,6 +72,10 @@ Client side is built with [React](https://facebook.github.io/react/)
 1. Linter run with `flake8`
 1. Tests run with `pytest`
 
+#### License
+
+This sample code is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+
 ## Privacy Notice
 
 Sample web applications that include this package may be configured to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:

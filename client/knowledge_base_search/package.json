@@ -2,6 +2,7 @@
   "name": "knowledge_base_search",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "classnames": "^2.2.5",
     "node-sass-chokidar": "0.0.3",
