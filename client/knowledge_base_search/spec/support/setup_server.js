@@ -23,10 +23,6 @@ casper.options.verbose = true;
 casper.options.logLevel = 'error';
 // increase the timeout
 casper.options.waitTimeout = 10000;
-// add array.find polyfill
-casper.options.clientScripts.push('./node_modules/phantomjs-polyfill-find/find-polyfill.js');
-// add array.findIndex polyfill
-casper.options.clientScripts.push('./node_modules/phantomjs-polyfill-find-index/findIndex-polyfill.js');
 
 casper.test.setUp((done) => {
   const server = spawn('python', ['../../server/python/server.py']);
