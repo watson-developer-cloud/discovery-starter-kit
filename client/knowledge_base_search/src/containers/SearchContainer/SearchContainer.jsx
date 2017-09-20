@@ -157,6 +157,7 @@ class SearchContainer extends Component {
             <FeatureSelect
               onFeatureSelect={this.props.onFeatureSelect}
               selectedFeature={this.props.selectedFeature}
+              isFetchingResults={this.props.isFetchingResults}
             />
             <QuestionTypeSelect
               onSelect={this.handleOnQuestionTypeSelect}

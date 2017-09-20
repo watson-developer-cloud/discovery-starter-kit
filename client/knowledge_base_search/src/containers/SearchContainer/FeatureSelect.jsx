@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import classNames from 'classnames';
 import './styles.css';
 
@@ -25,6 +25,7 @@ class FeatureSelect extends Component {
   render() {
     const {
       onFeatureSelect,
+      isFetchingResults,
     } = this.props;
 
     return (
@@ -46,6 +47,7 @@ class FeatureSelect extends Component {
                       'feature_select--list_button--active': this.isSelected(value),
                     })
                   }
+                  disabled={isFetchingResults}
                   onClick={onFeatureSelect}
                 >
                   { text }
@@ -62,6 +64,7 @@ class FeatureSelect extends Component {
 FeatureSelect.propTypes = {
   onFeatureSelect: func.isRequired,
   selectedFeature: string.isRequired,
+  isFetchingResults: bool.isRequired,
 };
 
 export default FeatureSelect;

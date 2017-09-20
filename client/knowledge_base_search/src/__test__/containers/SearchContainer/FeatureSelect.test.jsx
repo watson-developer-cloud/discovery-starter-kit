@@ -9,6 +9,7 @@ describe('<FeatureSelect />', () => {
   const props = {
     onFeatureSelect: onFeatureSelectMock,
     selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
+    isFetchingResults: false,
   };
 
   function getButtonClickEvent(button) {
@@ -86,6 +87,43 @@ describe('<FeatureSelect />', () => {
         target: {
           value: FeatureSelect.featureTypes.TRAINED.value,
         },
+      });
+    });
+  });
+
+  describe('when using the FeatureSelection tabs', () => {
+    let passagesTab;
+    let relevancyTab;
+
+    function renderWithProps(propSet) {
+      wrapper = shallow(<FeatureSelect {...propSet} />);
+      passagesTab = wrapper.find('.feature_select--list_button').at(0);
+      relevancyTab = wrapper.find('.feature_select--list_button').at(1);
+    }
+
+    beforeEach(() => {
+      renderWithProps(props);
+    });
+
+    describe('when the app is not fetching results', () => {
+      it('does not disable tab selection', () => {
+        expect(passagesTab.props().disabled).toBe(false);
+        expect(relevancyTab.props().disabled).toBe(false);
+      });
+    });
+
+    describe('when the app is fetching results to a question', () => {
+      const propsFetchingResults = Object.assign({}, props, {
+        isFetchingResults: true,
+      });
+
+      beforeEach(() => {
+        renderWithProps(propsFetchingResults);
+      });
+
+      it('disables tab selection', () => {
+        expect(passagesTab.props().disabled).toBe(true);
+        expect(relevancyTab.props().disabled).toBe(true);
       });
     });
   });
