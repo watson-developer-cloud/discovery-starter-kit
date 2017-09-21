@@ -11,120 +11,120 @@ describe('<FeatureSelect />', () => {
     selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
     isFetchingResults: false,
   };
+  const propsWithRelevancy = Object.assign({}, props, {
+    selectedFeature: FeatureSelect.featureTypes.TRAINED.value,
+  });
+
+  const passagesTabLocation = 0;
+  const relevancyTabLocation = 1;
+  let passagesTab;
+  let relevancyTab;
+  let highlightedFeature;
+
+  function renderWithProps(propSet) {
+    wrapper = shallow(<FeatureSelect {...propSet} />);
+    passagesTab = wrapper.find('.feature_select--list_button').at(passagesTabLocation);
+    relevancyTab = wrapper.find('.feature_select--list_button').at(relevancyTabLocation);
+    highlightedFeature = wrapper.find('.feature_select--list_button--active');
+  }
 
   function getButtonClickEvent(button) {
     return { target: { value: button.props().value } };
   }
 
-  it('renders without crashing', () => {
-    const div = document.createElement('div');
-    ReactDOM.render(<FeatureSelect {...props} />, div);
-  });
+  function clickTab(featureWrapper, tab) {
+    tab.simulate('click', getButtonClickEvent(tab));
+  }
 
-  it('has the expected features', () => {
-    wrapper = shallow(<FeatureSelect {...props} />);
-
-    expect(wrapper.find('.feature_select--list_item')).toHaveLength(2);
-  });
-
-  describe('when the selectedFeature is "Passage Search"', () => {
-    const propsWithPassage = Object.assign({}, props, {
-      selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
+  describe('basic functionality', () => {
+    it('renders without crashing', () => {
+      const div = document.createElement('div');
+      ReactDOM.render(<FeatureSelect {...props} />, div);
     });
 
-    beforeEach(() => {
-      wrapper = shallow(<FeatureSelect {...propsWithPassage} />);
-    });
-
-    it('has "Passage Search" highlighted', () => {
-      const highlightedFeature = wrapper.find('.feature_select--list_button--active');
-
-      expect(highlightedFeature.text()).toEqual(FeatureSelect.featureTypes.PASSAGES.text);
-    });
-  });
-
-  describe('when the selectedFeature is "Relevancy"', () => {
-    const propsWithRelevancy = Object.assign({}, props, {
-      selectedFeature: FeatureSelect.featureTypes.TRAINED.value,
-    });
-
-    beforeEach(() => {
-      wrapper = shallow(<FeatureSelect {...propsWithRelevancy} />);
-    });
-
-    it('has "Relevancy" highlighted', () => {
-      const highlightedFeature = wrapper.find('.feature_select--list_button--active');
-
-      expect(highlightedFeature.text()).toEqual(FeatureSelect.featureTypes.TRAINED.text);
-    });
-  });
-
-  describe('when the first feature is clicked', () => {
-    beforeEach(() => {
-      wrapper = shallow(<FeatureSelect {...props} />);
-      const button = wrapper.find('.feature_select--list_button').at(0);
-      button.simulate('click', getButtonClickEvent(button));
-    });
-
-    it('calls onSelect with "passages"', () => {
-      expect(onFeatureSelectMock).toBeCalledWith({
-        target: {
-          value: FeatureSelect.featureTypes.PASSAGES.value,
-        },
-      });
-    });
-  });
-
-  describe('when the second feature is clicked', () => {
-    beforeEach(() => {
-      wrapper = shallow(<FeatureSelect {...props} />);
-      const button = wrapper.find('.feature_select--list_button').at(1);
-      button.simulate('click', getButtonClickEvent(button));
-    });
-
-    it('calls onSelect with "relevancy"', () => {
-      expect(onFeatureSelectMock).toBeCalledWith({
-        target: {
-          value: FeatureSelect.featureTypes.TRAINED.value,
-        },
-      });
-    });
-  });
-
-  describe('when using the FeatureSelection tabs', () => {
-    let passagesTab;
-    let relevancyTab;
-
-    function renderWithProps(propSet) {
-      wrapper = shallow(<FeatureSelect {...propSet} />);
-      passagesTab = wrapper.find('.feature_select--list_button').at(0);
-      relevancyTab = wrapper.find('.feature_select--list_button').at(1);
-    }
-
-    beforeEach(() => {
+    it('has two features', () => {
       renderWithProps(props);
-    });
 
-    describe('when the app is not fetching results', () => {
-      it('does not disable tab selection', () => {
-        expect(passagesTab.props().disabled).toBe(false);
+      expect(wrapper.find('.feature_select--list_item')).toHaveLength(2);
+    });
+  });
+
+  describe('when selecting different features', () => {
+    describe('when the selectedFeature is "Passage Search"', () => {
+      beforeEach(() => {
+        renderWithProps(props);
+      });
+
+      it('has "Passage Search" highlighted', () => {
+        expect(highlightedFeature.text()).toEqual(FeatureSelect.featureTypes.PASSAGES.text);
+      });
+
+      it('disables tab selection for passages only', () => {
+        expect(passagesTab.props().disabled).toBe(true);
         expect(relevancyTab.props().disabled).toBe(false);
       });
     });
 
-    describe('when the app is fetching results to a question', () => {
-      const propsFetchingResults = Object.assign({}, props, {
-        isFetchingResults: true,
-      });
-
+    describe('when the selectedFeature is "Relevancy"', () => {
       beforeEach(() => {
-        renderWithProps(propsFetchingResults);
+        renderWithProps(propsWithRelevancy);
       });
 
-      it('disables tab selection', () => {
-        expect(passagesTab.props().disabled).toBe(true);
+      it('has "Relevancy" highlighted', () => {
+        expect(highlightedFeature.text()).toEqual(FeatureSelect.featureTypes.TRAINED.text);
+      });
+
+      it('disables tab selection for relevance only', () => {
+        expect(passagesTab.props().disabled).toBe(false);
         expect(relevancyTab.props().disabled).toBe(true);
       });
+    });
+  });
+
+  describe('when clicking feature tabs', () => {
+    describe('when the passages feature is clicked', () => {
+      beforeEach(() => {
+        renderWithProps(propsWithRelevancy);
+        clickTab(wrapper, passagesTab);
+      });
+
+      it('calls onSelect with "passages"', () => {
+        expect(onFeatureSelectMock).toBeCalledWith({
+          target: {
+            value: FeatureSelect.featureTypes.PASSAGES.value,
+          },
+        });
+      });
+    });
+
+    describe('when the relevancy feature is clicked', () => {
+      beforeEach(() => {
+        renderWithProps(props);
+        clickTab(wrapper, relevancyTab);
+      });
+
+      it('calls onSelect with "relevancy"', () => {
+        expect(onFeatureSelectMock).toBeCalledWith({
+          target: {
+            value: FeatureSelect.featureTypes.TRAINED.value,
+          },
+        });
+      });
+    });
+  });
+
+  describe('when the app is fetching results', () => {
+    const propsFetchingResults = Object.assign({}, props, {
+      isFetchingResults: true,
+    });
+
+    beforeEach(() => {
+      renderWithProps(propsFetchingResults);
+    });
+
+    it('disables tab selection', () => {
+      expect(passagesTab.props().disabled).toBe(true);
+      expect(relevancyTab.props().disabled).toBe(true);
     });
   });
 });
