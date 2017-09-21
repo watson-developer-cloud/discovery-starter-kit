@@ -47,7 +47,7 @@ class FeatureSelect extends Component {
                       'feature_select--list_button--active': this.isSelected(value),
                     })
                   }
-                  disabled={isFetchingResults}
+                  disabled={isFetchingResults || this.isSelected(value)}
                   onClick={onFeatureSelect}
                 >
                   { text }
