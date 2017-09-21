@@ -75,17 +75,26 @@ describe('<QuestionBarContainer />', () => {
     const propsWithMatchingCurrentQuery = Object.assign({}, props, {
       currentQuery: props.presetQueries[index].question,
     });
+    let buttons;
 
     beforeEach(() => {
       wrapper = shallow(<QuestionBarContainer {...propsWithMatchingCurrentQuery} />);
+      buttons = wrapper.find('.question_bar--button').nodes;
     });
 
     it('adds the "active" class to the appropriate question', () => {
-      const buttons = wrapper.find('.question_bar--button').nodes;
       expect(buttons[index].props.className).toContain('active');
 
       buttons.filter((button, i) => i !== index).forEach((button) => {
         expect(button.props.className).not.toContain('active');
+      });
+    });
+
+    it('disables the appropriate question', () => {
+      expect(buttons[index].props.disabled).toBe(true);
+
+      buttons.filter((button, i) => i !== index).forEach((button) => {
+        expect(button.props.disabled).toBe(false);
       });
     });
   });

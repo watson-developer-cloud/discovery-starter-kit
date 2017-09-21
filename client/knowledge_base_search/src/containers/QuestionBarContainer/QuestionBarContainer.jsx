@@ -63,7 +63,7 @@ class QuestionBarContainer extends Component {
                 })
               }
               type="button"
-              disabled={isFetchingResults}
+              disabled={isFetchingResults || query.question === currentQuery}
               onClick={() => { onQuestionClick(query.question); }}
             >
               { query.question }
