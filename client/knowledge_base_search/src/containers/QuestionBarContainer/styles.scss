@@ -45,17 +45,27 @@
     margin: 0 0.5rem;
     min-height: 7rem;
 
+    &:hover, &:focus {
+      border-color: color('white', 10);
+      &:enabled {
+        background-color: color('teal', 30);
+        color: color('teal', 80);
+      }
+      &:disabled {
+        background-color: inherit;
+        color: color('white', 10);
+      }
+    }
+
     &--active {
       border-color: color('white', 10);
       color: color('white', 10);
       background-color: color('teal', 50);
       outline: 0;
-    }
 
-    &:hover, &:focus {
-      background-color: color('teal', 30);
-      border-color: color('white', 10);
-      color: color('teal', 80);
+      &:hover:disabled {
+        background-color: color('teal', 50);
+      }
     }
   }
 

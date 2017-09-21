@@ -52,7 +52,7 @@
       }
     }
 
-    &.view_all--button {
+    &.view_all--button:enabled {
       &:hover, &:focus {
         border-bottom-color: color('white', 10);
       }
@@ -191,14 +191,19 @@
     line-height: 2.5rem;
     transition: none;
 
-    &--active {
-      border-bottom: 0.2rem solid color('white', 10);
-      color: color('white', 10);
+    &:active, &:focus, &:hover {
+      border-bottom-color: currentColor;
+      &:enabled {
+        color: color('white', 10);
+      }
+      &:disabled {
+        color: color('teal', 10);
+      }
     }
 
-    &:active, &:focus, &:hover {
+    &--active, &--active:hover:disabled {
+      border-bottom: 0.2rem solid color('white', 10);
       color: color('white', 10);
-      border-bottom-color: currentColor;
     }
   }
 }
