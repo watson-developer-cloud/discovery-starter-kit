@@ -30,10 +30,13 @@ class QuestionBarContainer extends Component {
     onOffsetUpdate(paginateTo);
   }
 
+  isCurrentQuestion(question) {
+    return question === this.props.currentQuery;
+  }
+
   render() {
     const {
       presetQueries,
-      currentQuery,
       questionsShown,
       isFetchingResults,
       onQuestionClick,
@@ -59,11 +62,11 @@ class QuestionBarContainer extends Component {
               key={md5(query.question)}
               className={
                 classNames('question_bar--button', {
-                  'question_bar--button--active': query.question === currentQuery,
+                  'question_bar--button--active': this.isCurrentQuestion(query.question),
                 })
               }
               type="button"
-              disabled={isFetchingResults || query.question === currentQuery}
+              disabled={isFetchingResults || this.isCurrentQuestion(query.question)}
               onClick={() => { onQuestionClick(query.question); }}
             >
               { query.question }
