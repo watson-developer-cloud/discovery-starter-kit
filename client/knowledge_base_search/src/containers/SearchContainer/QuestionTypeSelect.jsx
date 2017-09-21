@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { string, func } from 'prop-types';
+import { string, func, bool } from 'prop-types';
 import './styles.css';
 
 class QuestionTypeSelect extends Component {
@@ -24,6 +24,7 @@ class QuestionTypeSelect extends Component {
         className="question_type--select"
         value={this.props.selectedQuestion}
         onChange={this.props.onSelect}
+        disabled={this.props.isFetchingResults}
       >
         {
           Object.keys(QuestionTypeSelect.questionTypes).map((questionKey) => {
@@ -44,6 +45,7 @@ class QuestionTypeSelect extends Component {
 QuestionTypeSelect.propTypes = {
   onSelect: func.isRequired,
   selectedQuestion: string.isRequired,
+  isFetchingResults: bool.isRequired,
 };
 
 export default QuestionTypeSelect;

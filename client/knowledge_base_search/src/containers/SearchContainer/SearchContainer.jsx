@@ -162,6 +162,7 @@ class SearchContainer extends Component {
             <QuestionTypeSelect
               onSelect={this.handleOnQuestionTypeSelect}
               selectedQuestion={this.state.selectedQuestionType}
+              isFetchingResults={this.props.isFetchingResults}
             />
             { this.renderQuestionType() }
           </form>

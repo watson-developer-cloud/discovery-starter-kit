@@ -148,7 +148,7 @@
 }
 
 .question_type {
-  &--select {
+  &--select, &--select:disabled {
     border-color: color('white', 10);
     background-color: color('teal', 40);
     color: color('white', 10);

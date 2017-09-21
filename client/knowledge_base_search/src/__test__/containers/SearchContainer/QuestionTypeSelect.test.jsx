@@ -9,6 +9,7 @@ describe('<QuestionTypeSelect />', () => {
   const props = {
     onSelect: onSelectMock,
     selectedQuestion: QuestionTypeSelect.questionTypes.PRESET.value,
+    isFetchingResults: false,
   };
 
   it('renders without crashing', () => {
@@ -69,6 +70,32 @@ describe('<QuestionTypeSelect />', () => {
 
     it('calls onSelect with the value', () => {
       expect(onSelectMock).toBeCalledWith({ target: { value } });
+    });
+  });
+
+  describe('when a results are being fetched', () => {
+    const propsIsFetching = Object.assign({}, props, {
+      isFetchingResults: true,
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<QuestionTypeSelect {...propsIsFetching} />);
+    });
+
+    it('the dropdown is disabled', () => {
+      const dropdown = wrapper.find('.question_type--select');
+      expect(dropdown.props().disabled).toBe(true);
+    });
+  });
+
+  describe('when results are not being fetched', () => {
+    beforeEach(() => {
+      wrapper = shallow(<QuestionTypeSelect {...props} />);
+    });
+
+    it('the dropdown is enabled', () => {
+      const dropdown = wrapper.find('.question_type--select');
+      expect(dropdown.props().disabled).toBe(false);
     });
   });
 });
