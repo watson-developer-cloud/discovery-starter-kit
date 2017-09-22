@@ -1,0 +1,209 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+@import 'watson-ui-components/dist/lib/base/input/_input';
+@import 'watson-ui-components/dist/lib/base/select/_select';
+@import 'watson-ui-components/dist/lib/components/tab-panels/_tab-panels';
+@import 'watson-react-components/dist/scss/components/text-input/_text-input';
+
+.header--input {
+  color: color('white', 10);
+  text-align: center;
+  margin-bottom: get('rhythm');
+}
+
+.search_container--section {
+  &._full-width-row {
+    background-color: color('teal', 40);
+    padding: 0;
+    box-shadow: 0 7px 9px -6px rgba(0,0,0,0.7);
+  }
+
+  .training-key {
+    &--icon {
+      height: 0.7rem;
+      width: 0.7rem;
+      display: inline-flex;
+      margin-right: 0.5rem;
+      border: 1px solid color('white', 10);
+      border-radius: 50%;
+      background-color: color('purple', 50);
+    }
+
+    &--text {
+      color: color('teal', 80);
+      font-size: 0.75rem;
+      font-weight: get('weight light');
+      margin-right: 1rem;
+    }
+  }
+
+  button {
+    &.white--button,
+    &.view_all--button {
+      color: color('white', 10);
+      border-color: color('white', 10);
+      font-size: 1.3125rem;
+      font-weight: get('weight light');
+      margin-right: 1rem;
+    }
+
+    &.white--button {
+      &:hover, &:focus {
+        opacity: 0.8;
+      }
+    }
+
+    &.view_all--button:enabled {
+      &:hover, &:focus {
+        border-bottom-color: color('white', 10);
+      }
+    }
+
+    &.view_all--button {
+      border-radius: 0;
+      padding: 0;
+      border-width: 0 0 1px 0;
+      border-color: transparent;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.custom_question--div {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.text-input {
+  flex-grow: 1;
+  margin-right: 2rem;
+}
+
+#searchInput {
+  color: color('white', 10);
+  margin-left: 2.5rem;
+  background-color: inherit;
+  box-shadow: none;
+  max-width: 100%;
+}
+
+#searchInput::placeholder {
+  color: color('white', 10);
+}
+
+#searchInput:focus::placeholder {
+  opacity: 0.5;
+}
+
+.positioned--icon {
+  position: absolute;
+  display: inline;
+  top: -1.5rem;
+  z-index: 1;
+}
+
+.positioned--icon .icon {
+  height: 1.5rem;
+  width: 1.5rem;
+  color: color('white', 10);
+  fill: currentColor;
+  margin-top: 2rem;
+}
+
+._container-center {
+  text-align: center;
+}
+
+._container-right {
+  text-align: right;
+}
+
+.search_header-enter,
+.search_button-enter {
+  max-height: 0;
+  overflow-y: hidden;
+}
+
+.search_header-enter.search_header-enter-active,
+.search_button-enter.search_button-enter-active {
+  max-height: 5rem;
+  transition: max-height 500ms ease-in;
+}
+
+.search_header-leave,
+.search_button-leave {
+  max-height: 5rem;
+}
+
+.search_header-leave.search_header-leave-active,
+.search_button-leave.search_button-leave-active {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height 300ms ease-in;
+}
+
+.sticky-inner-wrapper {
+  z-index: 1;
+}
+
+.question_type {
+  &--select, &--select:disabled {
+    border-color: color('white', 10);
+    background-color: color('teal', 40);
+    color: color('white', 10);
+    background-image: url(triangle(color('white', 10), $size: 1.5));
+    padding-right: 1.7rem;
+    width: auto;
+    margin-bottom: 1rem;
+
+    &:focus {
+      border-color: color('white', 10);
+      outline: none;
+    }
+  }
+}
+
+.feature_select {
+  &--list {
+    display: flex;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid color('white', 10);
+  }
+
+  &--list_item {
+    margin-right: 1rem;
+
+    &::before {
+      content: '';
+      padding: 0;
+    }
+  }
+
+  &--list_button {
+    border: none;
+    border-radius: 0;
+    border-color: color('white', 10);
+    color: color('teal', 10);
+    font-weight: get('weight light');
+    padding: 0 0 0.2rem 0;
+    margin-right: get('rhythm');
+    line-height: 2.5rem;
+    transition: none;
+
+    &:active, &:focus, &:hover {
+      border-bottom-color: currentColor;
+      &:enabled {
+        color: color('white', 10);
+      }
+      &:disabled {
+        color: color('teal', 10);
+      }
+    }
+
+    &--active, &--active:hover:disabled {
+      border-bottom: 0.2rem solid color('white', 10);
+      color: color('white', 10);
+    }
+  }
+}

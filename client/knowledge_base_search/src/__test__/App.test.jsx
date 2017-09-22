@@ -1,45 +1,63 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
+import { Icon } from 'watson-react-components';
 import App from '../App';
 import SearchContainer from '../containers/SearchContainer/SearchContainer';
 import PassagesContainer from '../containers/PassagesContainer/PassagesContainer';
+import TrainingContainer from '../containers/TrainingContainer/TrainingContainer';
 import ErrorContainer from '../containers/ErrorContainer/ErrorContainer';
 import ViewAllContainer from '../containers/ViewAllContainer/ViewAllContainer';
-import { Icon } from 'watson-react-components';
+import FeatureSelect from '../containers/SearchContainer/FeatureSelect';
 import * as query from '../actions/query';
 import * as questions from '../actions/questions';
-import { shallow } from 'enzyme';
+
 
 describe('<App />', () => {
   let wrapper;
   const questionsResponse = [
-    'a question?',
-    'another question?',
-    'a third question?',
-    'a fourth question?',
-    'a fifth question?'
+    {
+      question: 'a question?',
+    },
+    {
+      question: 'another question?',
+    },
+    {
+      question: 'a third question?',
+    },
+    {
+      question: 'a fourth question?',
+    },
+    {
+      question: 'a fifth question?',
+    },
   ];
-  const resultsResponse = {
+  const passagesResponse = {
     matching_results: 10,
     results: [
       {
-        id: 1,
-        answer: 'one'
-      }
+        id: '1',
+        text: 'one',
+      },
     ],
     passages: [
       {
-        document_id: 1
-      }
-    ]
+        document_id: '1',
+        passage_text: 'passage',
+      },
+    ],
   };
 
-  questions.default = jest.fn(() => {
-    return Promise.resolve(questionsResponse);
-  });
-  query.default = jest.fn(() => {
-    return Promise.resolve(resultsResponse);
-  });
+  questions.default = jest.fn(() => Promise.resolve(questionsResponse));
+  query.default = jest.fn(() => Promise.resolve(passagesResponse));
+
+  function selectFeature(type) {
+    wrapper.instance().handleFeatureSelect({
+      target: {
+        value: type.value,
+      },
+    });
+  }
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -50,6 +68,7 @@ describe('<App />', () => {
     wrapper = shallow(<App />);
     expect(wrapper.find(Icon)).toHaveLength(0);
     expect(wrapper.find(PassagesContainer)).toHaveLength(0);
+    expect(wrapper.find(TrainingContainer)).toHaveLength(0);
     expect(wrapper.find(ErrorContainer)).toHaveLength(0);
     expect(wrapper.find(ViewAllContainer)).toHaveLength(0);
   });
@@ -90,11 +109,11 @@ describe('<App />', () => {
     });
   });
 
-  describe('when question retrieval is successful', () => {
+  describe('when retrieveQuestions is successful', () => {
     beforeEach((done) => {
       wrapper = shallow(<App />);
 
-      wrapper.instance().componentDidMount();
+      wrapper.instance().retrieveQuestions(wrapper.state().selectedFeature);
       // "wait" for response
       setTimeout(() => {
         done();
@@ -114,7 +133,7 @@ describe('<App />', () => {
 
     describe('and showViewAll is true', () => {
       beforeEach(() => {
-        wrapper.setState({showViewAll: true});
+        wrapper.setState({ showViewAll: true });
       });
 
       it('passes expected props to the ViewAllContainer', () => {
@@ -128,19 +147,17 @@ describe('<App />', () => {
     });
   });
 
-  describe('when question retrieval has an error', () => {
+  describe('when retrieveQuestions has an error', () => {
     beforeEach((done) => {
       // mock the fetch request to return an error
-      questions.default = jest.fn(() => {
-        return Promise.resolve({error: 'my bad'});
-      });
+      questions.default = jest.fn(() => Promise.resolve({ error: 'my bad' }));
 
       wrapper = shallow(<App />);
-      wrapper.instance().componentDidMount();
+      wrapper.instance().retrieveQuestions(wrapper.state().selectedFeature);
       // "wait" for response
       setTimeout(() => {
         done();
-      }, 1)
+      }, 1);
     });
 
     it('passes expected props to the SearchContainer', () => {
@@ -159,17 +176,9 @@ describe('<App />', () => {
       wrapper.instance().handleSearch('my query');
     });
 
-    it('shows a loading spinner', () => {
-      expect(wrapper.find(Icon)).toHaveLength(1);
-      expect(wrapper.find(PassagesContainer)).toHaveLength(0);
-      expect(wrapper.find(ErrorContainer)).toHaveLength(0);
-    });
-
-    it('submits a query to the regular and enriched collections', () => {
+    it('calls the query action', () => {
       expect(query.default)
-        .toBeCalledWith('enriched', {'natural_language_query': 'my query'});
-      expect(query.default)
-        .not.toBeCalledWith('enriched', {'filter': 'id:(1)'});
+        .toBeCalledWith('passages', { natural_language_query: 'my query' });
     });
 
     it('sets the search_input state to the input value', () => {
@@ -178,9 +187,10 @@ describe('<App />', () => {
 
     describe('and the query is successful', () => {
       beforeEach((done) => {
+        // "wait" for response
         setTimeout(() => {
           done();
-        }, 1)
+        }, 1);
       });
 
       it('shows the results container', () => {
@@ -193,9 +203,7 @@ describe('<App />', () => {
 
   describe('when handleSearch produces an error', () => {
     beforeEach((done) => {
-      query.default = jest.fn(() => {
-        return Promise.resolve({error: 'ouch'});
-      });
+      query.default = jest.fn(() => Promise.resolve({ error: 'ouch' }));
       wrapper = shallow(<App />);
       wrapper.instance().handleSearch('my query');
       setTimeout(() => {
@@ -206,40 +214,41 @@ describe('<App />', () => {
     it('shows the error container', () => {
       expect(wrapper.find(Icon)).toHaveLength(0);
       expect(wrapper.find(PassagesContainer)).toHaveLength(0);
+      expect(wrapper.find(TrainingContainer)).toHaveLength(0);
       expect(wrapper.find(ErrorContainer)).toHaveLength(1);
     });
   });
 
-  describe('when retrieveMissingPassages contains only some passages', () => {
+  describe('when the passage search contains only some of the source documents', () => {
     const responseWithExtra = {
       matching_results: 10,
       results: [],
       passages: [
         {
-          document_id: 1
-        }
-      ]
+          document_id: '1',
+          passage_text: 'passage',
+        },
+      ],
     };
-    let wrapper;
 
-    beforeEach(() => {
-      query.default = jest.fn((fetch) => {
-        return Promise.resolve(responseWithExtra);
-      });
+    beforeEach((done) => {
+      query.default = jest.fn(() => Promise.resolve(responseWithExtra));
       wrapper = shallow(<App />);
-      wrapper.instance().retrieveMissingPassages(responseWithExtra);
+      wrapper.instance().handleSearch('foo');
+      // "wait" for response
+      setTimeout(() => {
+        done();
+      }, 1);
     });
 
-    it('submits another query to the enriched collection for missing ids', () => {
-      expect(query.default).toBeCalledWith('enriched', {'filter': 'id:(1)'});
+    it('submits another query to the passages collection to retrieve missing documents', () => {
+      expect(query.default).toBeCalledWith('passages', { filter: 'id:(1)' });
     });
   });
 
   describe('onQuestionClick', () => {
     beforeEach((done) => {
-      questions.default = jest.fn(() => {
-        return Promise.resolve(questionsResponse);
-      });
+      questions.default = jest.fn(() => Promise.resolve(questionsResponse));
       wrapper = shallow(<App />);
       wrapper.instance().componentDidMount();
       // "wait" for response
@@ -254,7 +263,7 @@ describe('<App />', () => {
 
       beforeEach(() => {
         originalState = Object.assign({}, wrapper.state());
-        questionText = originalState.presetQueries[3];
+        questionText = originalState.presetQueries[3].question;
         wrapper.instance().handleQuestionClick(questionText);
       });
 
@@ -263,8 +272,8 @@ describe('<App />', () => {
         expect(wrapper.state().search_input).toEqual(questionText);
         expect(wrapper.state().presetQueries).toEqual(originalState.presetQueries);
         expect(wrapper.state().offset).toEqual(originalState.offset);
-        expect(query.default).toBeCalledWith('enriched', {
-          natural_language_query: questionText
+        expect(query.default).toBeCalledWith('passages', {
+          natural_language_query: questionText,
         });
       });
     });
@@ -273,13 +282,13 @@ describe('<App />', () => {
       let questionText;
 
       beforeEach(() => {
-        questionText = wrapper.state().presetQueries[1];
-        wrapper.setState({offset: 4});
+        questionText = wrapper.state().presetQueries[1].question;
+        wrapper.setState({ offset: 4 });
         wrapper.instance().handleQuestionClick(questionText);
       });
 
       it('pushes the question to the beginning and resets the offset', () => {
-        expect(wrapper.state().presetQueries[0]).toEqual(questionText);
+        expect(wrapper.state().presetQueries[0].question).toEqual(questionText);
         expect(wrapper.state().offset).toEqual(0);
       });
     });
@@ -288,13 +297,129 @@ describe('<App />', () => {
       let questionText;
 
       beforeEach(() => {
-        questionText = wrapper.state().presetQueries[4];
+        questionText = wrapper.state().presetQueries[4].question;
         wrapper.instance().handleQuestionClick(questionText);
       });
 
       it('pushes the question to the beginning and resets the offset', () => {
-        expect(wrapper.state().presetQueries[0]).toEqual(questionText);
+        expect(wrapper.state().presetQueries[0].question).toEqual(questionText);
         expect(wrapper.state().offset).toEqual(0);
+      });
+    });
+  });
+
+  describe('when "Passages" feature is selected', () => {
+    beforeEach(() => {
+      wrapper = shallow(<App />);
+      selectFeature(FeatureSelect.featureTypes.PASSAGES);
+    });
+
+    it('sets the selectedFeature to "passages"', () => {
+      expect(wrapper.instance().state.selectedFeature)
+        .toEqual(FeatureSelect.featureTypes.PASSAGES.value);
+    });
+
+    describe('and retrieveQuestions is invoked', () => {
+      beforeEach((done) => {
+        questions.default.mockClear();
+        wrapper.instance().retrieveQuestions(wrapper.state().selectedFeature);
+        // "wait" for response
+        setTimeout(() => {
+          done();
+        }, 1);
+      });
+
+      it('fetches the passages questions', () => {
+        expect(questions.default).toBeCalledWith(FeatureSelect.featureTypes.PASSAGES.value);
+      });
+    });
+
+    describe('and handleSearch is called with a query string', () => {
+      beforeEach(() => {
+        query.default.mockClear();
+        wrapper.instance().handleSearch('my query');
+      });
+
+      it('submits a query to the passages collection', () => {
+        expect(query.default)
+          .toBeCalledWith('passages', { natural_language_query: 'my query' });
+        expect(query.default)
+          .not.toBeCalledWith('trained', { natural_language_query: 'my query' });
+        expect(query.default)
+          .not.toBeCalledWith('regular', { natural_language_query: 'my query' });
+      });
+
+      describe('and the query is successful', () => {
+        beforeEach((done) => {
+          // "wait" for response
+          setTimeout(() => {
+            done();
+          }, 1);
+        });
+
+        it('shows the passages container', () => {
+          expect(wrapper.find(Icon)).toHaveLength(0);
+          expect(wrapper.find(PassagesContainer)).toHaveLength(1);
+          expect(wrapper.find(TrainingContainer)).toHaveLength(0);
+          expect(wrapper.find(ErrorContainer)).toHaveLength(0);
+        });
+      });
+    });
+  });
+
+  describe('when "Relevancy" feature is selected', () => {
+    beforeEach(() => {
+      wrapper = shallow(<App />);
+      selectFeature(FeatureSelect.featureTypes.TRAINED);
+    });
+
+    it('sets the selectedFeature to "trained"', () => {
+      expect(wrapper.instance().state.selectedFeature)
+        .toEqual(FeatureSelect.featureTypes.TRAINED.value);
+    });
+
+    describe('and retrieveQuestions is invoked', () => {
+      beforeEach((done) => {
+        questions.default.mockClear();
+        wrapper.instance().retrieveQuestions(wrapper.state().selectedFeature);
+        // "wait" for response
+        setTimeout(() => {
+          done();
+        }, 1);
+      });
+
+      it('fetches the trained questions', () => {
+        expect(questions.default).toBeCalledWith(FeatureSelect.featureTypes.TRAINED.value);
+      });
+    });
+
+    describe('and handleSearch is called with a query string', () => {
+      beforeEach(() => {
+        query.default.mockClear();
+        wrapper.instance().handleSearch('my query');
+      });
+
+      it('submits a query to the trained collection', () => {
+        expect(query.default)
+          .toBeCalledWith('trained', { natural_language_query: 'my query' });
+        expect(query.default)
+          .not.toBeCalledWith('passages', { natural_language_query: 'my query' });
+      });
+
+      describe('and the query is successful', () => {
+        beforeEach((done) => {
+          // "wait" for response
+          setTimeout(() => {
+            done();
+          }, 1);
+        });
+
+        it('shows the training container', () => {
+          expect(wrapper.find(Icon)).toHaveLength(0);
+          expect(wrapper.find(PassagesContainer)).toHaveLength(0);
+          expect(wrapper.find(TrainingContainer)).toHaveLength(1);
+          expect(wrapper.find(ErrorContainer)).toHaveLength(0);
+        });
       });
     });
   });

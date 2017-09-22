@@ -17,26 +17,30 @@ MAX_DOCUMENTS = 10
 
 REGULAR_COLLECTION_NAME = os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME',
                                     'knowledge_base_regular')
-ENRICHED_COLLECTION_NAME = os.getenv('DISCOVERY_ENRICHED_COLLECTION_NAME',
-                                     'knowledge_base_enriched')
+TRAINED_COLLECTION_NAME = os.getenv('DISCOVERY_TRAINED_COLLECTION_NAME',
+                                    'knowledge_base_trained')
 
 # please provide the collection desired
 DESIRED_COLLECTION_NAME = REGULAR_COLLECTION_NAME
 
-# retrieve the following:
-# {
-#   environment_id,
-#   collection_id_regular,
-#   collection_id_enriched
-# }
+"""
+retrieve the following:
+{
+  environment_id: env_id,
+  collection_id: {
+    regular: regular_id,
+    trained: trained_id
+  }
+}
+"""
 discovery_constants = get_constants(
                         discovery,
                         regular_name=REGULAR_COLLECTION_NAME,
-                        enriched_name=ENRICHED_COLLECTION_NAME
+                        trained_name=TRAINED_COLLECTION_NAME,
                       )
-COLLECTION_ID = discovery_constants['collection_id_regular']
-if DESIRED_COLLECTION_NAME == ENRICHED_COLLECTION_NAME:
-    COLLECTION_ID = discovery_constants['collection_id_enriched']
+COLLECTION_ID = discovery_constants['collection_id']['regular']
+if DESIRED_COLLECTION_NAME == TRAINED_COLLECTION_NAME:
+    COLLECTION_ID = discovery_constants['collection_id']['trained']
 
 qopts = {'natural_language_query': QUESTION, 'count': MAX_DOCUMENTS}
 

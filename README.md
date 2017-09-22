@@ -28,10 +28,11 @@ You may use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.n
 
 Or if you prefer using python scripts aided by markdown-formatted explanation (known as [Jupyter Notebooks](http://jupyter.readthedocs.io/en/latest/index.html)), you can use the steps found in `notebooks/Setup_Discovery.ipynb` of this repo. The `notebook` section can be run locally by doing `pip install -r server/requirements/dev.txt` followed by `jupyter notebook` which will prompt you to open your browser to follow the steps in the interactive code guide. Each script can be run independently as each step is located in the `notebooks/scripts` directory.
 
-1. Create 2 collections in the Watson Discovery Service. Make sure to store the names in the `.env` file and add them to the environment variables in your deployment configuration. By default, they are set to:
+1. Create 2 collections in the Watson Discovery Service. Make sure to store the names in the `.env` file and add them to the environment variables in your deployment configuration. In case you want a different collection for the passage search feature, you may provide one (otherwise it is the same as the "regular" collection). By default, they are set to:
    ```
+   DISCOVERY_PASSAGES_COLLECTION_NAME=knowledge_base_regular
    DISCOVERY_REGULAR_COLLECTION_NAME=knowledge_base_regular
-   DISCOVERY_ENRICHED_COLLECTION_NAME=knowledge_base_enriched
+   DISCOVERY_TRAINED_COLLECTION_NAME=knowledge_base_trained
    ```
 1. Upload sample documents to the collections you created by dragging and dropping files from the `data/sample` directory into each collection created in the Watson Discovery Tooling UI
 
@@ -59,9 +60,9 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 1. Install [python](https://www.python.org/) version 2.7
 1. Install [virtual_env](https://virtualenv.pypa.io/en/stable/)
-1. Activate `virtualenv`
-  1. `virtualenv .` in project root directory
-  1. `source bin/activate` in project root directory
+1. Activate `virtualenv` for this project by running the following commands from the project root directory:
+    1. `virtualenv .`
+    1. `source bin/activate`
 1. Install dependencies `pip install -r server/python/requirements/dev.txt`
 1. Start server `python server/python/server.py`
 1. Visit http://localhost:5000/
@@ -70,6 +71,10 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 1. Linter run with `flake8`
 1. Tests run with `pytest`
+
+#### License
+
+This sample code is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## Privacy Notice
 
