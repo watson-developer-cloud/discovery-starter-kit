@@ -33,7 +33,7 @@ stages:
   - type: stage
   properties:
   - name: CF_INSTANCES
-    value: '5'
+    value: '1'
     type: text
   - name: CF_MEMORY
     value: 512M
@@ -78,7 +78,7 @@ stages:
       # create services that do not exist
 
       if ! cf service ${DISCOVERY_SERVICE_NAME} ; then
-        cf create-service discovery free ${DISCOVERY_SERVICE_NAME}
+        cf create-service discovery lite ${DISCOVERY_SERVICE_NAME}
 
         echo "Please create an environment by going to https://discovery-tooling.mybluemix.net"
         echo "The service instance created is called ${DISCOVERY_SERVICE_NAME}"
