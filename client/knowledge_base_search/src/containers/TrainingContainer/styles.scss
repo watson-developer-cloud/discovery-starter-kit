@@ -1,0 +1,38 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+
+.training_comparison {
+  &:first-child {
+    padding-top: 1.5rem;
+  }
+  &--content {
+    display: flex;
+
+    &_left {
+      width: 50%;
+      padding-right: 1rem;
+    }
+
+    &_right {
+      width: 50%;
+      border-left: 1px solid #e0e0e0;
+      padding-left: 1rem;
+    }
+  }
+  &--rank {
+    &-down, &-up {
+      font-size: 0.8rem;
+      margin-top: 0.8rem;
+      margin-left: 0.5rem;
+      color: color('gray', 40);
+      svg {
+        fill: color('purple', 50);
+      }
+    }
+    &-down svg {
+      transform: scale(0.7, -0.7);
+    }
+    &-up svg {
+      transform: scale(0.7, 0.7);
+    }
+  }
+}

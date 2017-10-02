@@ -1,0 +1,85 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+
+.arrow--span svg {
+  color: color('teal', 10);
+  fill: currentColor;
+}
+
+.question_bar {
+  &--container {
+    display: flex;
+  }
+
+  &--bottom {
+    margin-top: 0.5rem;
+    height: 2rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &--train {
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    height: 0.7rem;
+    width: 0.7rem;
+    border: 1px solid color('white', 10);
+    border-radius: 50%;
+    background-color: color('purple', 50);
+  }
+
+  &--button {
+    &:first-child {
+      margin-left: 0rem;
+    }
+    position: relative;
+    flex: 1 0 0;
+    color: color('white', 10);
+    border: 2px solid color('white', 10);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.3rem;
+    text-align: left;
+    padding: 0.5rem;
+    margin: 0 0.5rem;
+    min-height: 7rem;
+
+    &:hover, &:focus {
+      border-color: color('white', 10);
+      &:enabled {
+        background-color: color('teal', 30);
+        color: color('teal', 80);
+      }
+      &:disabled {
+        background-color: inherit;
+        color: color('white', 10);
+      }
+    }
+
+    &--active {
+      border-color: color('white', 10);
+      color: color('white', 10);
+      background-color: color('teal', 50);
+      outline: 0;
+
+      &:hover:disabled {
+        background-color: color('teal', 50);
+      }
+    }
+  }
+
+  &--arrow_button {
+    &--left, &--right {
+      width: get('rhythm');
+      border: none;
+      padding: 0;
+    }
+
+    &:hover, &:focus {
+      .arrow--span svg {
+        color: color('white', 10);
+      }
+    }
+  }
+}

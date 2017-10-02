@@ -1,0 +1,213 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+@import 'watson-ui-components/dist/lib/vendors/reset/_reset';
+@import 'watson-ui-components/dist/lib/base/_index';
+@import 'watson-ui-components/dist/lib/layouts/_index';
+@import 'watson-ui-components/dist/lib/components/loader/_loader';
+
+@import 'watson-react-components/dist/scss/core/_index';
+@import 'watson-react-components/dist/scss/layouts/_index';
+@import 'watson-react-components/dist/scss/components/header/_header';
+@import 'watson-react-components/dist/scss/components/jumbotron/_jumbotron';
+@import 'watson-react-components/dist/scss/components/footer/_footer';
+@import 'watson-react-components/dist/scss/components/bottom-nav-bar/_bottom-nav-bar';
+@import 'watson-react-components/dist/scss/components/icon/_icon';
+@import 'watson-react-components/dist/scss/components/loader/_loader';
+@import 'watson-react-components/dist/scss/_shame';
+
+body * + * {
+  margin-top: 0;
+  font-weight: 300;
+}
+
+div::before, div::after {
+  content: none;
+}
+
+.header {
+  background-color: color('teal', 80);
+}
+
+.header--wordmark-link,
+.header--wordmark-svg,
+.jumbotron--get-started-icon {
+  color: color('white', 10);
+  fill: currentColor;
+}
+
+.jumbotron--get-started {
+  padding-right: 1rem;
+}
+
+.jumbotron--description {
+  font-weight: initial;
+  float: none;
+}
+
+.base--h5 {
+  font-weight: get('weight normal');
+  margin: 1rem 0;
+}
+
+.base--a {
+  color: color('teal', 40);
+  border-bottom-color: color('teal', 40);
+
+  &:visited, &:hover {
+    color: color('teal', 40);
+    border-bottom-color: color('teal', 40);
+  }
+}
+
+a {
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
+    color: color('white', 10);
+    border-bottom-color: color('white', 10);
+  }
+}
+
+.header--breadcrumbs-slash,
+.header--breadcrumbs-main {
+  color: color('teal', 40);
+
+  &:hover, &:focus, &:visited {
+    color: color('teal', 40);
+  }
+}
+
+.header--breadcrumbs-sub {
+  color: color('gray', 20);
+
+  &:hover, &:active, &:focus {
+    color: color('teal', 40);
+  }
+}
+
+.base--button.base--button_fill {
+  &, &:visited, &:hover, &:active, &:focus {
+    background-color: color('teal', 80);
+    border-color: color('teal', 80);
+  }
+}
+
+._full-width-row {
+  padding-top: 3rem;
+
+  &.jumbotron {
+    color: color('white', 10);
+    background-color: color('teal', 40);
+  }
+}
+
+.description {
+  margin-top: 1rem;
+}
+
+.license--section {
+  text-align: center;
+  padding: 1rem 0 0 0;
+  background-color: color('gray', 80);
+  color: color('gray', 30);
+
+  a {
+    font-weight: 300;
+    border-bottom-width: 0.0625rem;
+  }
+}
+
+.base--h2, .description {
+  color: color('white', 10);
+  border-bottom-color: color('white', 10);
+}
+
+.jumbotron--nav-link {
+  color: color('white', 10);
+  border-bottom-color: color('white', 10);
+
+  &:hover, &:focus, &:active, &:visited {
+    color: color('white', 10);
+    border-bottom-color: color('white', 10);
+  }
+}
+
+.bottom-nav-bar--nav-link {
+  color: color('gray', 30);
+  border-color: color('gray', 30);
+
+  &:visited {
+    color: color('gray', 30);
+    border-color: color('gray', 30);
+  }
+
+  &:hover, &:active, &:focus {
+    color: color('teal', 50);
+    border-color: color('teal', 50);
+  }
+}
+
+.results-enter {
+  opacity: 0.01;
+}
+
+.results-enter.results-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.view_all-enter {
+  transform: translateX(30vw);
+}
+
+.view_all-enter.view_all-enter-active {
+  transform: translateX(0);
+  transition: transform 230ms;
+}
+
+.view_all-leave {
+  transform: translateX(0);
+  transition: transform 230ms;
+}
+
+.view_all-leave.view_all-leave-active {
+  transform: translateX(30vw);
+}
+
+.view_all_overlay--div.view_all_overlay-enter {
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 230ms;
+}
+
+.view_all_overlay-enter.view_all_overlay-enter-active {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.view_all_overlay-leave {
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: background-color 230ms;
+}
+
+.view_all_overlay-leave.view_all_overlay-leave-active {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.view_all_overlay--div {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.results_row--section {
+  background-color: color('white', 30);
+}
+
+button, .base--button {
+  &:active {
+    transform: none;
+  }
+}

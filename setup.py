@@ -16,5 +16,5 @@ setup(
     description='Watson Discovery Service Starter Kit',
     long_description=long_description,
     url='https://github.com/watson-developer-cloud/discovery-starter-kit',
-    license='Apache-2.0'
+    license='MIT'
 )

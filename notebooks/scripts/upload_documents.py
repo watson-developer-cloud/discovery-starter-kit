@@ -72,13 +72,13 @@ def upload_documents(docs_directory):
     if DOC_UPLOAD_LIMIT > 0:
         files = files[:DOC_UPLOAD_LIMIT]
     total_files = len(files)
-    total_documents = total_files * 2
     print("Number of files to process: %d" % total_files)
 
     docs_uploaded = 0
     done_percent = 0
-    collection_ids = [discovery_constants['collection_id_regular'],
-                      discovery_constants['collection_id_enriched']]
+    collection_ids = [discovery_constants['collection_id']['regular'],
+                      discovery_constants['collection_id']['trained']]
+    total_documents = total_files * len(collection_ids)
 
     write_progress(docs_uploaded, total_documents)
     for file in files:
@@ -103,21 +103,25 @@ def upload_documents(docs_directory):
 
 
 print('Retrieving environment and collection constants...')
-# retrieve the following:
-# {
-#   environment_id,
-#   collection_id_regular,
-#   collection_id_enriched
-# }
+"""
+retrieve the following:
+{
+  environment_id: env_id,
+  collection_id: {
+    regular: regular_id,
+    trained: trained_id
+  }
+}
+"""
 discovery_constants = get_constants(
                         discovery,
                         regular_name=os.getenv(
                                       'DISCOVERY_REGULAR_COLLECTION_NAME',
                                       'knowledge_base_regular'
                                     ),
-                        enriched_name=os.getenv(
-                                      'DISCOVERY_ENRICHED_COLLECTION_NAME',
-                                      'knowledge_base_enriched'
+                        trained_name=os.getenv(
+                                      'DISCOVERY_TRAINED_COLLECTION_NAME',
+                                      'knowledge_base_trained'
                                     )
                       )
 print('Constants retrieved!')

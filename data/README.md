@@ -1,13 +1,19 @@
 # Bluemix Container for Data Setup
 
-Follow steps on [Bluemix Container Service](https://console.bluemix.net/docs/containers/cs_cli_install.html#cs_cli_install) to get the CLI setup and logged in
+You need `docker` CLI and `bluemix` (`bx` for short) CLI installed.
+
+Follow steps on [Bluemix Container Service CLI](https://console.bluemix.net/docs/containers/cs_cli_install.html#cs_cli_install) to get the CLI setup and logged in.
+
+Then also make sure you have the [Bluemix Container Registry CLI](https://console.bluemix.net/docs/services/Registry/index.html) installed as well.
 
 Replace `<your_org>`, `<container_name>`, and `<memory_size>`(see [Available memory sizes](#available-memory-sizes))
 
 ## Setup
 
 1. Create a `.env` file from the `.env.example` with the proper credentials for your instance
-1. `bluemix ic build -t registry.ng.bluemix.net/<your_org>/discovery-starter-kit ./data`
+1. `docker build -t registry.ng.bluemix.net/<your_org>/discovery-starter-kit ./data`
+1. `bluemix cr namespace-add <your_org>` (if you haven't already created a namespace)
+1. `docker push registry.ng.bluemix.net/<your_org>/discovery-starter-kit`
 1. `bluemix ic run --env-file .env -m <memory_size> --name <container_name> registry.ng.bluemix.net/<your_org>/discovery-starter-kit:latest`
 1. Track your container logs by running `bluemix ic logs -f <container_name>`
 1. SSH into your running container by running `bluemix ic exec -t -i <container_name> /bin/bash`

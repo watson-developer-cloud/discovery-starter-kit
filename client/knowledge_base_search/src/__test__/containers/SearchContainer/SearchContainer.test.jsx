@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { shallow } from 'enzyme';
+import { TextInput } from 'watson-react-components';
 import SearchContainer from '../../../containers/SearchContainer/SearchContainer';
+import FeatureSelect from '../../../containers/SearchContainer/FeatureSelect';
+import QuestionTypeSelect from '../../../containers/SearchContainer/QuestionTypeSelect';
 import QuestionBarContainer from '../../../containers/QuestionBarContainer/QuestionBarContainer';
 import ErrorContainer from '../../../containers/ErrorContainer/ErrorContainer';
-import { TextInput, Icon } from 'watson-react-components';
-import { shallow } from 'enzyme';
+
 
 describe('<SearchContainer />', () => {
   let wrapper;
@@ -12,18 +15,29 @@ describe('<SearchContainer />', () => {
   const onOffsetUpdateMock = jest.fn();
   const onQuestionClickMock = jest.fn();
   const onViewAllClickMock = jest.fn();
+  const onFeatureSelectMock = jest.fn();
   const props = {
     errorMessage: null,
     isFetchingQuestions: true,
     isFetchingResults: false,
     offset: 0,
+    onFeatureSelect: onFeatureSelectMock,
     onOffsetUpdate: onOffsetUpdateMock,
     onQuestionClick: onQuestionClickMock,
     onSubmit: onSubmitMock,
     onViewAllClick: onViewAllClickMock,
     presetQueries: [],
-    searchInput: ''
+    searchInput: '',
+    selectedFeature: FeatureSelect.featureTypes.PASSAGES.value,
   };
+
+  function selectQuestionType(type) {
+    wrapper.instance().handleOnQuestionTypeSelect({
+      target: {
+        value: type.value,
+      },
+    });
+  }
 
   it('renders without crashing', () => {
     const div = document.createElement('div');
@@ -31,17 +45,21 @@ describe('<SearchContainer />', () => {
   });
 
   describe('when it has fetched questions', () => {
-    const props_questions_fetched = Object.assign({}, props, {
-      isFetchingQuestions: false
+    const propsQuestionsFetched = Object.assign({}, props, {
+      isFetchingQuestions: false,
     });
 
     describe('and questions are present', () => {
-      const questions = [ 'one', 'two' ];
-      const props_questions_present = Object.assign({}, props_questions_fetched, {
-        presetQueries: questions
+      const questions = [{ question: 'one' }, { question: 'two' }];
+      const propsQuestionsPresent = Object.assign({}, propsQuestionsFetched, {
+        presetQueries: questions,
       });
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_questions_present} />);
+        wrapper = shallow(<SearchContainer {...propsQuestionsPresent} />);
+      });
+
+      it('shows the QuestionTypeSelect with expected props', () => {
+        expect(wrapper.find(QuestionTypeSelect)).toHaveLength(1);
       });
 
       it('shows the QuestionBarContainer with expected props', () => {
@@ -73,12 +91,12 @@ describe('<SearchContainer />', () => {
     });
 
     describe('and an error is present', () => {
-      const props_with_error = Object.assign({}, props_questions_fetched, {
-        errorMessage: 'whoops'
+      const propsWithError = Object.assign({}, propsQuestionsFetched, {
+        errorMessage: 'whoops',
       });
 
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_with_error} />);
+        wrapper = shallow(<SearchContainer {...propsWithError} />);
       });
 
       it('shows an ErrorContainer', () => {
@@ -92,12 +110,12 @@ describe('<SearchContainer />', () => {
     });
 
     describe('and isFetchingResults is true', () => {
-      const props_results_fetching = Object.assign({}, props_questions_fetched, {
-        isFetchingResults: true
+      const propsResultsFetching = Object.assign({}, propsQuestionsFetched, {
+        isFetchingResults: true,
       });
 
       beforeEach(() => {
-        wrapper = shallow(<SearchContainer {...props_results_fetching} />);
+        wrapper = shallow(<SearchContainer {...propsResultsFetching} />);
       });
 
       it('passes "true" to the QuestionBarContainer', () => {
@@ -109,9 +127,9 @@ describe('<SearchContainer />', () => {
         expect(wrapper.find('.view_all--button').props().disabled).toBe(true);
       });
 
-      describe('and the Custom Query tab is selected', () => {
+      describe('and "Custom questions" type is selected', () => {
         beforeEach(() => {
-          wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
+          selectQuestionType(QuestionTypeSelect.questionTypes.CUSTOM);
         });
 
         it('disables all the inputs', () => {
@@ -122,10 +140,10 @@ describe('<SearchContainer />', () => {
     });
   });
 
-  describe('when the Custom Query tab is pressed', () => {
+  describe('when "Custom questions" type is selected', () => {
     beforeEach(() => {
       wrapper = shallow(<SearchContainer {...props} />);
-      wrapper.find('.tab-panels--tab.base--a').at(1).simulate('click');
+      selectQuestionType(QuestionTypeSelect.questionTypes.CUSTOM);
     });
 
     it('has the text search, icon, and submit button displayed', () => {
@@ -140,12 +158,27 @@ describe('<SearchContainer />', () => {
 
     beforeEach(() => {
       wrapper = shallow(<SearchContainer {...props} />);
-      wrapper.setState({searchInput: text});
-      wrapper.find('form').simulate('submit', { preventDefault: () => {}});
+      wrapper.setState({ searchInput: text });
+      wrapper.find('form').simulate('submit', { preventDefault: () => {} });
     });
 
     it('calls onSubmit with the text', () => {
       expect(onSubmitMock).toBeCalledWith(text);
+    });
+  });
+
+  describe('when the relevancy tab is selected', () => {
+    const propsWithRelevancySelected = Object.assign({}, props, {
+      isFetchingQuestions: false,
+      selectedFeature: FeatureSelect.featureTypes.TRAINED.value,
+    });
+
+    beforeEach(() => {
+      wrapper = shallow(<SearchContainer {...propsWithRelevancySelected} />);
+    });
+
+    it('shows the Trained Question key', () => {
+      expect(wrapper.find('.training-key')).toHaveLength(1);
     });
   });
 });

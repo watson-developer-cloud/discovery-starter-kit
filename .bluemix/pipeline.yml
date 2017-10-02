@@ -33,7 +33,7 @@ stages:
   - type: stage
   properties:
   - name: CF_INSTANCES
-    value: '5'
+    value: '1'
     type: text
   - name: CF_MEMORY
     value: 512M
@@ -44,11 +44,14 @@ stages:
   - name: NLU_SERVICE_NAME
     value: Discovery-Demo-NLU
     type: text
+  - name: DISCOVERY_PASSAGES_COLLECTION_NAME
+    value: knowledge_base_regular
+    type: text
   - name: DISCOVERY_REGULAR_COLLECTION_NAME
     value: knowledge_base_regular
     type: text
-  - name: DISCOVERY_ENRICHED_COLLECTION_NAME
-    value: knowledge_base_enriched
+  - name: DISCOVERY_TRAINED_COLLECTION_NAME
+    value: knowledge_base_trained
     type: text
   - name: TEMP_APP_NAME
     value: ''
@@ -75,13 +78,13 @@ stages:
       # create services that do not exist
 
       if ! cf service ${DISCOVERY_SERVICE_NAME} ; then
-        cf create-service discovery free ${DISCOVERY_SERVICE_NAME}
+        cf create-service discovery lite ${DISCOVERY_SERVICE_NAME}
 
         echo "Please create an environment by going to https://discovery-tooling.mybluemix.net"
         echo "The service instance created is called ${DISCOVERY_SERVICE_NAME}"
         echo "Then create 2 collections named:"
         echo "1. ${DISCOVERY_REGULAR_COLLECTION_NAME}"
-        echo "2. ${DISCOVERY_ENRICHED_COLLECTION_NAME}"
+        echo "2. ${DISCOVERY_TRAINED_COLLECTION_NAME}"
         echo "Then enqueue documents using the script provided in the github repo"
         exit 1
       fi
@@ -108,8 +111,9 @@ stages:
        - ${DISCOVERY_SERVICE_NAME}
        - ${NLU_SERVICE_NAME}
       env:
+        DISCOVERY_PASSAGES_COLLECTION_NAME: ${DISCOVERY_PASSAGES_COLLECTION_NAME}
         DISCOVERY_REGULAR_COLLECTION_NAME: ${DISCOVERY_REGULAR_COLLECTION_NAME}
-        DISCOVERY_ENRICHED_COLLECTION_NAME: ${DISCOVERY_ENRICHED_COLLECTION_NAME}
+        DISCOVERY_TRAINED_COLLECTION_NAME: ${DISCOVERY_TRAINED_COLLECTION_NAME}
 
       EOL
 
@@ -136,7 +140,7 @@ stages:
 
       echo "Testing endpoint: ${ENDPOINT} with POST"
 
-      HTTP_RESPONSE=$(curl -H "Content-Type:application/json" -X POST -k -sL -d '{"query": ""}' -D- -o/dev/null "${ENDPOINT}")
+      HTTP_RESPONSE=$(curl -H "Content-Type:application/json" -X POST -k -sL -d '{"natural_language_query": ""}' -D- -o/dev/null "${ENDPOINT}")
 
       echo "$HTTP_RESPONSE"
 

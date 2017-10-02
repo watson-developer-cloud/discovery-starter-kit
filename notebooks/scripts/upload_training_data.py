@@ -62,7 +62,7 @@ def upload_training_data(training_directory):
             upload_training_doc(
               json.loads(file_object.read()),
               discovery_constants['environment_id'],
-              discovery_constants['collection_id_enriched']
+              discovery_constants['collection_id']['trained']
             )
             training_data_uploaded += 1
             done_percent = write_progress(training_data_uploaded,
@@ -74,21 +74,20 @@ def upload_training_data(training_directory):
 
 
 print('Retrieving environment and collection constants...')
-# retrieve the following:
-# {
-#   environment_id,
-#   collection_id_regular,
-#   collection_id_enriched
-# }
+"""
+retrieve the following:
+{
+  environment_id: env_id,
+  collection_id: {
+    trained: trained_id
+  }
+}
+"""
 discovery_constants = get_constants(
                         discovery,
-                        regular_name=os.getenv(
-                                      'DISCOVERY_REGULAR_COLLECTION_NAME',
-                                      'knowledge_base_regular'
-                                    ),
-                        enriched_name=os.getenv(
-                                      'DISCOVERY_ENRICHED_COLLECTION_NAME',
-                                      'knowledge_base_enriched'
+                        trained_name=os.getenv(
+                                      'DISCOVERY_TRAINED_COLLECTION_NAME',
+                                      'knowledge_base_trained'
                                     )
                       )
 print('Constants retrieved!')

@@ -1,0 +1,116 @@
+@import 'watson-ui-components/dist/lib/core/_index';
+
+.view_all_container--div {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100%;
+  background-color: color('white', 30);
+  width: 30vw;
+  padding: get('rhythm');
+  box-shadow: -2px 0 1px 0 rgba(0,0,0,0.3);
+  z-index: 1;
+
+  button {
+    &.view_all_question--button,
+    &.close_view_all--button {
+      padding: 0;
+      border: none;
+
+      &:hover, &:focus {
+        text-decoration: underline;
+      }
+    }
+
+    &.view_all_question--button {
+      position: relative;
+      margin: 0.5rem 0;
+      width: 100%;
+      font-weight: get('weight normal');
+      font-size: 0.8rem;
+      color: color('teal', 50);
+      text-align: left;
+    }
+  }
+}
+
+.view_all_questions_header--div {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+}
+
+.view_all_questions_description--h5 {
+  padding: 0.3rem 0 1rem 0;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  color: color('gray', 60);
+}
+
+.view_all_questions_filter--div {
+  position: relative;
+
+  input[type='text'] {
+    background-color: color('white', 30);
+    box-shadow: none;
+    margin-left: 1.5rem;
+  }
+  label {
+    margin-right: 0;
+  }
+}
+
+.view_all_questions_filter--icon {
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+
+  svg {
+    color: color('gray', 80);
+    fill: currentColor;
+  }
+}
+
+.view_all_questions_list--div {
+  overflow-y: auto;
+  text-align: center;
+  flex-grow: 1;
+  margin-top: 0.5rem;
+  padding: 0;
+}
+
+.close_view_all--button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  svg {
+    color: color('gray', 40);
+    fill: currentColor;
+  }
+
+  &:hover, &:focus {
+    svg {
+      color: color('gray', 50);
+    }
+  }
+}
+
+.view_all_questions_no_results--span {
+  color: color('gray', 50);
+  font-size: 0.8rem;
+}
+
+.view_all {
+  &--train {
+    position: absolute;
+    top: 0.3rem;
+    left: -1rem;
+    height: 0.5rem;
+    width: 0.5rem;
+    border-radius: 50%;
+    background-color: color('purple', 50);
+  }
+}

@@ -7,6 +7,7 @@ virtualenv data_setup_env
 . data_setup_env/bin/activate
 
 echo "Installing dependencies..."
+pip install --upgrade pip
 pip install -r server/python/requirements/dev.txt
 
 python -u notebooks/scripts/download_and_extract_data.py
