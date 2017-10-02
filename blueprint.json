@@ -1,33 +1,30 @@
 {
   "name": "Watson Knowledge Base Search",
-  "description": "Explore the features of passage search, relevancy training, enrichment filtering, and more Discovery features centered around a knowledge base dataset",
+  "description": "Use Watson Discovery's cognitive search capabilities to quickly find the most relevant information in your documents to answer your natural language questions.",
   "thumbnailURL": "blueprint/thumbnail.svg",
   "appIconURL": "blueprint/appicon.svg",
   "previewURLs": [],
   "type": "WEB",
   "tags": [
-    "developer",
     "watson"
   ],
-  "demoURL": "https://knowledge-base-search.mybluemix.net",
+  "demoURL": "https://knowledge-base-search.mybluemix.net/",
   "generators": {
     "python": [
-      "generator-cloud-enablement",
-      "generator-starterkit-content-downloader"
+      "generator-starterkit-content-downloader",
+      "generator-ibm-cloud-enablement"
     ]
   },
-  "generatorOptions": {
-    "generator-cloud-enablement": {
-      "registry": "https://npm-registry.whitewater.ibm.com",
-      "scope": "@arf",
-      "version": "latest"
+    "generatorOptions": {
+      "generator-starterkit-content-downloader": {
+        "registry": "https://npm-registry.whitewater.ibm.com",
+        "scope": "@arf",
+        "version": "latest"
+      },
+      "generator-ibm-cloud-enablement": {
+        "version": "latest"
+      }
     },
-    "generator-starterkit-content-downloader": {
-      "registry": "https://npm-registry.whitewater.ibm.com",
-      "scope": "@arf",
-      "version": "latest"
-    }
-  },
   "requiredCapabilities": [
     "discovery"
   ],

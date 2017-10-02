@@ -15,8 +15,13 @@ from discovery_setup_utils import (
 ) # noqa
 
 # retrieve the regular collection name from the .env file or default
-COLLECTION_NAME = os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME',
-                            'knowledge_base_regular')
+
+if(len(sys.argv) == 3):
+    COLLECTION_NAME = os.getenv(sys.argv[1],
+                                sys.argv[2])
+else:
+    COLLECTION_NAME = os.getenv('DISCOVERY_REGULAR_COLLECTION_NAME',
+                                'knowledge_base_regular')
 
 # retrieve our environment id
 ENVIRONMENT_ID = find_byod_environment_id(discovery.get_environments())
