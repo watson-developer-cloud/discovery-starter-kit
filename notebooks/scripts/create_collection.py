@@ -29,7 +29,7 @@ output = discovery.list_collections(environment_id=ENVIRONMENT_ID)
 try:
     collection_id = find_collection_id(output, COLLECTION_NAME)
     print('Collection ID: ' + collection_id)
-except:
+except Exception:
     print ('Command:')
     print ('discovery.list_collections')
     print ('Response:')
