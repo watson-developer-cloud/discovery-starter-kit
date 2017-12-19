@@ -51,7 +51,7 @@ output = discovery.query(environment_id=discovery_constants['environment_id'],
 try:
     print ("No. of rows : %d" % output.get('matching_results'))
     print ("Results : %s" % json.dumps(output['results'], indent=4))
-except:
+except Exception:
     print ('Command:')
     print ('discovery.query()')
     print ('Response:')
