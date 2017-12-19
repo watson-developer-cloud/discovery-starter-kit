@@ -5,4 +5,4 @@ flask-cors===3.0.2
 flask_limiter===0.9.4
 https://github.com/maniax89/python-sdk/tarball/train_api
 python-dotenv===0.6.4
-cf-deployment-tracker===1.0.4
+metrics-tracker-client===1.1.1
