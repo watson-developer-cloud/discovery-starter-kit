@@ -6,7 +6,7 @@ A repo containing the basics for setting up one of the Watson Developer Cloud SD
 
 This demo shows a comparison of what the Watson Discovery Service can add to your data to make the search experience return more relevant results.
 
-IBM maintains a running demo of this `knowledge-base-search` at [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
+IBM maintains a running demo of this `knowledge-base-search` at [https://knowledge-base-search.ng.bluemix.net](https://knowledge-base-search.ng.bluemix.net)
 
 ### Setting up your own running instance of the demo
 Here's how to deploy your own working version of this demo that you can modify to learn more about the Watson Discovery Service and start building your own application.
@@ -16,7 +16,8 @@ Here's how to deploy your own working version of this demo that you can modify t
 1. [Run the application](#running-the-application)
 
 #### Deploy to Bluemix
-[![Deploy to Bluemix](https://deployment-tracker.mybluemix.net/stats/24261964d00b59942cda0befd0535f50/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
+
+[![Deploy to Bluemix](https://metrics-tracker.mybluemix.net/stats/_replace_me_/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
 
 Click this button to begin the process of creating a deployment toolchain in Bluemix based on the master branch of this repo. Modify the application name to the name of the host you want to put your final running application at. The default application name is {organization/user}-{repo_name}-{timestamp}.
 
@@ -36,7 +37,7 @@ To manually create the two required services, follow these steps:
 
 #### Setting up Discovery
 
-You may use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) UI to complete these next steps.
+You may use the [Watson Discovery Tooling](https://watson-discovery.bluemix.net) UI to complete these next steps.
 
 Or if you prefer using Python scripts aided by markdown-formatted explanation (known as [Jupyter Notebooks](http://jupyter.readthedocs.io/en/latest/index.html)), you can use the steps found in `notebooks/Setup_Discovery.ipynb` of this repo. The `notebook` section can be run locally by doing `pip install -r server/python/requirements/dev.txt` followed by `jupyter notebook` which will prompt you to open your browser to follow the steps in the interactive code guide. Each script can be run independently as each step is located in the `notebooks/scripts` directory.
 

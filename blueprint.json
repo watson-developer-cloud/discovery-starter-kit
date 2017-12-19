@@ -9,7 +9,7 @@
     "developer",
     "watson"
   ],
-  "demoURL": "https://knowledge-base-search.mybluemix.net",
+  "demoURL": "https://knowledge-base-search.ng.bluemix.net",
   "generators": {
     "node": [
       "generator-starterkit-content-downloader",

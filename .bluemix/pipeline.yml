@@ -80,7 +80,7 @@ stages:
       if ! cf service ${DISCOVERY_SERVICE_NAME} ; then
         cf create-service discovery lite ${DISCOVERY_SERVICE_NAME}
 
-        echo "Please create an environment by going to https://discovery-tooling.mybluemix.net"
+        echo "Please create an environment by going to https://watson-discovery.bluemix.net"
         echo "The service instance created is called ${DISCOVERY_SERVICE_NAME}"
         echo "Then create 2 collections named:"
         echo "1. ${DISCOVERY_REGULAR_COLLECTION_NAME}"
