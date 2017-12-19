@@ -11,7 +11,7 @@ from requests.exceptions import HTTPError
 from dotenv import load_dotenv, find_dotenv
 import watson_developer_cloud.natural_language_understanding.features.v1 as features  # noqa
 from watson_developer_cloud import DiscoveryV1, NaturalLanguageUnderstandingV1
-import cf_deployment_tracker
+import metrics_tracker_client
 
 try:
     load_dotenv(find_dotenv())
@@ -20,7 +20,7 @@ except IOError:
 
 # Emit Bluemix deployment event if not a demo deploy
 if not(os.getenv('DEMO_DEPLOY')):
-    cf_deployment_tracker.track()
+    metrics_tracker_client.track()
 
 app = Flask(
         __name__,

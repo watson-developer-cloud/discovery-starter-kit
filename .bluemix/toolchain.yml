@@ -17,7 +17,7 @@ toolchain:
     getting_started: |-
       **Your toolchain is ready!**
 
-      **Quick start:** Use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) to create collections and ingest data.
+      **Quick start:** Use the [Watson Discovery Tooling](https://watson-discovery.bluemix.net) to create collections and ingest data.
       Then, commit a change to the Git repo to trigger a new build and deployment.
 services:
   sample-repo:

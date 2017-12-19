@@ -6,7 +6,7 @@ A repo containing the basics for setting up one of the Watson Developer Cloud SD
 
 This demo shows a comparison of what the Watson Discovery Service can add to your data to make the search experience return more relevant results.
 
-IBM maintains a running demo of this `knowledge-base-search` at [https://knowledge-base-search.mybluemix.net](https://knowledge-base-search.mybluemix.net)
+IBM maintains a running demo of this `knowledge-base-search` at [https://knowledge-base-search.ng.bluemix.net](https://knowledge-base-search.ng.bluemix.net)
 
 ### Setting up your own running instance of the demo
 Here's how to deploy your own working version of this demo that you can modify to learn more about the Watson Discovery Service and start building your own application.
@@ -16,7 +16,8 @@ Here's how to deploy your own working version of this demo that you can modify t
 1. [Run the application](#running-the-application)
 
 #### Deploy to Bluemix
-[![Deploy to Bluemix](https://deployment-tracker.mybluemix.net/stats/24261964d00b59942cda0befd0535f50/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
+
+[![Deploy to Bluemix](https://metrics-tracker.mybluemix.net/stats/_replace_me_/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
 
 Click this button to begin the process of creating a deployment toolchain in Bluemix based on the master branch of this repo. Modify the application name to the name of the host you want to put your final running application at. The default application name is {organization/user}-{repo_name}-{timestamp}.
 
@@ -36,7 +37,7 @@ To manually create the two required services, follow these steps:
 
 #### Setting up Discovery
 
-You may use the [Watson Discovery Tooling](https://discovery-tooling.mybluemix.net) UI to complete these next steps.
+You may use the [Watson Discovery Tooling](https://watson-discovery.bluemix.net) UI to complete these next steps.
 
 Or if you prefer using Python scripts aided by markdown-formatted explanation (known as [Jupyter Notebooks](http://jupyter.readthedocs.io/en/latest/index.html)), you can use the steps found in `notebooks/Setup_Discovery.ipynb` of this repo. The `notebook` section can be run locally by doing `pip install -r server/python/requirements/dev.txt` followed by `jupyter notebook` which will prompt you to open your browser to follow the steps in the interactive code guide. Each script can be run independently as each step is located in the `notebooks/scripts` directory.
 
@@ -92,17 +93,24 @@ This sample code is licensed under the [MIT License](https://opensource.org/lice
 
 ## Privacy Notice
 
-Sample web applications that include this package may be configured to track deployments to [IBM Bluemix](https://www.bluemix.net/) and other Cloud Foundry platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM-Bluemix/cf-deployment-tracker-service) service on each deployment:
+Sample web applications that include this package may be configured to track deployments to [IBM Cloud](https://www.bluemix.net/) and other platforms. The following information is sent to a [Deployment Tracker](https://github.com/IBM/metrics-collector-service) service on each deployment:
 
 * Python package version
 * Python repository URL
 * Application Name (`application_name`)
 * Application GUID (`application_id`)
 * Application instance index number (`instance_index`)
-* Space ID (`space_id`)
+* Space ID (`space_id`) or OS username
 * Application Version (`application_version`)
 * Application URIs (`application_uris`)
+* Cloud Foundry API (`cf_api`)
 * Labels of bound services
 * Number of instances for each bound service and associated plan information
+* Metadata in the repository.yaml file
 
-This data is collected from the `setup.py` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Bluemix and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Bluemix to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+This data is collected from the `setup.py` and `repository.yaml` file in the sample application and the `VCAP_APPLICATION` and `VCAP_SERVICES` environment variables in IBM Cloud and other Cloud Foundry platforms. This data is used by IBM to track metrics around deployments of sample applications to IBM Cloud to measure the usefulness of our examples, so that we can continuously improve the content we offer to you. Only deployments of sample applications that include code to ping the Deployment Tracker service will be tracked.
+
+If you wish to remove this tracking, you may:
+
+- set the environment variable `DEMO_DEPLOY` to `1` OR
+- remove the `metrics_tracker_client.track()` line from the `server/python/server.py` file

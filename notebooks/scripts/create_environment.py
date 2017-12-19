@@ -21,7 +21,7 @@ environment_id = ''
 output = discovery.get_environments()
 try:
     environment_id = find_byod_environment_id(output)
-except:
+except Exception:
     print ('Command:')
     print ('discovery.get_environments')
     print ('Response:')
