@@ -103,6 +103,7 @@ stages:
 
       cat > ./manifest.yml <<EOL
       name: ${TEMP_APP_NAME}
+      domain: ${ROUTE_DOMAIN}
       instances: ${CF_INSTANCES}
       memory: ${CF_MEMORY}
       buildpack: python_buildpack
