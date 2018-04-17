@@ -117,6 +117,14 @@ a {
   }
 }
 
+.gdpr--section {
+  text-align: center;
+  padding: 1rem 0 0 0;
+  background-color: color('gray', 80);
+  color: color('gray', 30);
+  font-size: 0.7rem;
+}
+
 .base--h2, .description {
   color: color('white', 10);
   border-bottom-color: color('white', 10);

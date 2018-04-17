@@ -386,6 +386,12 @@ class App extends Component {
             cc by-sa 3.0 with attribution required
           </a>
         </section>
+        <section className="_full-width-row gdpr--section">
+          <span>This system is for demonstration purposes only and is not intended to process
+          Personal Data.  No Personal Data is to be entered into this system as it may not
+          have the necessary controls in place to meet the requirements of the General Data
+          Protection Regulation (EU) 2016/679</span>
+        </section>
         <Footer />
       </div>
     );
