@@ -6,6 +6,7 @@ const links = {
   bluemix: 'https://console.ng.bluemix.net/registration/?target=/catalog/services/discovery/',
   cc_license: 'https://creativecommons.org/licenses/by-sa/3.0/',
   stack_exchange: 'https://travel.stackexchange.com/',
+  gdpr: 'http://www.ibm.com/gdpr',
 };
 
 export default links;
