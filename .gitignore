@@ -95,6 +95,11 @@ venv/
 ENV/
 bin/
 include/
+Include/
+Lib/
+Scripts/
+etc/
+tcl/
 
 # Spyder project settings
 .spyderproject
