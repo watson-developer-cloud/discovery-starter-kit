@@ -63,6 +63,8 @@ Client side is built with [React](https://facebook.github.io/react/)
 
 #### Development
 
+For all of the following steps, Windows users may have to `cd` into the `client/knowledge_base_search` directory instead of using `--prefix`
+
 1. Run `npm install --prefix client/knowledge_base_search` to install the necessary dependencies.
 1. Run `npm start --prefix client/knowledge_base_search` - visit http://locahost:3000/
 1. To run statically through your server, run `npm run build --prefix client/knowledge_base_search` to produce static assets
@@ -76,9 +78,13 @@ Client side is built with [React](https://facebook.github.io/react/)
 1. Install [python](https://www.python.org/) version 2.7
 1. Install [virtual_env](https://virtualenv.pypa.io/en/stable/)
 1. Activate `virtualenv` for this project by running the following commands from the project root directory:
-    1. `virtualenv .`
-    1. `source bin/activate`
-1. Install dependencies `pip install -r server/python/requirements/dev.txt`
+   1. Linux/MacOS
+      1. `virtualenv .`
+      1. `source bin/activate`
+   1. Windows
+      1. `C:\Python27\Scripts\virtualenv.exe .`
+      1. `Scripts\activate`
+1. Install dependencies `pip install -r server/python/requirements/dev.txt` (Windows: must install Microsoft Visual C++ 9.0 from http://aka.ms/vcpython27)
 1. Start server `python server/python/server.py`
 1. Visit http://localhost:5000/
 
