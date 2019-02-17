@@ -17,7 +17,7 @@ Here's how to deploy your own working version of this demo that you can modify t
 
 #### Deploy to Bluemix
 
-[![Deploy to Bluemix](https://metrics-tracker.mybluemix.net/stats/24261964d00b59942cda0befd0535f50/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit)
+[![Deploy to Bluemix](https://metrics-tracker.mybluemix.net/stats/24261964d00b59942cda0befd0535f50/button.svg)](https://bluemix.net/deploy?repository=https://github.com/watson-developer-cloud/discovery-starter-kit) [![Greenkeeper badge](https://badges.greenkeeper.io/watson-developer-cloud/discovery-starter-kit.svg)](https://greenkeeper.io/)
 
 Click this button to begin the process of creating a deployment toolchain in Bluemix based on the master branch of this repo. Modify the application name to the name of the host you want to put your final running application at. The default application name is {organization/user}-{repo_name}-{timestamp}.
 
