@@ -1,0 +1,9 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "client/knowledge_base_search/package.json"
+      ]
+    }
+  }
+}
