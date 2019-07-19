@@ -1,5 +1,7 @@
-### Discovery Starter Kit [![Build Status](https://api.travis-ci.org/watson-developer-cloud/discovery-starter-kit.svg)](https://travis-ci.org/watson-developer-cloud/discovery-starter-kit)
+## DEPRECATION NOTICE
+This repository has been deprecated.
 
+### Discovery Starter Kit 
 A repo containing the basics for setting up one of the Watson Developer Cloud SDKs with a Q&A use case
 
 ### Knowledge Base Search
